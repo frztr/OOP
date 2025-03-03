@@ -1,20 +1,22 @@
 using Lab_1;
 
-public class StudentContext : Context
+public class StudentContext : IContext<Student>
 {
-    public override string Name => "Студенты";
+    public string Name => "Студенты";
 
-    public override void Add()
+    public IEnumerable<Student> entities => new List<Student>();
+
+    public void Add()
     {
         Console.WriteLine("Добавление студента");
     }
 
-    public override void Delete()
+    public void Delete()
     {
         throw new NotImplementedException();
     }
 
-    public override void Update()
+    public void Update()
     {
         throw new NotImplementedException();
     }

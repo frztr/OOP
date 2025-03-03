@@ -1,6 +1,6 @@
 namespace Lab_1;
 
-public class Student : Person
+public class Student : Person, IEntity
 {
     private Student(string name, string lastname, int age, string patronymic) : base(name, lastname, age, patronymic)
     {

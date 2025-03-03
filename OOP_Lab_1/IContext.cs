@@ -1,9 +1,10 @@
 namespace Lab_1;
-public abstract class Context
+public interface IContext<out T>
 {
-    public abstract void Add();
-    public abstract void Update();
-    public abstract void Delete();
+    public abstract IEnumerable<T> entities {get;}
+    public void Add();
+    public void Update();
+    public void Delete();
     public abstract string Name { get; }
 
     protected virtual void DisplayMenu()

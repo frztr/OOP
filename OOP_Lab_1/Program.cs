@@ -18,11 +18,11 @@ while (true)
             Console.WriteLine("Неверный формат ввода");
         }
     }
-    Context context;
+    IContext<IEntity> context;
     switch (selection)
     {
         case 1:
-            context = new StudentContext();
+           context = new StudentContext();
             break;
         case 2:
             break;
