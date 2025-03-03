@@ -18,35 +18,15 @@ while (true)
             Console.WriteLine("Неверный формат ввода");
         }
     }
-    int actionSelection = -1;
+    Context context;
     switch (selection)
     {
         case 1:
-            Console.WriteLine("Переход к разделу Студенты");
-            while (!new[] { 1, 2, 3, 4, 0 }.Contains(actionSelection))
-            {
-                while (!int.TryParse(Console.ReadLine(), out actionSelection))
-                {
-                    Console.WriteLine("Неверный формат ввода");
-                }
-            }
-            Console.WriteLine($@"Выберите действие -->
-1. Добавить студента
-2. Изменить студента
-3. Удалить студента");
-
-            // switch(actionSelection){
-                
-            // }
-
-
-
+            context = new StudentContext();
             break;
         case 2:
-            Console.WriteLine("Переход к разделу Преподаватели");
             break;
         case 3:
-            Console.WriteLine("Переход к разделу Дисциплины");
             break;
 
     }
