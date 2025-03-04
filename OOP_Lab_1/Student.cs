@@ -10,7 +10,7 @@ public class Student : Person, IEntity
 
     public Course Course { get; set; }
 
-    public static Student CreateStudent(string name, string lastname, int age, string patronymic, string group, Course course)
+    public static Student CreateNew(string name, string lastname, int age, string patronymic, string group, Course course)
     {
         Student st = new Student(name, lastname, age, patronymic);
         st.Course = course;

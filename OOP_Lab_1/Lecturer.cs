@@ -1,5 +1,5 @@
 namespace Lab_1;
-public class Lecturer : Person
+public class Lecturer : Person, IEntity
 {
     public string Grade { get; set; }
 

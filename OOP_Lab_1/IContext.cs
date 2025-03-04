@@ -7,20 +7,26 @@ public interface IContext<out T>
     public void Delete();
     public abstract string Name { get; }
 
-    protected virtual void DisplayMenu()
+    private void DisplayMenu()
     {
-        Console.WriteLine($@"
+        Console.WriteLine($@"Опции:
 0. Выйти из раздела.
 1. Добавление
 2. Обновление
 3. Удаление");
     }
+
+    protected void AdditionalMenu(){
+        return;
+    }
+
     public void Dialog()
     {
         while (true)
         {
             Console.WriteLine($@"Раздел {Name}");
             DisplayMenu();
+            AdditionalMenu();
             int selection;
             while (!int.TryParse(Console.ReadLine(), out selection))
             {

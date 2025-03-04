@@ -18,16 +18,20 @@ while (true)
             Console.WriteLine("Неверный формат ввода");
         }
     }
-    IContext<IEntity> context;
+    IContext<IEntity> context = null;
     switch (selection)
     {
         case 1:
-           context = new StudentContext();
+            context = new StudentContext();
             break;
         case 2:
+            context = new LecturerContext();
             break;
         case 3:
+            context = new DisciplineContext();
             break;
 
     }
+
+    context.Dialog();
 }
