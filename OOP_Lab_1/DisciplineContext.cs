@@ -3,9 +3,10 @@ namespace Lab_1;
 
 public class DisciplineContext : IContext<Discipline>
 {
-    public IEnumerable<Discipline> entities => new List<Discipline>();
-
+    private IEnumerable<Discipline> entities => new List<Discipline>();
     public string Name => "Дисциплины";
+
+    public IEnumerable<Discipline> Entities => entities;
 
     public void Add()
     {
@@ -21,4 +22,5 @@ public class DisciplineContext : IContext<Discipline>
     {
         throw new NotImplementedException();
     }
+
 }

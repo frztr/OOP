@@ -1,11 +1,13 @@
 namespace Lab_1;
-public interface IContext<out T>
+public interface IContext<out T> where T : IEntity
 {
-    public abstract IEnumerable<T> entities {get;}
+    // IEnumerable<T> getEntities();
+
+    public IEnumerable<T> Entities { get; }
     public void Add();
     public void Update();
     public void Delete();
-    public abstract string Name { get; }
+    public string Name { get; }
 
     private void DisplayMenu()
     {
@@ -16,7 +18,8 @@ public interface IContext<out T>
 3. Удаление");
     }
 
-    protected void AdditionalMenu(){
+    protected void AdditionalMenu()
+    {
         return;
     }
 
@@ -54,9 +57,8 @@ public interface IContext<out T>
 
     }
 
-
-
-    public virtual bool AdditionalOptions(int selection){
+    public virtual bool AdditionalOptions(int selection)
+    {
         return false;
     }
 }

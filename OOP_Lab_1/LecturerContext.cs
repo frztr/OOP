@@ -3,9 +3,11 @@ namespace Lab_1;
 
 public class LecturerContext : IContext<Lecturer>
 {
-    public IEnumerable<Lecturer> entities => new List<Lecturer>();
+    private IEnumerable<Lecturer> entities = new List<Lecturer>();
 
     public string Name => "Преподаватели";
+
+    public IEnumerable<Lecturer> Entities => entities;
 
     public void Add()
     {
@@ -21,4 +23,6 @@ public class LecturerContext : IContext<Lecturer>
     {
         throw new NotImplementedException();
     }
+
+
 }

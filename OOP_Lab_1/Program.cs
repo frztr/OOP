@@ -1,9 +1,5 @@
 ﻿using Lab_1;
 
-List<Student> students = new List<Student>();
-List<Lecturer> lecturers = new List<Lecturer>();
-List<Discipline> disciplines = new List<Discipline>();
-
 while (true)
 {
     Console.WriteLine($@"Перейти в раздел -->
@@ -32,6 +28,5 @@ while (true)
             break;
 
     }
-
     context.Dialog();
 }
