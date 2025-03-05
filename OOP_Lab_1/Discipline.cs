@@ -1,6 +1,5 @@
 namespace Lab_1;
 public class Discipline : IEntity {
-    public Guid Id {get;set;} = new Guid();
     public string Name {get;set;}
 
     public string Abbr {get;set;}

@@ -2,7 +2,7 @@ namespace Lab_1;
 
 public class Person
 {
-    public Guid Id { get; set; } = new Guid();
+    public Guid Id { get; set; } = Guid.NewGuid();
     
     public string Name { get; set; }
     public string Lastname { get; set; }

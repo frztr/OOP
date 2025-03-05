@@ -58,6 +58,7 @@ public class StudentContext : IContext<Student>
             }
             Student st = Student.CreateNew(_params[2], _params[3], age, (_params.Length > 5 ? _params[5] : null), _params[1], c);
             entities.Add(st);
+            Console.WriteLine($@"Студент создан с идентификатором {st.Id}");
             return;
         }
     }
