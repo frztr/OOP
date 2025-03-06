@@ -57,6 +57,18 @@ public interface IContext<out T> where T : IEntity
 
     }
 
+    public K? ReadDialog<K>(string propname)
+    {
+        Console.WriteLine($@"Введите свойство '{propname}'");
+        string input = Console.ReadLine();
+        if (!String.IsNullOrEmpty(input))
+        {
+            
+            return (K)(object)input;
+        }
+        return default(K);
+    }
+
     public virtual bool AdditionalOptions(int selection)
     {
         return false;

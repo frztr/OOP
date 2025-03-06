@@ -132,12 +132,13 @@ public class StudentContext : IContext<Student>
             }
 
         }
-        Console.WriteLine("Введите группу");
-        string group = Console.ReadLine();
-        if (!String.IsNullOrEmpty(group))
-        {
-            entity.Group = group;
-        }
+        // Console.WriteLine("Введите группу");
+        // string group = Console.ReadLine();
+        // if (!String.IsNullOrEmpty(group))
+        // {
+        //     entity.Group = group;
+        // }
+        entity.Group = ((IContext<Student>)this).ReadDialog<string>("group") ?? entity.Group;
         Console.WriteLine("Введите имя");
         string name = Console.ReadLine();
         if (!String.IsNullOrEmpty(name))
