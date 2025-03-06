@@ -8,169 +8,100 @@ public class StudentContext : IContext<Student>
 {
     public string Name => "Студенты";
 
-    private List<Student> entities = new List<Student>();
-
-    public IEnumerable<Student> Entities => entities;
-
-    public void Add()
-    {
-        Console.WriteLine("Добавление студента");
-        Console.WriteLine("Введите номер курса, название группы, имя, фамилию, возраст, отчество(опционально) через ';'");
-        while (true)
-        {
-            string[] _params = Console.ReadLine().Split(";");
-            if (_params.Length < 5)
-            {
-                Console.WriteLine("Параметров не может быть меньше 5");
-                continue;
-            }
-            if (!int.TryParse(_params[0], out int courseNumber))
-            {
-                Console.WriteLine("Неверный формат ввода номера курса");
-                continue;
-            }
-            if (String.IsNullOrEmpty(_params[1]))
-            {
-                Console.WriteLine("Неверный формат ввода названия группы");
-                continue;
-            }
-            if (String.IsNullOrEmpty(_params[2]))
-            {
-                Console.WriteLine("Неверный формат ввода имени");
-                continue;
-            }
-            if (String.IsNullOrEmpty(_params[3]))
-            {
-                Console.WriteLine("Неверный формат ввода фамилии");
-                continue;
-            }
-            if (!int.TryParse(_params[4], out int age))
-            {
-                Console.WriteLine("Неверный формат ввода возраста");
-                continue;
-            }
-
-            Course c = CourseRepo.getCourseRepo().courses.FirstOrDefault(x => x.CourseNumber == courseNumber);
-            if (c == null)
-            {
-                Console.WriteLine("Курс не найден.");
-                continue;
-            }
-            Student st = Student.CreateNew(_params[2], _params[3], age, (_params.Length > 5 ? _params[5] : null), _params[1], c);
-            entities.Add(st);
-            Console.WriteLine($@"Студент создан с идентификатором {st.Id}");
-            return;
-        }
-    }
 
     void IContext<Student>.AdditionalMenu()
     {
         Console.WriteLine("4. Просмотр информации о студенте");
     }
 
-    public void Delete()
+    bool IContext<Student>.AdditionalOptions(int selection)
     {
-        while (true)
+        switch (selection)
         {
-            string id = Console.ReadLine();
-            if (String.IsNullOrEmpty(id))
-            {
-                Console.WriteLine("Неверный формат ввода идентификатора");
-                continue;
-            }
-            var entity = entities.FirstOrDefault(x => x.Id == new Guid(id));
-            if (entity == null)
-            {
-                Console.WriteLine("Данный идентификатор не найден");
-                continue;
-            }
-            entities.Remove(entity);
-            return;
+            case 4:
+                ShowEntityInfo();
+                return true;
+            default:
+                return false;
         }
     }
+
+    public void Add()
+    {
+        Console.WriteLine("Добавление студента");
+        var _this = (IContext<Student>)this;
+        int? age = null;
+        string? group = null;
+        string? name = null;
+        string? lastname = null;
+        string? patronymic = null;
+        Course c = null;
+
+        while (c == null)
+        {
+            c = _this.ReadDialog<Course>("course", false);
+        }
+        while (group == null)
+        {
+            group = _this.ReadDialog<string?>("group", false);
+        }
+        while (name == null)
+        {
+            name = _this.ReadDialog<string?>("name", false);
+        }
+        while (lastname == null)
+        {
+            lastname = _this.ReadDialog<string?>("lastname", false);
+        }
+        patronymic = _this.ReadDialog<string?>("patronymic");
+        while (age == null)
+        {
+            age = _this.ReadDialog<int?>("age", false);
+        }
+        Student st = Student.CreateNew(name, lastname, age.Value, patronymic, group, c);
+        IContext<Student>.Entities = IContext<Student>.Entities.Union(new List<Student> { st });
+        Console.WriteLine($@"Студент создан с идентификатором {st.Id}");
+    }
+
+
 
     public void Update()
     {
         Console.WriteLine("Обновление студента");
+        var _this = (IContext<Student>)this;
+        Student entity = null!;
+        Guid guid = _this.ReadDialog<Guid>("идентификатор");
+        entity = IContext<Student>.Entities.FirstOrDefault(x => x.Id == guid)!;
+        if (entity == null)
+        {
+            Console.WriteLine("Запись с данным идентификатором не найдена");
+            return;
+        }
+
+        entity.Course = _this.ReadDialog<Course>("course") ?? entity.Course;
+        entity.Group = _this.ReadDialog<string>("group") ?? entity.Group;
+        entity.Name = _this.ReadDialog<string>("name") ?? entity.Name;
+        entity.Lastname = _this.ReadDialog<string>("lastname") ?? entity.Lastname;
+        entity.Age = _this.ReadDialog<int?>("age") ?? entity.Age;
+        entity.Patronymic = _this.ReadDialog<string>("patronymic") ?? entity.Patronymic;
+        return;
+    }
+
+    void ShowEntityInfo()
+    {
+        var _this = (IContext<Student>)this;
+        Console.WriteLine("Просмотр данных студента");
         Console.WriteLine("Введите идентификатор студента");
-        bool idEntered = false;
         Student entity = null!;
         while (entity == null)
         {
-            string id = Console.ReadLine();
-            if (String.IsNullOrEmpty(id))
-            {
-                Console.WriteLine("Неверный формат идентификатора");
-                continue;
-            }
-            entity = entities.FirstOrDefault(x => x.Id == new Guid(id))!;
+            Guid id = _this.ReadDialog<Guid>("идентификатор");
+            entity = IContext<Student>.Entities.FirstOrDefault(x => x.Id == id)!;
+            entity.DisplayInfo();
             if (entity == null)
             {
                 Console.WriteLine("Запись с данным идентификатором не найдена");
             }
         }
-
-        Console.WriteLine("Введите курс");
-        string input = Console.ReadLine();
-        if (!String.IsNullOrEmpty(input))
-        {
-            if (!int.TryParse(input, out int courseNumber))
-            {
-                Console.WriteLine("Неверный формат ввода номера курса. Пропуск...");
-            }
-            else
-            {
-                Course c = CourseRepo.getCourseRepo().courses.FirstOrDefault(x => x.CourseNumber == courseNumber);
-                if (c == null)
-                {
-                    Console.WriteLine("Курс не найден");
-                }
-                else
-                {
-                    entity.Course = c;
-                }
-            }
-
-        }
-        // Console.WriteLine("Введите группу");
-        // string group = Console.ReadLine();
-        // if (!String.IsNullOrEmpty(group))
-        // {
-        //     entity.Group = group;
-        // }
-        entity.Group = ((IContext<Student>)this).ReadDialog<string>("group") ?? entity.Group;
-        Console.WriteLine("Введите имя");
-        string name = Console.ReadLine();
-        if (!String.IsNullOrEmpty(name))
-        {
-            entity.Name = name;
-        }
-        Console.WriteLine("Введите фамилию");
-        string lastname = Console.ReadLine();
-        if (!String.IsNullOrEmpty(lastname))
-        {
-            entity.Lastname = lastname;
-        }
-        Console.WriteLine("Введите возраст");
-        string ageInput = Console.ReadLine();
-        if (!String.IsNullOrEmpty(ageInput))
-        {
-            if (!int.TryParse(input, out int age))
-            {
-                Console.WriteLine("Неверный формат ввода возраста. Пропуск...");
-            }
-            else
-            {
-                entity.Age = age;
-            }
-
-        }
-        Console.WriteLine("Введите отчество");
-        string patronymic = Console.ReadLine();
-        if (!String.IsNullOrEmpty(patronymic))
-        {
-            entity.Patronymic = patronymic;
-        }
-        return;
     }
 }

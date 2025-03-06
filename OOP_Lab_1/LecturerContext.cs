@@ -7,14 +7,7 @@ public class LecturerContext : IContext<Lecturer>
 
     public string Name => "Преподаватели";
 
-    public IEnumerable<Lecturer> Entities => entities;
-
     public void Add()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Delete()
     {
         throw new NotImplementedException();
     }
@@ -23,6 +16,5 @@ public class LecturerContext : IContext<Lecturer>
     {
         throw new NotImplementedException();
     }
-
 
 }

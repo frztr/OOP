@@ -6,6 +6,8 @@ public class Discipline : IEntity {
 
     public Lecturer Lecturer {get;set;}
 
+    public Guid Id => Guid.NewGuid();
+
     private Discipline(string name, string abbr,Lecturer lecturer){
         this.Name = name;
         this.Abbr = abbr;
