@@ -4,17 +4,16 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Lab_1;
 
-public class StudentContext : IContext<Student>
+public class StudentContext : AbstractContext<Student>
 {
-    public string Name => "Студенты";
+    protected override string Name => "Студенты";
 
-
-    void IContext<Student>.AdditionalMenu()
+    protected override void AdditionalMenu()
     {
         Console.WriteLine("4. Просмотр информации о студенте");
     }
 
-    bool IContext<Student>.AdditionalOptions(int selection)
+    protected override bool AdditionalOptions(int selection)
     {
         switch (selection)
         {
@@ -26,10 +25,9 @@ public class StudentContext : IContext<Student>
         }
     }
 
-    public void Add()
+    protected override void Add()
     {
         Console.WriteLine("Добавление студента");
-        var _this = (IContext<Student>)this;
         int? age = null;
         string? group = null;
         string? name = null;
@@ -39,64 +37,62 @@ public class StudentContext : IContext<Student>
 
         while (c == null)
         {
-            c = _this.ReadDialog<Course>("course", false);
+            c = ReadDialog<Course>("course", false);
         }
         while (group == null)
         {
-            group = _this.ReadDialog<string?>("group", false);
+            group = ReadDialog<string?>("group", false);
         }
         while (name == null)
         {
-            name = _this.ReadDialog<string?>("name", false);
+            name = ReadDialog<string?>("name", false);
         }
         while (lastname == null)
         {
-            lastname = _this.ReadDialog<string?>("lastname", false);
+            lastname = ReadDialog<string?>("lastname", false);
         }
-        patronymic = _this.ReadDialog<string?>("patronymic");
+        patronymic = ReadDialog<string?>("patronymic");
         while (age == null)
         {
-            age = _this.ReadDialog<int?>("age", false);
+            age = ReadDialog<int?>("age", false);
         }
         Student st = Student.CreateNew(name, lastname, age.Value, patronymic, group, c);
-        IContext<Student>.Entities = IContext<Student>.Entities.Union(new List<Student> { st });
+        Entities.Add(st);
         Console.WriteLine($@"Студент создан с идентификатором {st.Id}");
     }
 
 
 
-    public void Update()
+    protected override void Update()
     {
         Console.WriteLine("Обновление студента");
-        var _this = (IContext<Student>)this;
         Student entity = null!;
-        Guid guid = _this.ReadDialog<Guid>("идентификатор");
-        entity = IContext<Student>.Entities.FirstOrDefault(x => x.Id == guid)!;
+        Guid guid = ReadDialog<Guid>("идентификатор");
+        entity = Entities.FirstOrDefault(x => x.Id == guid)!;
         if (entity == null)
         {
             Console.WriteLine("Запись с данным идентификатором не найдена");
             return;
         }
 
-        entity.Course = _this.ReadDialog<Course>("course") ?? entity.Course;
-        entity.Group = _this.ReadDialog<string>("group") ?? entity.Group;
-        entity.Name = _this.ReadDialog<string>("name") ?? entity.Name;
-        entity.Lastname = _this.ReadDialog<string>("lastname") ?? entity.Lastname;
-        entity.Age = _this.ReadDialog<int?>("age") ?? entity.Age;
-        entity.Patronymic = _this.ReadDialog<string>("patronymic") ?? entity.Patronymic;
+        entity.Course = ReadDialog<Course>("course") ?? entity.Course;
+        entity.Group = ReadDialog<string>("group") ?? entity.Group;
+        entity.Name = ReadDialog<string>("name") ?? entity.Name;
+        entity.Lastname = ReadDialog<string>("lastname") ?? entity.Lastname;
+        entity.Age = ReadDialog<int?>("age") ?? entity.Age;
+        entity.Patronymic = ReadDialog<string>("patronymic") ?? entity.Patronymic;
         return;
     }
 
     void ShowEntityInfo()
     {
-        var _this = (IContext<Student>)this;
         Console.WriteLine("Просмотр данных студента");
         Console.WriteLine("Введите идентификатор студента");
         Student entity = null!;
         while (entity == null)
         {
-            Guid id = _this.ReadDialog<Guid>("идентификатор");
-            entity = IContext<Student>.Entities.FirstOrDefault(x => x.Id == id)!;
+            Guid id = ReadDialog<Guid>("идентификатор");
+            entity = Entities.FirstOrDefault(x => x.Id == id)!;
             entity.DisplayInfo();
             if (entity == null)
             {
