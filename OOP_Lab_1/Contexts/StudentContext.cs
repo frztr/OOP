@@ -10,14 +10,14 @@ public class StudentContext : AbstractContext<Student>
 
     protected override void AdditionalMenu()
     {
-        Console.WriteLine("4. Просмотр информации о студенте");
+        Console.WriteLine($@"5. Просмотр информации о студенте");
     }
 
     protected override bool AdditionalOptions(int selection)
     {
         switch (selection)
         {
-            case 4:
+            case 5:
                 ShowEntityInfo();
                 return true;
             default:
@@ -37,28 +37,27 @@ public class StudentContext : AbstractContext<Student>
 
         while (c == null)
         {
-            c = ReadDialog<Course>("course", false);
+            c = ReadValueDialog<Course>("Номер курса", false);
         }
         while (group == null)
         {
-            group = ReadDialog<string?>("group", false);
+            group = ReadValueDialog<string?>("Группа", false);
         }
         while (name == null)
         {
-            name = ReadDialog<string?>("name", false);
+            name = ReadValueDialog<string?>("Имя", false);
         }
         while (lastname == null)
         {
-            lastname = ReadDialog<string?>("lastname", false);
+            lastname = ReadValueDialog<string?>("Фамилия", false);
         }
-        patronymic = ReadDialog<string?>("patronymic");
+        patronymic = ReadValueDialog<string?>("Отчество");
         while (age == null)
         {
-            age = ReadDialog<int?>("age", false);
+            age = ReadValueDialog<int?>("Возраст", false);
         }
-        Student st = Student.CreateNew(name, lastname, age.Value, patronymic, group, c);
-        Entities.Add(st);
-        Console.WriteLine($@"Студент создан с идентификатором {st.Id}");
+        Guid guid = Student.AddNew(name, lastname, age.Value, patronymic, group, c);
+        Console.WriteLine($@"Студент создан с идентификатором {guid}");
     }
 
 
@@ -66,38 +65,32 @@ public class StudentContext : AbstractContext<Student>
     protected override void Update()
     {
         Console.WriteLine("Обновление студента");
-        Student entity = null!;
-        Guid guid = ReadDialog<Guid>("идентификатор");
-        entity = Entities.FirstOrDefault(x => x.Id == guid)!;
-        if (entity == null)
-        {
-            Console.WriteLine("Запись с данным идентификатором не найдена");
-            return;
-        }
-
-        entity.Course = ReadDialog<Course>("course") ?? entity.Course;
-        entity.Group = ReadDialog<string>("group") ?? entity.Group;
-        entity.Name = ReadDialog<string>("name") ?? entity.Name;
-        entity.Lastname = ReadDialog<string>("lastname") ?? entity.Lastname;
-        entity.Age = ReadDialog<int?>("age") ?? entity.Age;
-        entity.Patronymic = ReadDialog<string>("patronymic") ?? entity.Patronymic;
-        return;
+        Student entity = GetByIdDialog();
+        if (entity == null) return;
+        entity.EditData(
+            ReadValueDialog<string>("Имя"),
+            ReadValueDialog<string>("Фамилия"),
+            ReadValueDialog<int?>("Возраст"),
+            ReadValueDialog<string>("Отчество"),
+            ReadValueDialog<string>("Группа"),
+            ReadValueDialog<Course>("Номер курса")
+        );
     }
 
     void ShowEntityInfo()
     {
         Console.WriteLine("Просмотр данных студента");
-        Console.WriteLine("Введите идентификатор студента");
         Student entity = null!;
-        while (entity == null)
+        do
         {
-            Guid id = ReadDialog<Guid>("идентификатор");
-            entity = Entities.FirstOrDefault(x => x.Id == id)!;
-            entity.DisplayInfo();
-            if (entity == null)
-            {
-                Console.WriteLine("Запись с данным идентификатором не найдена");
-            }
+            entity = GetByIdDialog();
         }
+        while (entity == null);
+        entity.DisplayInfo();
+    }
+
+    protected override string SearchCriteria(Student item)
+    {
+        return $@"{item.Name}{item.Lastname}{item.Patronymic}{item.Age}{item.Group}{item.Course}";
     }
 }

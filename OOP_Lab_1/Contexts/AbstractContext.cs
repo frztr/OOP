@@ -1,13 +1,16 @@
 namespace Lab_1;
-public abstract class AbstractContext<T> : IContextSpecified<T> where T : IEntity
+public abstract class AbstractContext<T> : IContextSpecified<T>
+where T : IEntity
 {
     protected List<T> Entities = GlobalStorage.GetList<T>();
     protected abstract string Name { get; }
     protected abstract void Add();
     protected abstract void Update();
-    public void Delete()
+
+    protected abstract string SearchCriteria(T item);
+    protected void Delete()
     {
-        Guid id = ReadDialog<Guid>("идентификатор");
+        Guid id = ReadValueDialog<Guid>("идентификатор");
         var entity = Entities.FirstOrDefault(x => x.Id == id);
         if (entity == null)
         {
@@ -16,88 +19,88 @@ public abstract class AbstractContext<T> : IContextSpecified<T> where T : IEntit
         }
         Entities.Remove(entity);
         return;
-    }   
+    }
 
-    protected virtual void DisplayMenu()
+    protected void DisplayMenu()
     {
         Console.WriteLine($@"Опции:
 0. Выйти из раздела.
 1. Добавление
 2. Обновление
-3. Удаление");
+3. Удаление
+4. Поиск");
     }
 
-    protected virtual void AdditionalMenu(){}
+    protected virtual void AdditionalMenu() { }
 
     protected virtual bool AdditionalOptions(int selection)
     {
         return false;
     }
-
-    protected K? ReadDialog<K>(string propname, bool ignoreEmptyField = true)
+    //Диалог запроса переменной с последующим конвертированием к требуемому формату, если возможно
+    //ignoreEmptyField - для операций обновления можно игнорировать пустые поля, т.к. это будет значить отсутствие изменений данных свойства
+    protected K? ReadValueDialog<K>(string propname, bool ignoreEmptyField = true)
     {
-        Console.WriteLine($@"Введите свойство '{propname}'");
+        Console.WriteLine($@"Введите параметр '{propname}'");
         string input = Console.ReadLine();
         if (String.IsNullOrEmpty(input))
         {
             if (!ignoreEmptyField)
             {
-                Console.WriteLine($@"Свойство '{propname}' не может быть пустым.");
+                Console.WriteLine($@"Параметр '{propname}' не может быть пустым.");
             }
             return default(K);
         }
-        if (typeof(string) == typeof(K))
+        switch (typeof(K).Name.ToString())
         {
-            return (K)(object)input;
-        }
-        if (typeof(int) == typeof(K) || typeof(int?) == typeof(K))
-        {
-            if (!int.TryParse(input, out int e))
-            {
-                Console.WriteLine($@"Неверный формат ввода поля '{propname}'.");
-                return default(K);
-            }
-            else
-            {
-                return (K)(object)e;
-            }
-        }
-        if (typeof(Guid) == typeof(K))
-        {
-            if (!Guid.TryParse(input, out Guid id))
-            {
-                Console.WriteLine("Неверный формат идентификатора");
-                return default(K);
-            }
-            else
-            {
-                return (K)(object)id;
-            }
-        }
-        if (typeof(Course) == typeof(K))
-        {
-            if (int.TryParse(input, out int courseNumber))
-            {
-                Course c = GlobalStorage.GetList<Course>().FirstOrDefault(x => x.CourseNumber == courseNumber);
-                if (c == null)
+            case "string":
+            case "string?":
+                return (K)(object)input;
+            case "int":
+            case "int?":
+                if (!int.TryParse(input, out int e))
                 {
-                    Console.WriteLine("Курс не найден");
+                    Console.WriteLine($@"Неверный формат ввода параметра '{propname}'.");
                     return default(K);
                 }
                 else
                 {
-                    return (K)(object)c;
+                    return (K)(object)e;
                 }
-            }
-            else
-            {
-                Console.WriteLine($@"Неверный формат ввода поля '{propname}'.");
-            }
+            case "Guid":
+                if (!Guid.TryParse(input, out Guid id))
+                {
+                    Console.WriteLine("Неверный формат идентификатора");
+                    return default(K);
+                }
+                else
+                {
+                    return (K)(object)id;
+                }
+            case "Course":
+                if (int.TryParse(input, out int courseNumber))
+                {
+                    Course c = GlobalStorage.GetList<Course>().FirstOrDefault(x => x.CourseNumber == courseNumber);
+                    if (c == null)
+                    {
+                        Console.WriteLine("Курс не найден");
+                        return default(K);
+                    }
+                    else
+                    {
+                        return (K)(object)c;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($@"Неверный формат ввода параметра '{propname}'.");
+                    return default(K);
+                }
         }
         return default(K);
     }
 
-    public void Dialog()
+    public void ShowContext()
     {
         while (true)
         {
@@ -122,12 +125,49 @@ public abstract class AbstractContext<T> : IContextSpecified<T> where T : IEntit
                 case 3:
                     Delete();
                     break;
+                case 4:
+                    Search();
+                    break;
                 default:
                     if (!AdditionalOptions(selection))
                         Console.WriteLine("Введен неверный пункт");
                     break;
             }
         }
+
+    }
+
+    public T GetByIdDialog()
+    {
+        T entity = default(T);
+        Guid guid = ReadValueDialog<Guid>($@"идентификатор сущности {Name}");
+        entity = Entities.FirstOrDefault(x => x.Id == guid)!;
+        if (entity == null)
+        {
+            Console.WriteLine("Запись с данным идентификатором не найдена");
+        }
+        return entity;
+    }
+
+    protected void Search()
+    {
+        Console.WriteLine($@"Поиск записей. Введите любые известные данные сущности {Name} через пробел.");
+        string s = "";
+        do
+        {
+            s = Console.ReadLine();
+        }
+        while (String.IsNullOrEmpty(s));
+
+        var keywords = s.ToLower().Split(" ");
+        Entities.Where(x =>
+        {
+            foreach (var k in keywords)
+            {
+                if(!SearchCriteria(x).ToLower().Contains(k)) return false;
+            }
+            return true;
+        }).ToList().ForEach(x=>x.DisplayInfo());
 
     }
 }

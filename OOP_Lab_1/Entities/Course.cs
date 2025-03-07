@@ -1,12 +1,26 @@
 namespace Lab_1;
 
-public class Course{
-    public Guid Id {get;set;} = Guid.NewGuid();
-    public int CourseNumber {get;set;}
+//Класс Course
+//В этом классе должны содержаться:
+public class Course : IEntity
+{
+    //1. Свойство Идентификатор
+    public Guid Id { get; set; } = Guid.NewGuid();
+    //2. Свойство Номера курса
+    public int CourseNumber { get; set; }
 
-    public List<Discipline> disciplines = new List<Discipline>();
+    //3. Список Дисциплин этого курса
+    public List<Discipline> Disciplines = new List<Discipline>();
 
-    public Course(int courseNumber){
+    public static List<Course> Entities = new List<Course>();
+
+    public Course(int courseNumber)
+    {
         CourseNumber = courseNumber;
+    }
+
+    public void DisplayInfo()
+    {
+        Console.WriteLine($@"Курс: Id:{Id} Номер: {CourseNumber}");
     }
 }

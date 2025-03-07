@@ -1,38 +1,47 @@
 namespace Lab_1;
+//Класс Lecturer
+//Описывает преподавателя. Данный класс является производным от класса Person
+//1. Свойство Идентификатор наследует от Person
 public class Lecturer : Person, IEntity
 {
+    //2. Свойство Ученое звание 
     public string Grade { get; set; }
 
-    public List<Discipline> readingDisciplines { get; set; } = new List<Discipline>();
+    //3. Список преподаваемых дисциплин
+    public List<Discipline> ReadingDisciplines { get; set; } = new List<Discipline>();
 
-    private Lecturer(string name, string lastname, int age, string patronymic) : base(name, lastname, age, patronymic)
+    public static List<Lecturer> Entities = new List<Lecturer>();
+    private Lecturer(string name, string lastname, int age, string patronymic, string grade) : base(name, lastname, age, patronymic)
     {
+        Grade = grade;
     }
-
+    //4. Метод вывода информации о преподавателе (ФИО, список дисциплин и т.п.)
     public void DisplayInfo()
     {
-        Console.WriteLine($@"ФИО: {Lastname} {Name} {Patronymic}");
+        Console.WriteLine("Преподаватель:");
+        base.DisplayInfo();
+        Console.WriteLine($@"Учёное звание: {Grade}");
         Console.WriteLine($@"Список дисциплин:");
-        readingDisciplines.Select((d, i) => new { d, i }).ToList().ForEach(item =>
+        ReadingDisciplines.ForEach(item =>
         {
-            Console.WriteLine($@"{item.i + 1}.{item.d.Name}({item.d.Abbr})");
+            item.DisplayInfo();
         });
     }
 
-    public static Lecturer CreateLecturer(string name, string lastname, int age, string patronymic, string grade, List<Discipline> readingDisciplines)
+    //5. Метод добавления нового преподавателя.
+    public static Guid AddNew(string name, string lastname, int age, string patronymic, string grade)
     {
-        Lecturer lecturer = new Lecturer(name, lastname, age, patronymic);
-        lecturer.Grade = grade;
-        if (readingDisciplines != null) lecturer.readingDisciplines = readingDisciplines;
-        return lecturer;
+        Lecturer lecturer = new Lecturer(name, lastname, age, patronymic, grade);
+        Entities.Add(lecturer);
+        return lecturer.Id;
     }
 
-    public void EditData(string name, string lastname, string patronymic, int? age, string Grade, List<Discipline> disciplines)
+    //6. Метод изменения данных преподавателя
+    public void EditData(string name, string lastname, string patronymic, int? age, string Grade)
     {
         if (!String.IsNullOrEmpty(name)) Name = name;
         if (!String.IsNullOrEmpty(lastname)) Lastname = lastname;
         if (!String.IsNullOrEmpty(patronymic)) Patronymic = patronymic;
         if (age.HasValue) Age = age.Value;
-        if (disciplines != null) readingDisciplines = disciplines;
     }
 }

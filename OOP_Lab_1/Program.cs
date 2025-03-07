@@ -32,5 +32,5 @@ while (true)
             return;
 
     }
-    context.Dialog();
+    context.ShowContext();
 }
