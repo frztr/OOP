@@ -4,21 +4,21 @@ public class GlobalStorage
 {
 
     private static GlobalStorage storage;
-    public List<Course> Courses { get; set; }
-    public List<Discipline> Disciplines { get; set; }
-    public List<Lecturer> Lecturers { get; set; }
-    public List<Student> Students { get; set; }
+    private List<Course> courses;
+    private List<Discipline> disciplines;
+    private List<Lecturer> lecturers;
+    private List<Student> students;
     private GlobalStorage()
     {
-        Courses = new List<Course>(){
+        courses = new List<Course>(){
             new Course(1),
             new Course(2),
             new Course(3),
             new Course(4)
         };
-        Disciplines = new List<Discipline>();
-        Lecturers = new List<Lecturer>();
-        Students = new List<Student>();
+        disciplines = new List<Discipline>();
+        lecturers = new List<Lecturer>();
+        students = new List<Student>();
     }
 
     public static List<T> GetList<T>()
@@ -29,16 +29,16 @@ public class GlobalStorage
         switch (typeof(T).Name.ToString())
         {
             case "Student":
-                list = (object)storage.Students;
+                list = (object)storage.students;
                 break;
             case "Course":
-                list = (object)storage.Courses;
+                list = (object)storage.courses;
                 break;
             case "Lecturer":
-                list = (object)storage.Lecturers;
+                list = (object)storage.lecturers;
                 break;
             case "Discipline":
-                list = (object)storage.Disciplines;
+                list = (object)storage.disciplines;
                 break;
         }
 
