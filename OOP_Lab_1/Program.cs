@@ -18,6 +18,7 @@ while (true)
     switch (selection)
     {
         case 1:
+            //Feed a repo to context and remove T classes.
             context = new StudentContext();
             break;
         case 2:
