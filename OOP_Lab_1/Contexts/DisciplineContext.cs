@@ -5,6 +5,7 @@ public class DisciplineContext : AbstractContext<Discipline>
 {
     protected override string Name => "Дисциплины";
 
+    protected override string SearchCriteria(Discipline item) => $@"{item.Name}{item.Description}";
     protected override void AdditionalMenu()
     {
         Console.WriteLine($@"5. Прикрепить дисциплину к преподавателю        
@@ -78,8 +79,5 @@ public class DisciplineContext : AbstractContext<Discipline>
         entity.Course = course;
     }
 
-    protected override string SearchCriteria(Discipline item)
-    {
-        return $@"{item.Name}{item.Description}";
-    }
+    
 }

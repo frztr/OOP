@@ -10,8 +10,7 @@ public class Lecturer : Person, IEntity
     //3. Список преподаваемых дисциплин
     public List<Discipline> ReadingDisciplines { get; set; } = new List<Discipline>();
 
-    public static List<Lecturer> Entities = new List<Lecturer>();
-    private Lecturer(string name, string lastname, int age, string patronymic, string grade) : base(name, lastname, age, patronymic)
+    public Lecturer(string name, string lastname, int age, string patronymic, string grade) : base(name, lastname, age, patronymic)
     {
         Grade = grade;
     }
@@ -32,7 +31,7 @@ public class Lecturer : Person, IEntity
     public static Guid AddNew(string name, string lastname, int age, string patronymic, string grade)
     {
         Lecturer lecturer = new Lecturer(name, lastname, age, patronymic, grade);
-        Entities.Add(lecturer);
+        GlobalStorage.GetList<Lecturer>().Add(lecturer);
         return lecturer.Id;
     }
 

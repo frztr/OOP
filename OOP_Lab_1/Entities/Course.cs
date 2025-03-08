@@ -12,8 +12,6 @@ public class Course : IEntity
     //3. Список Дисциплин этого курса
     public List<Discipline> Disciplines = new List<Discipline>();
 
-    public static List<Course> Entities = new List<Course>();
-
     public Course(int courseNumber)
     {
         CourseNumber = courseNumber;

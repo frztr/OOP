@@ -7,7 +7,7 @@ namespace Lab_1;
 public class StudentContext : AbstractContext<Student>
 {
     protected override string Name => "Студенты";
-
+    protected override string SearchCriteria(Student item) => $@"{item.Name}{item.Lastname}{item.Patronymic}{item.Age}{item.Group}{item.Course}";
     protected override void AdditionalMenu()
     {
         Console.WriteLine($@"5. Просмотр информации о студенте");
@@ -87,10 +87,5 @@ public class StudentContext : AbstractContext<Student>
         }
         while (entity == null);
         entity.DisplayInfo();
-    }
-
-    protected override string SearchCriteria(Student item)
-    {
-        return $@"{item.Name}{item.Lastname}{item.Patronymic}{item.Age}{item.Group}{item.Course}";
     }
 }

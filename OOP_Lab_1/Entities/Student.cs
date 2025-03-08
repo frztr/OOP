@@ -5,7 +5,7 @@ namespace Lab_1;
 //1. Свойство Идентификатор наследует от Person
 public class Student : Person, IEntity
 {
-    private Student(string name, string lastname, int age, string patronymic, string group, Course course) : base(name, lastname, age, patronymic)
+    public Student(string name, string lastname, int age, string patronymic, string group, Course course) : base(name, lastname, age, patronymic)
     {
         Course = course;
         Group = group;
@@ -15,13 +15,11 @@ public class Student : Person, IEntity
     //3. Свойство Курса
     public Course Course { get; set; }
 
-    public static List<Student> Entities = new List<Student>();
-
     //4. Метод добавления нового студента
     public static Guid AddNew(string name, string lastname, int age, string patronymic, string group, Course course)
     {
         Student st = new Student(name, lastname, age, patronymic,group,course);
-        Entities.Add(st);
+        GlobalStorage.GetList<Student>().Add(st);
         return st.Id;
     }
     //5. Метод обновления данных о студенте

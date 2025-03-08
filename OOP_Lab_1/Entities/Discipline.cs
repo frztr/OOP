@@ -48,9 +48,7 @@ public class Discipline : IEntity
         }
     }
 
-    public static List<Discipline> Entities = new List<Discipline>();
-
-    private Discipline(string name, string description)
+    public Discipline(string name, string description)
     {
         Name = name;
         Description = description;
@@ -59,7 +57,7 @@ public class Discipline : IEntity
     public static Guid AddNew(string name, string description)
     {
         Discipline d = new Discipline(name, description);
-        Entities.Add(d);
+        GlobalStorage.GetList<Discipline>().Add(d);
         return d.Id;
     }
     //6. Метод изменения данных дисциплины

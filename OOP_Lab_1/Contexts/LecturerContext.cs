@@ -4,7 +4,7 @@ namespace Lab_1;
 public class LecturerContext : AbstractContext<Lecturer>
 {
     protected override string Name => "Преподаватели";
-
+    protected override string SearchCriteria(Lecturer item) => $@"{item.Name}{item.Lastname}{item.Patronymic}{item.Age}{item.Grade}";
     protected override void AdditionalMenu()
     {
         Console.WriteLine("5. Просмотр информации о преподавателе");
@@ -83,8 +83,5 @@ public class LecturerContext : AbstractContext<Lecturer>
         entity.DisplayInfo();
     }
 
-    protected override string SearchCriteria(Lecturer item)
-    {
-        return $@"{item.Name}{item.Lastname}{item.Patronymic}{item.Age}{item.Grade}";
-    }
+
 }
