@@ -27,7 +27,7 @@ public class Student : Person, IEntity
     {
         if (!String.IsNullOrEmpty(name)) Name = name;
         if (!String.IsNullOrEmpty(lastname)) Lastname = lastname;
-        if (!age.HasValue) Age = age.Value;
+        if (age.HasValue) Age = age.Value;
         if (!String.IsNullOrEmpty(patronymic)) Patronymic = patronymic;
         if (!String.IsNullOrEmpty(group)) Group = group;
         if (course != null) Course = course;

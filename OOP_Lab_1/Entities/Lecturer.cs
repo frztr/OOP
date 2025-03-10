@@ -36,11 +36,12 @@ public class Lecturer : Person, IEntity
     }
 
     //6. Метод изменения данных преподавателя
-    public void EditData(string name, string lastname, string patronymic, int? age, string Grade)
+    public void EditData(string name, string lastname, string patronymic, int? age, string grade)
     {
         if (!String.IsNullOrEmpty(name)) Name = name;
         if (!String.IsNullOrEmpty(lastname)) Lastname = lastname;
         if (!String.IsNullOrEmpty(patronymic)) Patronymic = patronymic;
         if (age.HasValue) Age = age.Value;
+        if (!String.IsNullOrEmpty(grade)) Grade = grade;
     }
 }

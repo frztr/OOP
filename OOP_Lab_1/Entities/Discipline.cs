@@ -18,15 +18,14 @@ public class Discipline : IEntity
         get => lecturer;
         set
         {
-            if (!value.ReadingDisciplines.Contains(this))
-            {
-                value.ReadingDisciplines.Add(this);
-            }
-            if (value != Lecturer)
+            if (value != lecturer)
             {
                 lecturer = value;
             }
-            
+            if (!value.ReadingDisciplines.Contains(this))
+            {
+                value.ReadingDisciplines.Add(this);
+            }            
         }
     }
 
@@ -36,15 +35,14 @@ public class Discipline : IEntity
         get => course;
         set
         {
-            if (!course.Disciplines.Contains(this))
-            {
-                course.Disciplines.Add(this);
-            }
             if (value != course)
             {
                 course = value;
             }
-            
+            if (!course.Disciplines.Contains(this))
+            {
+                course.Disciplines.Add(this);
+            }            
         }
     }
 

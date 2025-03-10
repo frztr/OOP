@@ -8,17 +8,18 @@ where T : IEntity
     protected abstract void Update();
 
     protected abstract string SearchCriteria(T item);
-    protected void Delete()
+    protected virtual T Delete()
     {
         Guid id = ReadValueDialog<Guid>("идентификатор");
         var entity = Entities.FirstOrDefault(x => x.Id == id);
         if (entity == null)
         {
             Console.WriteLine("Запись с данным идентификатором не найдена");
-            return;
+            return default(T);
         }
         Entities.Remove(entity);
-        return;
+        Console.WriteLine("Запись удалена");
+        return entity;
     }
 
     protected void DisplayMenu()
@@ -51,51 +52,54 @@ where T : IEntity
             }
             return default(K);
         }
-        switch (typeof(K).Name.ToString())
+        if (typeof(K) == typeof(string))
         {
-            case "string":
-            case "string?":
-                return (K)(object)input;
-            case "int":
-            case "int?":
-                if (!int.TryParse(input, out int e))
+            return (K)(object)input;
+        }
+        if (typeof(K) == typeof(int) || typeof(K) == typeof(int?))
+        {
+            if (!int.TryParse(input, out int e))
+            {
+                Console.WriteLine($@"Неверный формат ввода параметра '{propname}'.");
+                return default(K);
+            }
+            else
+            {
+                return (K)(object)e;
+            }
+        }
+        if (typeof(K) == typeof(Guid))
+        {
+            if (!Guid.TryParse(input, out Guid id))
+            {
+                Console.WriteLine("Неверный формат идентификатора");
+                return default(K);
+            }
+            else
+            {
+                return (K)(object)id;
+            }
+        }
+        if (typeof(K) == typeof(Course))
+        {
+            if (int.TryParse(input, out int courseNumber))
+            {
+                Course c = GlobalStorage.GetList<Course>().FirstOrDefault(x => x.CourseNumber == courseNumber);
+                if (c == null)
                 {
-                    Console.WriteLine($@"Неверный формат ввода параметра '{propname}'.");
+                    Console.WriteLine("Курс не найден");
                     return default(K);
                 }
                 else
                 {
-                    return (K)(object)e;
+                    return (K)(object)c;
                 }
-            case "Guid":
-                if (!Guid.TryParse(input, out Guid id))
-                {
-                    Console.WriteLine("Неверный формат идентификатора");
-                    return default(K);
-                }
-                else
-                {
-                    return (K)(object)id;
-                }
-            case "Course":
-                if (int.TryParse(input, out int courseNumber))
-                {
-                    Course c = GlobalStorage.GetList<Course>().FirstOrDefault(x => x.CourseNumber == courseNumber);
-                    if (c == null)
-                    {
-                        Console.WriteLine("Курс не найден");
-                        return default(K);
-                    }
-                    else
-                    {
-                        return (K)(object)c;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($@"Неверный формат ввода параметра '{propname}'.");
-                    return default(K);
-                }
+            }
+            else
+            {
+                Console.WriteLine($@"Неверный формат ввода параметра '{propname}'.");
+                return default(K);
+            }
         }
         return default(K);
     }
@@ -164,10 +168,10 @@ where T : IEntity
         {
             foreach (var k in keywords)
             {
-                if(!SearchCriteria(x).ToLower().Contains(k)) return false;
+                if (!SearchCriteria(x).ToLower().Contains(k)) return false;
             }
             return true;
-        }).ToList().ForEach(x=>x.DisplayInfo());
+        }).ToList().ForEach(x => x.DisplayInfo());
 
     }
 }

@@ -41,7 +41,7 @@ public class DisciplineContext : AbstractContext<Discipline>
             description = ReadValueDialog<string?>("Краткое описание дисциплины");
         }
         Guid guid = Discipline.AddNew(name, description);
-        Console.WriteLine($@"Дисциплина создана с идентификатором ${guid}");
+        Console.WriteLine($@"Дисциплина создана с идентификатором {guid}");
     }
 
     protected override void Update()
@@ -70,7 +70,7 @@ public class DisciplineContext : AbstractContext<Discipline>
         Discipline entity = GetByIdDialog();
         if (entity == null) return;
         int? courseNumber = ReadValueDialog<int?>("номер курса");
-        Course course = GlobalStorage.GetList<Course>().FirstOrDefault(x => x.CourseNumber == courseNumber);
+        Course course = GlobalStorage.GetList<Course>().FirstOrDefault(x => x.CourseNumber == courseNumber.Value);
         if (course == null)
         {
             Console.WriteLine("Курс не найден");
@@ -79,5 +79,22 @@ public class DisciplineContext : AbstractContext<Discipline>
         entity.Course = course;
     }
 
-    
+    protected override Discipline Delete()
+    {
+        var entity = base.Delete();
+        if (entity != null)
+        {
+            if (entity.Lecturer != null)
+            {
+                entity.Lecturer.ReadingDisciplines.Remove(entity);
+            }
+            if (entity.Course != null)
+            {
+                entity.Course.Disciplines.Remove(entity);
+            }
+        }
+        return entity;
+    }
+
+
 }
