@@ -5,7 +5,7 @@ namespace Lab_1;
 public class Discipline : IEntity
 {
     //1. Свойство Идентификатор
-    public Guid Id {get;} = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.NewGuid();
     //2. Свойство Название дисциплины
     public string Name { get; set; }
     //3. Свойство Краткое описание дисциплины
@@ -18,14 +18,18 @@ public class Discipline : IEntity
         get => lecturer;
         set
         {
-            if (value != lecturer)
+            if (lecturer != value)
             {
+                if (lecturer != null)
+                {
+                    lecturer.ReadingDisciplines.Remove(this);
+                }
                 lecturer = value;
+                if (!lecturer.ReadingDisciplines.Contains(this))
+                {
+                    lecturer.ReadingDisciplines.Add(this);
+                }
             }
-            if (!value.ReadingDisciplines.Contains(this))
-            {
-                value.ReadingDisciplines.Add(this);
-            }            
         }
     }
 
@@ -35,14 +39,30 @@ public class Discipline : IEntity
         get => course;
         set
         {
-            if (value != course)
+            if (course != value)
             {
+                if (course != null)
+                {
+                    course.Disciplines.Remove(this);
+                }
                 course = value;
+                if (!course.Disciplines.Contains(this))
+                {
+                    course.Disciplines.Add(this);
+                }
             }
-            if (!course.Disciplines.Contains(this))
-            {
-                course.Disciplines.Add(this);
-            }            
+        }
+    }
+
+    ~Discipline()
+    {
+        if (this.lecturer != null)
+        {
+            lecturer.ReadingDisciplines.Remove(this);
+        }
+        if (this.course != null)
+        {
+            course.Disciplines.Remove(this);
         }
     }
 
@@ -55,7 +75,7 @@ public class Discipline : IEntity
     public static Guid AddNew(string name, string description)
     {
         Discipline d = new Discipline(name, description);
-        GlobalStorage.GetList<Discipline>().Add(d);
+        GlobalStorage.GetStorage().GetList<Discipline>().Add(d);
         return d.Id;
     }
     //6. Метод изменения данных дисциплины
@@ -69,11 +89,12 @@ public class Discipline : IEntity
     {
         Console.WriteLine($@"Дисциплина:
 Id:{Id} {Name}
-{Description}");
+Описание: {Description}");
         if (Course != null)
         {
             Console.WriteLine($@"Курс:");
             Course.DisplayInfo();
+            Console.WriteLine();
         }
     }
 }

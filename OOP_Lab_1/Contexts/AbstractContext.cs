@@ -1,25 +1,26 @@
+using System.Threading.Tasks;
+
 namespace Lab_1;
 public abstract class AbstractContext<T> : IContextSpecified<T>
 where T : IEntity
 {
-    protected List<T> Entities = GlobalStorage.GetList<T>();
+    protected List<T> Entities = GlobalStorage.GetStorage().GetList<T>();
     protected abstract string Name { get; }
-    protected abstract void Add();
-    protected abstract void Update();
+    protected abstract Task Add();
+    protected abstract Task Update();
 
     protected abstract string SearchCriteria(T item);
-    protected virtual T Delete()
+    protected virtual async Task Delete()
     {
         Guid id = ReadValueDialog<Guid>("идентификатор");
         var entity = Entities.FirstOrDefault(x => x.Id == id);
         if (entity == null)
         {
             Console.WriteLine("Запись с данным идентификатором не найдена");
-            return default(T);
         }
         Entities.Remove(entity);
         Console.WriteLine("Запись удалена");
-        return entity;
+        await GlobalStorage.GetStorage().SaveChanges();
     }
 
     protected void DisplayMenu()
@@ -32,9 +33,9 @@ where T : IEntity
 4. Поиск");
     }
 
-    protected virtual void AdditionalMenu() { }
+    protected virtual async Task AdditionalMenu() { }
 
-    protected virtual bool AdditionalOptions(int selection)
+    protected virtual async Task<bool> AdditionalOptions(int selection)
     {
         return false;
     }
@@ -84,7 +85,7 @@ where T : IEntity
         {
             if (int.TryParse(input, out int courseNumber))
             {
-                Course c = GlobalStorage.GetList<Course>().FirstOrDefault(x => x.CourseNumber == courseNumber);
+                Course c = GlobalStorage.GetStorage().GetList<Course>().FirstOrDefault(x => x.CourseNumber == courseNumber);
                 if (c == null)
                 {
                     Console.WriteLine("Курс не найден");
@@ -104,13 +105,13 @@ where T : IEntity
         return default(K);
     }
 
-    public void ShowContext()
+    public async Task ShowContext()
     {
         while (true)
         {
             Console.WriteLine($@"Раздел {Name}");
             DisplayMenu();
-            AdditionalMenu();
+            await AdditionalMenu();
             int selection;
             while (!int.TryParse(Console.ReadLine(), out selection))
             {
@@ -121,19 +122,19 @@ where T : IEntity
                 case 0:
                     return;
                 case 1:
-                    Add();
+                    await Add();
                     break;
                 case 2:
-                    Update();
+                    await Update();
                     break;
                 case 3:
-                    Delete();
+                    await Delete();
                     break;
                 case 4:
                     Search();
                     break;
                 default:
-                    if (!AdditionalOptions(selection))
+                    if (!(await AdditionalOptions(selection)))
                         Console.WriteLine("Введен неверный пункт");
                     break;
             }

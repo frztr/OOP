@@ -2,7 +2,6 @@
 
 while (true)
 {
-
     Console.WriteLine($@"Перейти в раздел -->
 1. Студенты
 2. Преподаватели
@@ -29,8 +28,9 @@ while (true)
             context = new DisciplineContext();
             break;
         case 0:
+            await GlobalStorage.GetStorage().SaveChanges();
             return;
 
     }
-    context.ShowContext();
+    await context.ShowContext();
 }

@@ -1,7 +1,7 @@
 namespace Lab_1;
 public interface IContext
 {
-    public void ShowContext();
+    public Task ShowContext();
 }
 
 public interface IContextSpecified<T> : IContext { }

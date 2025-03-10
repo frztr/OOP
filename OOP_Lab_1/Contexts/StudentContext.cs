@@ -1,6 +1,7 @@
 
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace Lab_1;
 
@@ -8,24 +9,25 @@ public class StudentContext : AbstractContext<Student>
 {
     protected override string Name => "Студенты";
     protected override string SearchCriteria(Student item) => $@"{item.Name}{item.Lastname}{item.Patronymic}{item.Age}{item.Group}{item.Course}";
-    protected override void AdditionalMenu()
+    protected override Task AdditionalMenu()
     {
         Console.WriteLine($@"5. Просмотр информации о студенте");
+        return Task.CompletedTask;
     }
 
-    protected override bool AdditionalOptions(int selection)
+    protected override Task<bool> AdditionalOptions(int selection)
     {
         switch (selection)
         {
             case 5:
                 ShowEntityInfo();
-                return true;
+                return Task.FromResult(true);
             default:
-                return false;
+                return Task.FromResult(false);
         }
     }
 
-    protected override void Add()
+    protected override async Task Add()
     {
         Console.WriteLine("Добавление студента");
         int? age = null;
@@ -58,11 +60,12 @@ public class StudentContext : AbstractContext<Student>
         }
         Guid guid = Student.AddNew(name, lastname, age.Value, patronymic, group, c);
         Console.WriteLine($@"Студент создан с идентификатором {guid}");
+        await GlobalStorage.GetStorage().SaveChanges();
     }
 
 
 
-    protected override void Update()
+    protected override async Task Update()
     {
         Console.WriteLine("Обновление студента");
         Student entity = GetByIdDialog();
@@ -75,6 +78,7 @@ public class StudentContext : AbstractContext<Student>
             ReadValueDialog<string>("Группа"),
             ReadValueDialog<Course>("Номер курса")
         );
+        await GlobalStorage.GetStorage().SaveChanges();
     }
 
     void ShowEntityInfo()

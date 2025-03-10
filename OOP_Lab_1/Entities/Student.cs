@@ -13,13 +13,14 @@ public class Student : Person, IEntity
     //2. Свойство Номер группы
     public string Group { get; set; }
     //3. Свойство Курса
-    public Course Course { get; set; }
+    public Course Course
+    {get; set;}
 
     //4. Метод добавления нового студента
     public static Guid AddNew(string name, string lastname, int age, string patronymic, string group, Course course)
     {
-        Student st = new Student(name, lastname, age, patronymic,group,course);
-        GlobalStorage.GetList<Student>().Add(st);
+        Student st = new Student(name, lastname, age, patronymic, group, course);
+        GlobalStorage.GetStorage().GetList<Student>().Add(st);
         return st.Id;
     }
     //5. Метод обновления данных о студенте
@@ -33,7 +34,8 @@ public class Student : Person, IEntity
         if (course != null) Course = course;
     }
     //6. Метод вывода информации о студенте
-    public void DisplayInfo(){
+    public void DisplayInfo()
+    {
         Console.WriteLine("Студент:");
         base.DisplayInfo();
         Course.DisplayInfo();

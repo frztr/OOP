@@ -6,28 +6,29 @@ public class DisciplineContext : AbstractContext<Discipline>
     protected override string Name => "Дисциплины";
 
     protected override string SearchCriteria(Discipline item) => $@"{item.Name}{item.Description}";
-    protected override void AdditionalMenu()
+    protected override Task AdditionalMenu()
     {
         Console.WriteLine($@"5. Прикрепить дисциплину к преподавателю        
 6. Прикрепить дисциплину к курсу");
+        return Task.CompletedTask;
     }
 
-    protected override bool AdditionalOptions(int selection)
+    protected override async Task<bool> AdditionalOptions(int selection)
     {
         switch (selection)
         {
             case 5:
-                AddDisciplineToLecturer();
+                await AddDisciplineToLecturer();
                 return true;
             case 6:
-                AddDisciplineToCourse();
+                await AddDisciplineToCourse();
                 return true;
             default:
                 return false;
         }
     }
 
-    protected override void Add()
+    protected override async Task Add()
     {
         Console.WriteLine("Добавление дисциплины");
         string? name = null;
@@ -42,9 +43,10 @@ public class DisciplineContext : AbstractContext<Discipline>
         }
         Guid guid = Discipline.AddNew(name, description);
         Console.WriteLine($@"Дисциплина создана с идентификатором {guid}");
+        await GlobalStorage.GetStorage().SaveChanges();
     }
 
-    protected override void Update()
+    protected override async Task Update()
     {
         Console.WriteLine("Обновление дисциплины");
         Discipline entity = GetByIdDialog();
@@ -54,47 +56,31 @@ public class DisciplineContext : AbstractContext<Discipline>
             ReadValueDialog<string>("Название дисциплины"),
             ReadValueDialog<string>("Краткое описание дисциплины")
         );
+        await GlobalStorage.GetStorage().SaveChanges();
     }
 
-    void AddDisciplineToLecturer()
+    async Task AddDisciplineToLecturer()
     {
         Discipline entity = GetByIdDialog();
         if (entity == null) return;
         Lecturer lecturer = new LecturerContext().GetByIdDialog();
         if (lecturer == null) return;
         entity.Lecturer = lecturer;
+        await GlobalStorage.GetStorage().SaveChanges();
     }
 
-    void AddDisciplineToCourse()
+    async Task AddDisciplineToCourse()
     {
         Discipline entity = GetByIdDialog();
         if (entity == null) return;
         int? courseNumber = ReadValueDialog<int?>("номер курса");
-        Course course = GlobalStorage.GetList<Course>().FirstOrDefault(x => x.CourseNumber == courseNumber.Value);
+        Course course = GlobalStorage.GetStorage().GetList<Course>().FirstOrDefault(x => x.CourseNumber == courseNumber.Value);
         if (course == null)
         {
             Console.WriteLine("Курс не найден");
             return;
         }
         entity.Course = course;
+        await GlobalStorage.GetStorage().SaveChanges();
     }
-
-    protected override Discipline Delete()
-    {
-        var entity = base.Delete();
-        if (entity != null)
-        {
-            if (entity.Lecturer != null)
-            {
-                entity.Lecturer.ReadingDisciplines.Remove(entity);
-            }
-            if (entity.Course != null)
-            {
-                entity.Course.Disciplines.Remove(entity);
-            }
-        }
-        return entity;
-    }
-
-
 }

@@ -21,4 +21,10 @@ public class Course : IEntity
     {
         Console.WriteLine($@"Курс: Id:{Id} Номер: {CourseNumber}");
     }
+
+    ~Course(){
+        Disciplines.ForEach(x=>{
+            x.Course = null;
+        });
+    }
 }

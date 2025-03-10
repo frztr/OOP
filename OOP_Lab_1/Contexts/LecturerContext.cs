@@ -5,24 +5,25 @@ public class LecturerContext : AbstractContext<Lecturer>
 {
     protected override string Name => "Преподаватели";
     protected override string SearchCriteria(Lecturer item) => $@"{item.Name}{item.Lastname}{item.Patronymic}{item.Age}{item.Grade}";
-    protected override void AdditionalMenu()
+    protected override Task AdditionalMenu()
     {
         Console.WriteLine("5. Просмотр информации о преподавателе");
+        return Task.CompletedTask;
     }
 
-    protected override bool AdditionalOptions(int selection)
+    protected override Task<bool> AdditionalOptions(int selection)
     {
         switch (selection)
         {
             case 5:
                 ShowEntityInfo();
-                return true;
+                return Task.FromResult<bool>(true);
             default:
-                return false;
+                return Task.FromResult<bool>(false);
         }
     }
 
-    protected override void Add()
+    protected override async Task Add()
     {
         string? name = null;
         string? lastname = null;
@@ -49,9 +50,10 @@ public class LecturerContext : AbstractContext<Lecturer>
         }
         Guid guid = Lecturer.AddNew(name, lastname, age.Value, patronymic, grade);
         Console.WriteLine($@"Преподаватель создан с идентификатором {guid}");
+        await GlobalStorage.GetStorage().SaveChanges();
     }
 
-    protected override void Update()
+    protected override async Task Update()
     {
         Console.WriteLine("Обновление преподавателя");
         Lecturer entity = null!;
@@ -69,6 +71,7 @@ public class LecturerContext : AbstractContext<Lecturer>
             ReadValueDialog<int?>("Возраст"),
             ReadValueDialog<string>("Учёное звание")
         );
+        await GlobalStorage.GetStorage().SaveChanges();
     }
 
     void ShowEntityInfo()

@@ -31,7 +31,7 @@ public class Lecturer : Person, IEntity
     public static Guid AddNew(string name, string lastname, int age, string patronymic, string grade)
     {
         Lecturer lecturer = new Lecturer(name, lastname, age, patronymic, grade);
-        GlobalStorage.GetList<Lecturer>().Add(lecturer);
+        GlobalStorage.GetStorage().GetList<Lecturer>().Add(lecturer);
         return lecturer.Id;
     }
 
@@ -43,5 +43,11 @@ public class Lecturer : Person, IEntity
         if (!String.IsNullOrEmpty(patronymic)) Patronymic = patronymic;
         if (age.HasValue) Age = age.Value;
         if (!String.IsNullOrEmpty(grade)) Grade = grade;
+    }
+
+    ~Lecturer(){
+        ReadingDisciplines.ForEach(x=>{
+            x.Lecturer = null;
+        });
     }
 }
