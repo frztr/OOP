@@ -42,13 +42,13 @@ public class GlobalStorage
         switch (typeof(T).Name.ToString())
         {
             case "Student":
-                return studentRepository != null ? (List<T>)(object)studentRepository.list : new List<T>();
+                return (List<T>)(object)studentRepository.list;
             case "Course":
-                return courseRepository != null ? (List<T>)(object)courseRepository.list : new List<T>();
+                return (List<T>)(object)courseRepository.list;
             case "Lecturer":
-                return lecturerRepository != null ? (List<T>)(object)lecturerRepository.list : new List<T>();
+                return (List<T>)(object)lecturerRepository.list;
             case "Discipline":
-                return disciplineRepository != null ? (List<T>)(object)disciplineRepository.list : new List<T>();
+                return (List<T>)(object)disciplineRepository.list;
             default:
                 return null;
         }
