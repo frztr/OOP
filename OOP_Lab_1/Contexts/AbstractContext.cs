@@ -6,11 +6,11 @@ where T : IEntity
 {
     protected List<T> Entities = GlobalStorage.GetStorage().GetList<T>();
     protected abstract string Name { get; }
-    protected abstract Task Add();
-    protected abstract Task Update();
+    protected abstract void Add();
+    protected abstract void Update();
 
     protected abstract string SearchCriteria(T item);
-    protected virtual async Task Delete()
+    protected virtual void Delete()
     {
         Guid id = ReadValueDialog<Guid>("идентификатор");
         var entity = Entities.FirstOrDefault(x => x.Id == id);
@@ -20,7 +20,7 @@ where T : IEntity
         }
         Entities.Remove(entity);
         Console.WriteLine("Запись удалена");
-        await GlobalStorage.GetStorage().SaveChanges();
+        GlobalStorage.GetStorage().SaveChanges();
     }
 
     protected void DisplayMenu()
@@ -33,9 +33,9 @@ where T : IEntity
 4. Поиск");
     }
 
-    protected virtual async Task AdditionalMenu() { }
+    protected virtual void AdditionalMenu() { }
 
-    protected virtual async Task<bool> AdditionalOptions(int selection)
+    protected virtual bool AdditionalOptions(int selection)
     {
         return false;
     }
@@ -105,13 +105,13 @@ where T : IEntity
         return default(K);
     }
 
-    public async Task ShowContext()
+    public void ShowContext()
     {
         while (true)
         {
             Console.WriteLine($@"Раздел {Name}");
             DisplayMenu();
-            await AdditionalMenu();
+            AdditionalMenu();
             int selection;
             while (!int.TryParse(Console.ReadLine(), out selection))
             {
@@ -122,19 +122,19 @@ where T : IEntity
                 case 0:
                     return;
                 case 1:
-                    await Add();
+                    Add();
                     break;
                 case 2:
-                    await Update();
+                    Update();
                     break;
                 case 3:
-                    await Delete();
+                    Delete();
                     break;
                 case 4:
                     Search();
                     break;
                 default:
-                    if (!(await AdditionalOptions(selection)))
+                    if (!(AdditionalOptions(selection)))
                         Console.WriteLine("Введен неверный пункт");
                     break;
             }

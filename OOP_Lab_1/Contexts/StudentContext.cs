@@ -9,25 +9,24 @@ public class StudentContext : AbstractContext<Student>
 {
     protected override string Name => "Студенты";
     protected override string SearchCriteria(Student item) => $@"{item.Name}{item.Lastname}{item.Patronymic}{item.Age}{item.Group}{item.Course}";
-    protected override Task AdditionalMenu()
+    protected override void AdditionalMenu()
     {
         Console.WriteLine($@"5. Просмотр информации о студенте");
-        return Task.CompletedTask;
     }
 
-    protected override Task<bool> AdditionalOptions(int selection)
+    protected override bool AdditionalOptions(int selection)
     {
         switch (selection)
         {
             case 5:
                 ShowEntityInfo();
-                return Task.FromResult(true);
+                return true;
             default:
-                return Task.FromResult(false);
+                return false;
         }
     }
 
-    protected override async Task Add()
+    protected override void Add()
     {
         Console.WriteLine("Добавление студента");
         int? age = null;
@@ -60,12 +59,12 @@ public class StudentContext : AbstractContext<Student>
         }
         Guid guid = Student.AddNew(name, lastname, age.Value, patronymic, group, c);
         Console.WriteLine($@"Студент создан с идентификатором {guid}");
-        await GlobalStorage.GetStorage().SaveChanges();
+        GlobalStorage.GetStorage().SaveChanges();
     }
 
 
 
-    protected override async Task Update()
+    protected override void Update()
     {
         Console.WriteLine("Обновление студента");
         Student entity = GetByIdDialog();
@@ -78,7 +77,7 @@ public class StudentContext : AbstractContext<Student>
             ReadValueDialog<string>("Группа"),
             ReadValueDialog<Course>("Номер курса")
         );
-        await GlobalStorage.GetStorage().SaveChanges();
+        GlobalStorage.GetStorage().SaveChanges();
     }
 
     void ShowEntityInfo()

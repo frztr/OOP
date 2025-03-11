@@ -1,4 +1,5 @@
 ﻿using Lab_1;
+
 Console.WriteLine("Начало программы");
 while (true)
 {
@@ -28,9 +29,9 @@ while (true)
             context = new DisciplineContext();
             break;
         case 0:
-            await GlobalStorage.GetStorage().SaveChanges();
+            GlobalStorage.GetStorage().SaveChanges();
             return;
 
     }
-    await context.ShowContext();
+    context.ShowContext();
 }

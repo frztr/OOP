@@ -50,11 +50,12 @@ public class GlobalStorage
     public async Task SaveChanges()
     {
         Console.WriteLine("Синхронизация с базой данных");
+
         await Task.WhenAll(
-            courseRepository.SaveChanges(),
-            studentRepository.SaveChanges(),
-            lecturerRepository.SaveChanges(),
-            disciplineRepository.SaveChanges()
+        courseRepository.SaveChanges(),
+        studentRepository.SaveChanges(),
+        lecturerRepository.SaveChanges(),
+        disciplineRepository.SaveChanges()
         );
         Console.WriteLine("База данных синхронизирована");
     }
