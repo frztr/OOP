@@ -35,7 +35,9 @@ public abstract class AbstractRepository<T>
         }
     }
 
-    protected abstract void InitHardcode();
+    protected virtual void InitHardcode(){
+        
+    }
 
     protected async Task InitFromJson()
     {
