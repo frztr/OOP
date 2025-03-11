@@ -21,7 +21,6 @@ public abstract class AbstractRepository<T>
     public AbstractRepository(InitializationType type)
     {
         this.type = type;
-        Init();
     }
 
     public async Task Init(){

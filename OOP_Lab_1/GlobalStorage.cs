@@ -8,17 +8,15 @@ public class GlobalStorage
 {
     private static InitializationType initType = InitializationType.Json;
 
-    private static CourseRepository courseRepository = new CourseRepository(initType);
+    private CourseRepository courseRepository = new CourseRepository(initType);
 
-    private static DisciplineRepository disciplineRepository = new DisciplineRepository(initType);
+    private DisciplineRepository disciplineRepository = new DisciplineRepository(initType);
 
-    private static LecturerRepository lecturerRepository = new LecturerRepository(initType);
+    private LecturerRepository lecturerRepository = new LecturerRepository(initType);
 
-    private static StudentRepository studentRepository = new StudentRepository(initType);
+    private StudentRepository studentRepository = new StudentRepository(initType);
     private GlobalStorage()
-    {
-
-    }
+    { }
 
     private static GlobalStorage storage;
     public static GlobalStorage GetStorage()
@@ -26,6 +24,15 @@ public class GlobalStorage
         if (storage == null)
         {
             storage = new GlobalStorage();
+            Task.Run(async () =>
+            {
+                await storage.courseRepository.Init();
+                await Task.WhenAll(
+                    storage.disciplineRepository.Init(),
+                    storage.lecturerRepository.Init(),
+                    storage.studentRepository.Init()
+                );
+            }).GetAwaiter().GetResult();
         }
         return storage;
     }
