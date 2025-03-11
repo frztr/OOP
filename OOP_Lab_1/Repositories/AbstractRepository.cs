@@ -20,6 +20,7 @@ public abstract class AbstractRepository<T>
     private InitializationType type;
     public AbstractRepository(InitializationType type)
     {
+        this.type = type;
         Init();
     }
 

@@ -47,16 +47,17 @@ public class GlobalStorage
         }
     }
 
-    public async Task SaveChanges()
+    public void SaveChanges()
     {
         Console.WriteLine("Синхронизация с базой данных");
-
-        await Task.WhenAll(
-        courseRepository.SaveChanges(),
-        studentRepository.SaveChanges(),
-        lecturerRepository.SaveChanges(),
-        disciplineRepository.SaveChanges()
-        );
+        Task.Run(async () =>
+        {
+            await Task.WhenAll(
+            courseRepository.SaveChanges(),
+            studentRepository.SaveChanges(),
+            lecturerRepository.SaveChanges(),
+            disciplineRepository.SaveChanges());
+        }).GetAwaiter().GetResult();
         Console.WriteLine("База данных синхронизирована");
     }
 }
