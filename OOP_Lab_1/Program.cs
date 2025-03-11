@@ -1,5 +1,5 @@
 ﻿using Lab_1;
-
+Console.WriteLine("Начало программы");
 while (true)
 {
     Console.WriteLine($@"Перейти в раздел -->
