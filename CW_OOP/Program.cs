@@ -10,12 +10,12 @@ builder.Services.AddOpenApi();
 
 builder.Services
 .AddDbContext<AppDbContext>()
-.AddTransient<Role.IService,Role.Service>()
-.AddScoped<Role.IRepository, Role.Repository>()
-// .AddTransient<IService<short,AddUserDto,UpdateUserDto,UserEntityDto>,UserService>()
-// .AddScoped<IRepository<short,AddRoleDto,UpdateRoleDto,RoleEntityDto>,RoleRepository>()
-// .AddScoped<IRepository<short,AddUserDto,UpdateUserDto,UserEntityDto>,UserRepository>()
-;
+.AddScoped<IBaseService<short,Role.DTO.AddDto,Role.DTO.UpdateDto,Role.DTO.EntityDto>,Role.Service>()
+.AddScoped<IBaseRepository<short,Role.DTO.AddDto,Role.DTO.UpdateDto,Role.DTO.EntityDto>,Role.Repository>()
+.AddScoped<Role.IService,Role.Service>()
+.AddTransient<Role.IRepository, Role.Repository>()
+.AddScoped<Driver.IService,Driver.Service>()
+.AddTransient<Driver.IRepository, Driver.Repository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -35,15 +35,15 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    // app.UseSwagger();
-    // app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

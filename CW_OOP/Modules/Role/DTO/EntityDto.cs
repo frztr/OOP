@@ -2,15 +2,20 @@ using Global;
 
 namespace Role.DTO
 {
-    public class EntityDto
+    public class EntityDto : IConvertible<EntityDto>
     {
         public short Id { get; set; }
         public string Name { get; set; }
 
-        public EntityDto(Global.Role entity)
+        // public EntityDto(Global.Role entity)
+        // {
+        //     Id = entity.Id;
+        //     Name = entity.Name;
+        // }
+
+        public EntityDto Convert()
         {
-            Id = entity.Id;
-            Name = entity.Name;
+            return this;
         }
     }
 }

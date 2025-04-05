@@ -9,7 +9,8 @@ public class RepairHistoryMap : IEntityTypeConfiguration<RepairHistory>
         builder.HasKey(rh => rh.Id);
         builder.Property(rh => rh.Id).HasColumnName("id").ValueGeneratedOnAdd();
         builder.Property(rh => rh.VehicleId).HasColumnName("vehicle_id").IsRequired();
-        builder.Property(rh => rh.DateTime).HasColumnName("datetime").IsRequired();
+        builder.Property(rh => rh.DateTimeBegin).HasColumnName("datetime_begin").IsRequired();
+        builder.Property(rh => rh.DateTimeEnd).HasColumnName("datetime_end");
         builder.Property(rh => rh.CompletedWork).HasColumnName("completed_work").HasMaxLength(2000).IsRequired();
         builder.Property(rh => rh.Price).HasColumnName("price").HasPrecision(9, 2);
         builder.Property(rh => rh.ServiceStationTinNumber).HasColumnName("servicestation_tin_number");

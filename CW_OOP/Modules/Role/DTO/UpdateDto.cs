@@ -1,14 +1,19 @@
 namespace Role.DTO
 {
-    public class UpdateDto
+    public class UpdateDto : IConvertible<UpdateDto>, IUpdateDto<short,Global.Role>
     {
         public short Id { get; set; }
 
         public string Name { get; set; }
 
-        public void Update(Global.Role role)
+        public UpdateDto Convert()
         {
-            if (String.IsNullOrEmpty(Name)) role.Name = Name;
+            return this;
+        }
+
+        public void Update(Global.Role entity)
+        {
+            if (!String.IsNullOrEmpty(Name)) entity.Name = Name;
         }
     }
 }

@@ -9,9 +9,6 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     public DbSet<Automechanic> Automechanics { get; set; }
     public DbSet<DocumentType> DocumentTypes { get; set; }
     public DbSet<Driver> Drivers { get; set; }
-
-    public DbSet<Employee> Employees { get; set; }
-
     public DbSet<FuelMeasurementHistory> FuelMeasurementHistories { get; set; }
 
     public DbSet<FuelType> FuelTypes { get; set; }
@@ -61,7 +58,7 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=AMSDb;Username=postgres;Password=postgres");
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=AutoManagementSystemDb;Username=postgres;Password=postgres");;
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=AMSDb;Username=postgres;Password=postgres");;
 
     }
 
@@ -70,7 +67,6 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
         builder.ApplyConfiguration(new AutomechanicMap())
             .ApplyConfiguration(new DocumentTypeMap())
             .ApplyConfiguration(new DriverMap())
-            .ApplyConfiguration(new EmployeeMap())
             .ApplyConfiguration(new FuelMeasurementHistoryMap())
             .ApplyConfiguration(new FuelTypeMap())
             .ApplyConfiguration(new MaintenanceHistoryMap())
@@ -79,11 +75,13 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
             .ApplyConfiguration(new MileageMeasurementHistoryMap())
             .ApplyConfiguration(new OilTypeMap())
             .ApplyConfiguration(new PlannedMaintenanceScheduleMap())
+            .ApplyConfiguration(new RepairHistoryMap())
             .ApplyConfiguration(new RefuelingHistoryMap())
             .ApplyConfiguration(new RepairConsumedSparePartMap())
             .ApplyConfiguration(new RoleMap())
             .ApplyConfiguration(new SparePartMap())
             .ApplyConfiguration(new UserMap())
+            .ApplyConfiguration(new VehicleMap())
             .ApplyConfiguration(new VehicleCategoryMap())
             .ApplyConfiguration(new VehicleDocumentMap())
             .ApplyConfiguration(new VehicleModelMap())

@@ -6,6 +6,10 @@ public class User : IEntity<short>
     public string PasswordHash { get; set; }
     public short RoleId { get; set; }
 
+    public string Fio { get; set; }
+
     public Role Role { get; set; }
-    public Employee Employee { get; set; }
+    public Driver Driver { get; set; }
+
+    public Automechanic Automechanic { get; set; }
 }
