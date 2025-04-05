@@ -1,4 +1,4 @@
-public interface IUpdateDto<Key,Entity> : IDto where Key : IComparable<Key>
+public interface IUpdateDto<Key,Entity> where Key : IComparable<Key>
 {
     public Key Id { get; set; }
 

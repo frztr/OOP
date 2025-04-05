@@ -54,7 +54,8 @@ EntityControllerDto,
 UpdateControllerDto,
 AddServiceDto,
 EntityServiceDto,
-UpdateServiceDto>
+UpdateServiceDto,
+TService>
 :
 Controller,
 IBaseController<Key,
@@ -68,9 +69,10 @@ where Key : IComparable<Key>
 where AddControllerDto : IConvertible<AddServiceDto>
 where EntityServiceDto : IConvertible<EntityControllerDto>
 where UpdateControllerDto : IConvertible<UpdateServiceDto>
+where TService : IBaseService<Key, AddServiceDto, UpdateServiceDto, EntityServiceDto> 
 {
-    private IBaseService<Key, AddServiceDto, UpdateServiceDto, EntityServiceDto> service;
-    public BaseController(IBaseService<Key, AddServiceDto, UpdateServiceDto, EntityServiceDto> service)
+    protected TService service;
+    public BaseController(TService service)
     {
         this.service = service;
     }

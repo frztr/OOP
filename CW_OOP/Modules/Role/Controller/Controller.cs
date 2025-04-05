@@ -7,9 +7,9 @@ namespace Role.Controller;
 
 [ApiController]
 [Route("Role")]
-public class Controller : BaseController<short, AddDto, EntityDto, UpdateDto, AddDto, EntityDto, UpdateDto>
+public class Controller : BaseController<short, AddDto, EntityDto, UpdateDto, AddDto, EntityDto, UpdateDto, IService>, IController
 {
-    public Controller(IBaseService<short, AddDto, UpdateDto, EntityDto> service) : base(service)
+    public Controller(IService service) : base(service)
     {
     }
 }

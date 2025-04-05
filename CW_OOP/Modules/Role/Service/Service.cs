@@ -3,9 +3,9 @@ using Role.DTO;
 
 namespace Role;
 
-public class Service : BaseService<short, AddDto, EntityDto, UpdateDto, AddDto, EntityDto, UpdateDto>, IService
+public class Service : BaseService<short, AddDto, EntityServiceDto, UpdateDto, AddDto, EntityRepositoryDto, UpdateDto, IRepository>, IService
 {
-    public Service(IBaseRepository<short, AddDto, UpdateDto, EntityDto> repository) : base(repository)
+    public Service(IRepository repository) : base(repository)
     {
-    }
+    } 
 }

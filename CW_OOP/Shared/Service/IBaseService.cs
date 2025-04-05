@@ -38,7 +38,7 @@ where UpdateServiceDto : IConvertible<UpdateRepositoryDto>
 
     IRepositoryDelete<Key> IServiceDelete<Key>.repository => repository;
 
-    IRepositoryGetAll<EntityRepositoryDto> IServiceGetAll<EntityServiceDto, EntityRepositoryDto>.repository => repository;
+    IRepositoryGetAll<EntityRepositoryDto,IListDto<EntityRepositoryDto>> IServiceGetAll<EntityServiceDto, EntityRepositoryDto>.repository => repository;
 
     IRepositoryUpdate<UpdateRepositoryDto> IServiceUpdate<UpdateServiceDto, UpdateRepositoryDto>.repository => repository;
 
@@ -51,7 +51,8 @@ EntityServiceDto,
 UpdateServiceDto,
 AddRepositoryDto,
 EntityRepositoryDto,
-UpdateRepositoryDto> : IBaseService<Key,
+UpdateRepositoryDto,
+TRepository> : IBaseService<Key,
 AddServiceDto,
 EntityServiceDto,
 UpdateServiceDto,
@@ -62,9 +63,10 @@ where Key : IComparable<Key>
 where AddServiceDto : IConvertible<AddRepositoryDto>
 where EntityRepositoryDto : IConvertible<EntityServiceDto>
 where UpdateServiceDto : IConvertible<UpdateRepositoryDto>
+where TRepository : IBaseRepository<Key, AddRepositoryDto, UpdateRepositoryDto, EntityRepositoryDto>
 {
-    private IBaseRepository<Key, AddRepositoryDto, UpdateRepositoryDto, EntityRepositoryDto> repository;
-    public BaseService(IBaseRepository<Key, AddRepositoryDto, UpdateRepositoryDto, EntityRepositoryDto> repository)
+    protected TRepository repository;
+    public BaseService(TRepository repository)
     {
         this.repository = repository;
     }

@@ -10,10 +10,8 @@ builder.Services.AddOpenApi();
 
 builder.Services
 .AddDbContext<AppDbContext>()
-.AddScoped<IBaseService<short,Role.DTO.AddDto,Role.DTO.UpdateDto,Role.DTO.EntityDto>,Role.Service>()
-.AddScoped<IBaseRepository<short,Role.DTO.AddDto,Role.DTO.UpdateDto,Role.DTO.EntityDto>,Role.Repository>()
 .AddScoped<Role.IService,Role.Service>()
-.AddTransient<Role.IRepository, Role.Repository>()
+.AddTransient<Role.IRepository,Role.Repository>()
 .AddScoped<Driver.IService,Driver.Service>()
 .AddTransient<Driver.IRepository, Driver.Repository>();
 

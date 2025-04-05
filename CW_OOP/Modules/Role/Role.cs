@@ -1,15 +1,15 @@
 using Role.DTO;
 
 namespace Global;
-public class Role : IEntity<short>, IConvertible<EntityDto>
+public class Role : IEntity<short>, IConvertible<EntityRepositoryDto>
 {
     public short Id { get; set; }
     public string Name { get; set; }
     public ICollection<User> Users { get; set; }
 
-    public EntityDto Convert()
+    public EntityRepositoryDto Convert()
     {
-        return new EntityDto(){
+        return new EntityRepositoryDto(){
             Id = Id,
             Name = Name
         };

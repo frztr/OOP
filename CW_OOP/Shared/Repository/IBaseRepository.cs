@@ -3,27 +3,29 @@ using Global;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-public interface IBaseRepository<Key, AddDto, UpdateDto, EntityDto> :
-IRepositoryAdd<AddDto>,
-IRepositoryDelete<Key>,
-IRepositoryGetAll<EntityDto>,
-IRepositoryGetById<Key, EntityDto>,
-IRepositoryUpdate<UpdateDto>
+public interface IIBaseRepository<Key, AddDto, UpdateDto, EntityDto, EntityListDto> :
+IIRepositoryAdd<AddDto>,
+IIRepositoryDelete<Key>,
+IIRepositoryGetAll<EntityListDto, EntityDto>,
+IIRepositoryGetById<Key, EntityDto>,
+IIRepositoryUpdate<UpdateDto>
 where Key : IComparable<Key>
+where EntityListDto : IListDto<EntityDto>
 {
 
 }
-public interface IBaseRepository<Key, Entity, AddDto, UpdateDto, EntityDto> :
-IBaseRepository<Key, AddDto, UpdateDto, EntityDto>,
+public interface IBaseRepository<Key, Entity, AddDto, UpdateDto, EntityDto, EntityListDto> :
+IIBaseRepository<Key, AddDto, UpdateDto, EntityDto, EntityListDto>,
 IRepositoryAdd<AddDto, Entity>,
 IRepositoryDelete<Key, Entity>,
-IRepositoryGetAll<EntityDto, Entity>,
+IRepositoryGetAll<EntityListDto,EntityDto, Entity>,
 IRepositoryGetById<Key, EntityDto, Entity>,
 IRepositoryUpdate<UpdateDto, Entity, Key>
 where Key : IComparable<Key>
 where Entity : class, IEntity<Key>, IConvertible<EntityDto>
 where AddDto : IConvertible<Entity>
 where UpdateDto : IUpdateDto<Key, Entity>
+where EntityListDto : IListDto<EntityDto>
 {
     protected AppDbContext db { get; }
 
@@ -39,28 +41,34 @@ where UpdateDto : IUpdateDto<Key, Entity>
 
     DbSet<Entity> IRepositoryDelete<Key, Entity>.set => set;
 
-    DbSet<Entity> IRepositoryGetAll<EntityDto, Entity>.set => set;
+    DbSet<Entity> IRepositoryGetAll<EntityListDto, EntityDto, Entity>.set=> set;
 
     DbSet<Entity> IRepositoryGetById<Key, EntityDto, Entity>.set => set;
 
     DbSet<Entity> IRepositoryUpdate<UpdateDto, Entity, Key>.set => set;
 }
 
-public abstract class BaseRepository<Key, Entity, AddDto, UpdateDto, EntityDto> :
-IBaseRepository<Key, Entity, AddDto, UpdateDto, EntityDto>
+public abstract class BaseRepository<Key, Entity, AddDto, UpdateDto, EntityDto, EntityListDto> :
+IBaseRepository<Key, Entity, AddDto, UpdateDto, EntityDto, EntityListDto>
 where Key : IComparable<Key>
 where Entity : class, IEntity<Key>, IConvertible<EntityDto>
 where AddDto : IConvertible<Entity>
 where UpdateDto : IUpdateDto<Key, Entity>
+where EntityListDto : IListDto<EntityDto>
 {
-    private AppDbContext db;
-    private DbSet<Entity> set;
-    public BaseRepository(AppDbContext db)
+    protected AppDbContext db;
+    protected DbSet<Entity> set;
+
+    protected IConverter<IEnumerable<EntityDto>, EntityListDto<EntityDto>> converter;
+    public BaseRepository(AppDbContext db, IConverter<IEnumerable<EntityDto>, EntityListDto<EntityDto>> converter)
     {
         this.db = db;
         this.set = db.Set<Entity>();
+        this.converter = converter;
     }
-    AppDbContext IBaseRepository<Key, Entity, AddDto, UpdateDto, EntityDto>.db => db;
+    AppDbContext IBaseRepository<Key, Entity, AddDto, UpdateDto, EntityDto, EntityListDto>.db => db;
 
-    DbSet<Entity> IBaseRepository<Key, Entity, AddDto, UpdateDto, EntityDto>.set => set;
+    DbSet<Entity> IBaseRepository<Key, Entity, AddDto, UpdateDto, EntityDto, EntityListDto>.set => set;
+
+    IConverter<IEnumerable<EntityDto>, EntityListDto<EntityDto>> IRepositoryGetAll<EntityListDto, EntityDto, Entity>.converter => converter;
 }
