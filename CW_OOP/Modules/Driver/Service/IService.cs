@@ -1,14 +1,18 @@
+using Driver.DTO;
+
 namespace Driver;
 
 public interface IService
 {
-    public IEnumerable<DTO.EntityDto> GetAll();
+    public EntityRepositoryListDto GetAll();
 
-    public DTO.EntityDto GetById(short id);
+    public EntityDto GetById(short id);
 
-    public void Add(DTO.AddDto addDto);
+    public EntityDto Add(AddServiceDto addDto);
 
     public void Delete(short id);
 
-    public void Update(DTO.UpdateDto updateDto);
+    public void Update(UpdateDto updateDto);
+
+    public EntityRefuelListDto GetRefuels(short id, int count = 50, int offset = 0);
 }

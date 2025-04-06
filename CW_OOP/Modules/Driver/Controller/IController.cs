@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Driver.DTO;
 
 namespace Driver.Controller;
 public interface IController
@@ -7,9 +8,11 @@ public interface IController
 
     public IResult GetById(short id);
 
-    public IResult Add(DTO.AddDto addDto);
+    public IResult Add(AddServiceDto addDto);
 
     public IResult Delete(short id);
 
-    public IResult Update(DTO.UpdateDto updateDto);
+    public IResult Update(UpdateDto updateDto);
+
+    public IResult GetRefuels(short id, int count = 50, int offset = 0);
 }

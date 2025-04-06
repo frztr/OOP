@@ -1,13 +1,15 @@
+using Driver.DTO;
+
 namespace Driver;
 public interface IRepository
 {
-    public IEnumerable<DTO.EntityDto> GetAll();
+    public EntityRepositoryListDto GetAll();
 
-    public DTO.EntityDto GetById(short id);
+    public EntityDto GetById(short id);
 
-    public void Add(DTO.AddDto addDto);
+    public EntityDto Add(AddRepositoryDto addDto);
 
     public void Delete(short id);
 
-    public void Update(DTO.UpdateDto updateDto);
+    public void Update(UpdateDto updateDto);
 }

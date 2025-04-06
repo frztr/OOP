@@ -1,7 +1,9 @@
 
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Driver.DTO;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+using Microsoft.AspNetCore.Components;
 namespace Driver.Controller;
 
 [ApiController]
@@ -10,12 +12,11 @@ public class Controller(IService service) : IController
 {
     [HttpPost]
     [Route("add")]
-    public IResult Add(DTO.AddDto addDto)
+    public IResult Add(AddServiceDto addDto)
     {
         try
         {
-            service.Add(addDto);
-            return Results.Created();
+            return Results.Json(service.Add(addDto));
         }
         catch (Exception ex)
         {
@@ -65,6 +66,20 @@ public class Controller(IService service) : IController
             return Results.InternalServerError(ex);
         }
     }
+    [HttpGet]
+    [Route("getRefuels/{id}")]
+    public IResult GetRefuels(short id, int count = 50, int offset = 0)
+    {
+        try
+        {
+            return Results.Json(service.GetRefuels(id,count,offset));
+        }
+        catch (Exception ex)
+        {
+            return Results.InternalServerError(ex);
+        }
+    }
+
     [HttpPatch]
     [Route("update")]
     public IResult Update(DTO.UpdateDto updateDto)
