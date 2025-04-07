@@ -24,6 +24,7 @@ foreach (var file in directoryInfo.GetFiles())
 {
     var fileText = File.ReadAllText($"{AppContext.Get().ProjectPath}/Entities/{file.Name.Replace(".cs","")}.cs");
     var entityName = Regex.Match(fileText, @"public class ([\w]+)").Value.Replace("public class ", "");
+    Console.WriteLine(Regex.Match(fileText, @"public class ([\w]+)[\W]{1}[\\{]{1}[\w\W]+[\\}]{1}").Value);
     var entityBody = new Regex(@"((public class ([\w]+)[\W]{1}[\\{]{1})|([\\{]{1} get; set; [\\}]{1})|([\\}]{1}))+").Replace(
     Regex.Match(fileText, @"public class ([\w]+)[\W]{1}[\\{]{1}[\w\W]+[\\}]{1}").Value, "");
     var props = Regex.Matches(entityBody, @"\w+ \w+ \w+");
