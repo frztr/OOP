@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 AppContext.Init(args);
 DirectoryInfo directoryInfo = new DirectoryInfo($"{AppContext.Get().ProjectPath}/Entities/");
@@ -43,6 +44,7 @@ foreach (var file in directoryInfo.GetFiles())
         Props = entProps.ToList()
     };
     entities.Add(entity);
+    Console.WriteLine(JsonConvert.SerializeObject(entity));
     if (!Directory.Exists($"{AppContext.Get().ProjectPath}/Repositories/{entity.Name}"))
         Directory.CreateDirectory($"{AppContext.Get().ProjectPath}/Repositories/{entity.Name}");
     if (!Directory.Exists($"{AppContext.Get().ProjectPath}/Services/{entity.Name}"))
