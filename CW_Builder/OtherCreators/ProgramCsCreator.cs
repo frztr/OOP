@@ -1,0 +1,58 @@
+using System;
+
+public class ProgramCsCreator
+{
+    public static string Create(Entity[] entities)
+    {
+        return $@"
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Global;
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddOpenApi();
+
+builder.Services
+.AddDbContext<AppDbContext>()
+{String.Join("\n", entities.Select(x => $@".AddScoped<I{x.Name}Service,{x.Name}Service>()
+.AddTransient<I{x.Name}Repository, {x.Name}Repository>()"))};
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {{options.TokenValidationParameters = new TokenValidationParameters
+        {{
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidIssuer = ""{AppContext.Get().ProjectPath.Split("/").LastOrDefault()}"",
+            ValidAudience = ""{AppContext.Get().ProjectPath.Split("/").LastOrDefault()}"",
+            ValidateLifetime = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(""{new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz", 32)
+        .Select(s => s[new Random().Next(62)]).ToArray())}"")),
+            ValidateIssuerSigningKey = true
+        }};
+}});
+builder.Services.AddAuthorization();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}}
+
+app.UseHttpsRedirection();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();";
+    }
+}
