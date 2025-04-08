@@ -1,6 +1,0 @@
-@cw_oop_HostAddress = http://localhost:5107
-
-GET {{cw_oop_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

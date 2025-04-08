@@ -1,12 +1,12 @@
 public class DtoListCreator
 {
-    public static string CreateDto(Entity entity)
+    public static string CreateDto(Entity entity, string layer)
     {
         return $@"
 namespace Global;
-public class {entity.Name}ListDto
+public class {entity.Name}List{layer}Dto
 {{
-    public IEnumerable<{entity.Name}Dto> items {{ get; set; }}
+    public IEnumerable<{entity.Name}{layer}Dto> Items {{ get; set; }}
 }}";
 
     }

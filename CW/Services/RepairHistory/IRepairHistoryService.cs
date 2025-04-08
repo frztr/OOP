@@ -1,0 +1,14 @@
+
+namespace Global;
+public interface IRepairHistoryService
+    {
+        public Task<RepairHistoryListServiceDto> GetAllAsync(int count = 50, int offset = 0);
+
+        public Task<RepairHistoryServiceDto> GetByIdAsync(int id);
+
+        public Task<RepairHistoryServiceDto> AddAsync(AddRepairHistoryServiceDto addDto);
+
+        public Task DeleteAsync(int id);
+
+        public Task UpdateAsync(UpdateRepairHistoryServiceDto updateDto);
+    }

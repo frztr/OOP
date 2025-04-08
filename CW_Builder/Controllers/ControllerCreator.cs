@@ -4,6 +4,7 @@ public class ControllerCreator
     {
         var pk = $@"{entity.Props.FirstOrDefault(x => x.Name == "Id").Type}";
         return $@"
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 namespace Global;
@@ -13,11 +14,17 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
 {{
     [HttpPost]
     [Route(""add"")]
-    public IResult Add(Add{entity.Name}Dto addDto)
+    public async Task<IResult> Add(Add{entity.Name}ControllerDto addDto)
     {{
         try
         {{
-            return Results.Json(service.Add(addDto));
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Add{entity.Name}ControllerDto, Add{entity.Name}ServiceDto>());
+            var mapper = new Mapper(config);
+            var addServiceDto = mapper.Map<Add{entity.Name}ControllerDto, Add{entity.Name}ServiceDto>(addDto);
+            var result = await service.AddAsync(addServiceDto);
+            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name}ServiceDto, {entity.Name}ControllerDto>());
+            var mapper2 = new Mapper(config2);
+            return Results.Json(mapper2.Map<{entity.Name}ServiceDto, {entity.Name}ControllerDto>(result));
         }}
         catch (Exception ex)
         {{
@@ -26,12 +33,12 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
     }}
 
     [HttpDelete]
-    [Route(""delete"")]
-    public IResult Delete({pk} id)
+    [Route(""{{id}}"")]
+    public async Task<IResult> Delete({pk} id)
     {{
         try
         {{
-            service.Delete(id);
+            await service.DeleteAsync(id);
             return Results.Ok();
         }}
         catch (Exception ex)
@@ -42,11 +49,15 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
 
     [HttpGet]
     [Route("""")]
-    public IResult GetAll({pk} count = 50, {pk} offset = 0)
+    public async Task<IResult> GetAll({pk} count = 50, {pk} offset = 0)
     {{
         try
         {{
-            return Results.Json(service.GetAll(count,offset));
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name}ServiceDto,{entity.Name}ControllerDto>());
+            var mapper = new Mapper(config);
+            return Results.Json(new {entity.Name}ListControllerDto(){{
+                Items = (await service.GetAllAsync(count,offset)).Items.Select(x=>mapper.Map<{entity.Name}ServiceDto,{entity.Name}ControllerDto>(x))
+            }});
         }}
         catch (Exception ex)
         {{
@@ -56,11 +67,13 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
 
     [HttpGet]
     [Route(""{{id}}"")]
-    public IResult GetById({pk} id)
+    public async Task<IResult> GetById({pk} id)
     {{
         try
         {{
-            return Results.Json(service.GetById(id));
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name}ServiceDto, {entity.Name}ControllerDto>());
+            var mapper = new Mapper(config);
+            return Results.Json(mapper.Map<{entity.Name}ServiceDto, {entity.Name}ControllerDto>(await service.GetByIdAsync(id)));
         }}
         catch (Exception ex)
         {{
@@ -69,11 +82,14 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
     }}
     [HttpPatch]
     [Route(""update"")]
-    public IResult Update(Update{entity.Name}Dto updateDto)
+    public async Task<IResult> UpdateAsync(Update{entity.Name}ControllerDto updateDto)
     {{
         try
         {{
-            service.Update(updateDto);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Update{entity.Name}ControllerDto, Update{entity.Name}ServiceDto>());
+            var mapper = new Mapper(config);
+            var updateServiceDto = mapper.Map<Update{entity.Name}ControllerDto, Update{entity.Name}ServiceDto>(updateDto);
+            await service.UpdateAsync(updateServiceDto);
             return Results.Ok();
         }}
         catch (Exception ex)

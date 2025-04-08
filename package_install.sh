@@ -7,5 +7,6 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet add package Newtonsoft.Json
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 dotnet add package Swashbuckle.AspNetCore
+dotnet add package AutoMapper
 dotnet new tool-manifest
 dotnet tool install --local dotnet-ef

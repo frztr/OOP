@@ -7,15 +7,15 @@ public class ServiceInterfaceCreator
 namespace Global;
 public interface I{entity.Name}Service
     {{
-        public {entity.Name}ListDto GetAll({pk} count = 50, {pk} offset = 0);
+        public Task<{entity.Name}ListServiceDto> GetAllAsync({pk} count = 50, {pk} offset = 0);
 
-        public {entity.Name}Dto GetById({pk} id);
+        public Task<{entity.Name}ServiceDto> GetByIdAsync({pk} id);
 
-        public {entity.Name}Dto Add(Add{entity.Name}Dto addDto);
+        public Task<{entity.Name}ServiceDto> AddAsync(Add{entity.Name}ServiceDto addDto);
 
-        public void Delete({pk} id);
+        public Task DeleteAsync({pk} id);
 
-        public void Update(Update{entity.Name}Dto updateDto);
+        public Task UpdateAsync(Update{entity.Name}ServiceDto updateDto);
     }}";
 
     }

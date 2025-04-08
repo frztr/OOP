@@ -1,10 +1,10 @@
 public class UpdateDtoCreator
 {
-    public static string CreateDto(Entity entity)
+    public static string CreateDto(Entity entity, string layer)
     {
         return $@"
 namespace Global;
-public class Update{entity.Name}Dto
+public class Update{entity.Name}{layer}Dto
 {{
     public {entity.Props.FirstOrDefault(x=>x.Name == "Id").Type} Id {{ get; set; }}
     {String.Join("\n\t", entity.Props

@@ -1,0 +1,8 @@
+namespace Global;
+public class Manufacturer
+{
+    public short Id { get; set; }
+    public string Name { get; set; }
+    
+    public ICollection<VehicleModel> VehicleModels { get; set; }
+}

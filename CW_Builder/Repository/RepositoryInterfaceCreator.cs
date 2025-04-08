@@ -7,15 +7,15 @@ public class RepositoryInterfaceCreator
         namespace Global;
         public interface I{entity.Name}Repository
 {{
-    public {entity.Name}ListDto GetAll({pk} count = 50, {pk} offset = 0);
+    public Task<{entity.Name}ListRepositoryDto> GetAllAsync({pk} count = 50, {pk} offset = 0);
 
-    public {entity.Name}Dto GetById({pk} id);
+    public Task<{entity.Name}RepositoryDto> GetByIdAsync({pk} id);
 
-    public {entity.Name}Dto Add(Add{entity.Name}Dto addDto);
+    public Task<{entity.Name}RepositoryDto> AddAsync(Add{entity.Name}RepositoryDto addDto);
 
-    public void Delete({pk} id);
+    public Task DeleteAsync({pk} id);
 
-    public void Update(Update{entity.Name}Dto updateDto);
+    public Task UpdateAsync(Update{entity.Name}RepositoryDto updateDto);
 }}";
 
     }

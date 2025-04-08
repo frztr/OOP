@@ -27,8 +27,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = ""{AppContext.Get().ProjectPath.Split("/").LastOrDefault()}"",
             ValidAudience = ""{AppContext.Get().ProjectPath.Split("/").LastOrDefault()}"",
             ValidateLifetime = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(""{new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz", 32)
-        .Select(s => s[new Random().Next(62)]).ToArray())}"")),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(""J9gGkPrHnbT6rZHjkiaGLvFpRGkEMMDr"")),
             ValidateIssuerSigningKey = true
         }};
 }});
@@ -56,3 +55,7 @@ app.MapControllers();
 app.Run();";
     }
 }
+// ""J9gGkPrHnbT6rZHjkiaGLvFpRGkEMMDr""
+
+// ""{new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz", 32)
+        // .Select(s => s[new Random().Next(62)]).ToArray())}""

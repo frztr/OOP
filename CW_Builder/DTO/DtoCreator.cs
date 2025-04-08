@@ -1,10 +1,10 @@
 public class DtoCreator
 {
-    public static string CreateDto(Entity entity)
+    public static string CreateDto(Entity entity, string layer)
     {
         return $@"
 namespace Global;
-public class {entity.Name}Dto
+public class {entity.Name}{layer}Dto
 {{
     {String.Join("\n\t", entity.Props
 .Where(x => AppContext.Get().AllowedValues.Contains(x.Type))

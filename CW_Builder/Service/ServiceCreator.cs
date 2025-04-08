@@ -4,32 +4,48 @@ public class ServiceCreator
     {
         var pk = $@"{entity.Props.FirstOrDefault(x => x.Name == "Id").Type}";
         return $@"
+using AutoMapper;
 namespace Global;
 public class {entity.Name}Service(I{entity.Name}Repository repository) : I{entity.Name}Service
 {{
-    public {entity.Name}Dto Add(Add{entity.Name}Dto addDto)
+    public async Task<{entity.Name}ServiceDto> AddAsync(Add{entity.Name}ServiceDto addServiceDto)
     {{
-        return repository.Add(addDto);
+        var config = new MapperConfiguration(cfg => cfg.CreateMap<Add{entity.Name}ServiceDto, Add{entity.Name}RepositoryDto>());
+        var mapper = new Mapper(config);
+        var addRepositoryDto = mapper.Map<Add{entity.Name}ServiceDto, Add{entity.Name}RepositoryDto>(addServiceDto);
+        var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
+        var config2 = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name}RepositoryDto, {entity.Name}ServiceDto>());
+        var mapper2 = new Mapper(config2);
+        return mapper2.Map<{entity.Name}RepositoryDto, {entity.Name}ServiceDto>(entityRepositoryDto);
     }}
 
-    public void Delete({pk} id)
+    public async Task DeleteAsync({pk} id)
     {{
-        repository.Delete(id);
+        await repository.DeleteAsync(id);
     }}
 
-    public {entity.Name}ListDto GetAll({pk} count = 50, {pk} offset = 0)
+    public async Task<{entity.Name}ListServiceDto> GetAllAsync({pk} count = 50, {pk} offset = 0)
     {{
-        return repository.GetAll(count, offset);
+        var config = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name}RepositoryDto,{entity.Name}ServiceDto>());
+        var mapper = new Mapper(config);
+        return new {entity.Name}ListServiceDto(){{
+            Items = (await repository.GetAllAsync(count, offset)).Items.Select(x=>mapper.Map<{entity.Name}ServiceDto>(x))
+        }};
     }}
 
-    public {entity.Name}Dto GetById({pk} id)
+    public async Task<{entity.Name}ServiceDto> GetByIdAsync({pk} id)
     {{
-        return repository.GetById(id);
+        var config = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name}RepositoryDto, {entity.Name}ServiceDto>());
+        var mapper = new Mapper(config);
+        return mapper.Map<{entity.Name}RepositoryDto, {entity.Name}ServiceDto>(await repository.GetByIdAsync(id));
     }}
 
-    public void Update(Update{entity.Name}Dto updateDto)
+    public async Task UpdateAsync(Update{entity.Name}ServiceDto updateDto)
     {{
-        repository.Update(updateDto);
+        var config = new MapperConfiguration(cfg => cfg.CreateMap<Update{entity.Name}ServiceDto, Update{entity.Name}RepositoryDto>());
+        var mapper = new Mapper(config);
+        var updateRepositoryDto = mapper.Map<Update{entity.Name}ServiceDto, Update{entity.Name}RepositoryDto>(updateDto);
+        await repository.UpdateAsync(updateRepositoryDto);
     }}
 }}";
     }
