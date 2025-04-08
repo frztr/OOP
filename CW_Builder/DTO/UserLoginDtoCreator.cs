@@ -3,6 +3,7 @@ public class UserLoginDtoCreator
     public static string CreateDto(Entity entity, string layer)
     {
         return $@"
+using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class UserLogin{layer}Dto
 {{

@@ -93,3 +93,8 @@ var appDbContextCs = AppDbContextCreator.Create(entities.ToArray());
 File.WriteAllText($"{AppContext.Get().ProjectPath}/AppDbContext.cs", appDbContextCs);
 
 
+// foreach(var param in query){
+//             foreach(var (key,value) in param){
+//                 Console.WriteLine(key+":"+"value");
+//             }
+//         }
