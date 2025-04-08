@@ -1,8 +1,11 @@
 
+using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class UpdateAutomechanicRepositoryDto
 {
-    public short Id { get; set; }
-    public short? UserId { get; set; }
-	public string? Qualification { get; set; }
+    [Required]
+    	public short UserId { get; set; }
+    
+    	[StringLength(30)]
+	public string Qualification { get; set; }
 }

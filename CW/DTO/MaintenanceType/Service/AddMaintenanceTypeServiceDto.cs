@@ -1,6 +1,9 @@
 
+using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddMaintenanceTypeServiceDto
 {
-public string Name { get; set; }
+    [Required]
+	[StringLength(30)]
+	public string Name { get; set; }
 }

@@ -23,7 +23,7 @@ public class UserRepositoryCreator
     }
     public static string CreateRepository(Entity entity)
     {
-        var pk = $@"{entity.Props.FirstOrDefault(x => x.Name == "Id").Type}";
+        var pk = entity.Props.FirstOrDefault(x => x.PK);
         return $@"
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -44,13 +44,13 @@ public class {entity.Name}Repository(AppDbContext db) : I{entity.Name}Repository
         return dto;
     }}
 
-    public async Task DeleteAsync({pk} id)
+    public async Task DeleteAsync({pk.Type} id)
     {{
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        set.Remove(await set.FirstOrDefaultAsync(x => x.{pk.Name} == id));
         await db.SaveChangesAsync();
     }}
 
-    public async Task<{entity.Name}ListRepositoryDto> GetAllAsync({pk} count = 50, {pk} offset = 0)
+    public async Task<{entity.Name}ListRepositoryDto> GetAllAsync({pk.Type} count = 50, {pk.Type} offset = 0)
     {{
         var config = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name},{entity.Name}RepositoryDto>());
         var mapper = new Mapper(config);
@@ -62,17 +62,17 @@ public class {entity.Name}Repository(AppDbContext db) : I{entity.Name}Repository
         }};
     }}
 
-    public async Task<{entity.Name}RepositoryDto> GetByIdAsync({pk} id)
+    public async Task<{entity.Name}RepositoryDto> GetByIdAsync({pk.Type} id)
     {{
         var config = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name},{entity.Name}RepositoryDto>());
         var mapper = new Mapper(config);
-        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await set.FirstOrDefaultAsync(x => x.{pk.Name} == id);
         return mapper.Map<{entity.Name},{entity.Name}RepositoryDto>(entity);
     }}
 
     public async Task UpdateAsync(Update{entity.Name}RepositoryDto updateDto)
     {{
-        var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        var entity = await set.FirstOrDefaultAsync(x => x.{pk.Name} == updateDto.{pk.Name});
         var config = new MapperConfiguration(cfg => cfg.CreateMap<Update{entity.Name}RepositoryDto, {entity.Name}>());
         var mapper = new Mapper(config);
         mapper.Map<Update{entity.Name}RepositoryDto, {entity.Name}>(updateDto,entity);

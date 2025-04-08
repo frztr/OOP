@@ -23,28 +23,9 @@ if (!Directory.Exists($"{AppContext.Get().ProjectPath}/DTO"))
 foreach (var file in directoryInfo.GetFiles())
 {
     //Parsing
-    var fileText = File.ReadAllText($"{AppContext.Get().ProjectPath}/Data/{file.Name.Replace(".cs", "")}.cs");
-    var entityName = Regex.Match(fileText, @"public class ([\w]+)").Value.Replace("public class ", "");
-    var entityBody = new Regex(@"((public class ([\w]+)[\W]{1}[\\{]{1})|([\\{]{1} get; set; [\\}]{1})|([\\}]{1}))+").Replace(
-    Regex.Match(fileText, @"public class ([\w]+)[\W]{1}[\\{]{1}[\w\W]+[\\}]{1}").Value, "");
-    var props = Regex.Matches(entityBody, @"\w+ \w+ \w+");
-    var entProps = props.ToList().Select(x =>
-    {
-        var s = x.Value.Split(" ");
-        return new EntityProp()
-        {
-            Modificator = s[0],
-            Type = s[1],
-            Name = s[2]
-        };
-    });
-
-    Entity entity = new Entity()
-    {
-        Name = entityName,
-        Props = entProps.ToList()
-    };
+    var entity = EntityParser.Parse(file);
     entities.Add(entity);
+
     //Creating
     if (!Directory.Exists($"{AppContext.Get().ProjectPath}/Repositories/{entity.Name}"))
         Directory.CreateDirectory($"{AppContext.Get().ProjectPath}/Repositories/{entity.Name}");

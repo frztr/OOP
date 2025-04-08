@@ -1,7 +1,11 @@
 
+using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddAutomechanicControllerDto
 {
-public short UserId { get; set; }
+    [Required]
+	public short UserId { get; set; }
+	[Required]
+	[StringLength(30)]
 	public string Qualification { get; set; }
 }

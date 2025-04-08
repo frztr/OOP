@@ -2,12 +2,14 @@ public class ControllerCreator
 {
     public static string CreateController(Entity entity)
     {
-        var pk = $@"{entity.Props.FirstOrDefault(x => x.Name == "Id").Type}";
+        var pk = $@"{entity.Props.FirstOrDefault(x => x.PK).Type}";
         return $@"
+using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 namespace Global;
+[Authorize(Roles=""admin"")]
 [ApiController]
 [Route(""{entity.Name}"")]
 public class {entity.Name}Controller(I{entity.Name}Service service)

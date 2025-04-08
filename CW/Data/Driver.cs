@@ -8,7 +8,4 @@ public class Driver
     
     public User User { get; set; }
     public ICollection<RefuelingHistory> RefuelingHistories { get; set; }
-
-    [NotMapped]
-    public short Id { get => UserId; set => UserId = value; }
 }

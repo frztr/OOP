@@ -9,7 +9,4 @@ public class Automechanic
     public User User { get; set; }
     public ICollection<RepairHistory> RepairHistories { get; set; }
     public ICollection<MaintenanceHistory> MaintenanceHistories { get; set; }
-
-    [NotMapped]
-    public short Id { get => UserId; set => UserId = value; }
 }

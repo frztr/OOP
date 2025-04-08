@@ -1,8 +1,12 @@
 
+using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class UpdateSparePartRepositoryDto
 {
-    public int Id { get; set; }
-    public string? Name { get; set; }
-	public int? CountLeft { get; set; }
+    [Required]
+    	public int Id { get; set; }
+    
+    	[StringLength(100)]
+	public string Name { get; set; }
+		public int CountLeft { get; set; }
 }

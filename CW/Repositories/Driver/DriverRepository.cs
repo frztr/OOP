@@ -20,7 +20,7 @@ public class DriverRepository(AppDbContext db) : IDriverRepository
 
     public async Task DeleteAsync(short id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        set.Remove(await set.FirstOrDefaultAsync(x => x.UserId == id));
         await db.SaveChangesAsync();
     }
 
@@ -40,13 +40,13 @@ public class DriverRepository(AppDbContext db) : IDriverRepository
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<Driver,DriverRepositoryDto>());
         var mapper = new Mapper(config);
-        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await set.FirstOrDefaultAsync(x => x.UserId == id);
         return mapper.Map<Driver,DriverRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateDriverRepositoryDto updateDto)
     {
-        var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        var entity = await set.FirstOrDefaultAsync(x => x.UserId == updateDto.UserId);
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateDriverRepositoryDto, Driver>());
         var mapper = new Mapper(config);
         mapper.Map<UpdateDriverRepositoryDto, Driver>(updateDto,entity);

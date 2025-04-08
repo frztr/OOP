@@ -20,7 +20,7 @@ public class AutomechanicRepository(AppDbContext db) : IAutomechanicRepository
 
     public async Task DeleteAsync(short id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        set.Remove(await set.FirstOrDefaultAsync(x => x.UserId == id));
         await db.SaveChangesAsync();
     }
 
@@ -40,13 +40,13 @@ public class AutomechanicRepository(AppDbContext db) : IAutomechanicRepository
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<Automechanic,AutomechanicRepositoryDto>());
         var mapper = new Mapper(config);
-        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await set.FirstOrDefaultAsync(x => x.UserId == id);
         return mapper.Map<Automechanic,AutomechanicRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateAutomechanicRepositoryDto updateDto)
     {
-        var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        var entity = await set.FirstOrDefaultAsync(x => x.UserId == updateDto.UserId);
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateAutomechanicRepositoryDto, Automechanic>());
         var mapper = new Mapper(config);
         mapper.Map<UpdateAutomechanicRepositoryDto, Automechanic>(updateDto,entity);

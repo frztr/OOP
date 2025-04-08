@@ -2,7 +2,7 @@ public class UserServiceCreator
 {
     public static string CreateService(Entity entity)
     {
-        var pk = $@"{entity.Props.FirstOrDefault(x => x.Name == "Id").Type}";
+        var pk = $@"{entity.Props.FirstOrDefault(x => x.PK).Type}";
         return $@"
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

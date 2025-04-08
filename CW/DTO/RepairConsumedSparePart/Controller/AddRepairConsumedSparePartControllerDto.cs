@@ -1,8 +1,12 @@
 
+using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddRepairConsumedSparePartControllerDto
 {
-public int RepairId { get; set; }
+    [Required]
+	public int RepairId { get; set; }
+	[Required]
 	public int SparePartId { get; set; }
+	[Required]
 	public int PartCount { get; set; }
 }

@@ -1,7 +1,11 @@
 
+using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class UpdateVehicleCategoryControllerDto
 {
-    public short Id { get; set; }
-    public string? Name { get; set; }
+    [Required]
+    	public short Id { get; set; }
+    
+    	[StringLength(25)]
+	public string Name { get; set; }
 }

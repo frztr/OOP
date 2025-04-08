@@ -1,9 +1,10 @@
 
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+using Microsoft.AspNetCore.Authorization;
 namespace Global;
+[Authorize(Roles="admin")]
 [ApiController]
 [Route("User")]
 public class UserController(IUserService service)
@@ -42,7 +43,7 @@ public class UserController(IUserService service)
             return Results.InternalServerError(ex);
         }
     }
-    [Authorize]
+
     [HttpGet]
     [Route("")]
     public async Task<IResult> GetAll(short count = 50, short offset = 0)

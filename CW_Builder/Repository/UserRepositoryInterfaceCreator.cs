@@ -2,7 +2,7 @@ public class UserRepositoryInterfaceCreator
 {
     public static string CreateRepository(Entity entity)
     {
-        var pk = $@"{entity.Props.FirstOrDefault(x => x.Name == "Id").Type}";
+        var pk = $@"{entity.Props.FirstOrDefault(x => x.PK).Type}";
         return $@"
         namespace Global;
         public interface I{entity.Name}Repository

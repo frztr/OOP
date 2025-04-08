@@ -1,8 +1,10 @@
 
+using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 namespace Global;
+[Authorize(Roles="admin")]
 [ApiController]
 [Route("RepairHistory")]
 public class RepairHistoryController(IRepairHistoryService service)

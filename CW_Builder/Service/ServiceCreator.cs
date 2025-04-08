@@ -2,7 +2,7 @@ public class ServiceCreator
 {
     public static string CreateService(Entity entity)
     {
-        var pk = $@"{entity.Props.FirstOrDefault(x => x.Name == "Id").Type}";
+        var pk = $@"{entity.Props.FirstOrDefault(x => x.PK).Type}";
         return $@"
 using AutoMapper;
 namespace Global;

@@ -2,7 +2,7 @@ public class ServiceInterfaceCreator
 {
     public static string CreateService(Entity entity)
     {
-        var pk = $@"{entity.Props.FirstOrDefault(x => x.Name == "Id").Type}";
+        var pk = $@"{entity.Props.FirstOrDefault(x => x.PK).Type}";
         return $@"
 namespace Global;
 public interface I{entity.Name}Service
