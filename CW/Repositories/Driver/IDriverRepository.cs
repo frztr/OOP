@@ -2,7 +2,7 @@
         namespace Global;
         public interface IDriverRepository
 {
-    public Task<DriverListRepositoryDto> GetAllAsync(short count = 50, short offset = 0);
+    public Task<DriverListRepositoryDto> GetAllAsync(DriverQueryRepositoryDto queryDto);
 
     public Task<DriverRepositoryDto> GetByIdAsync(short id);
 

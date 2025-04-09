@@ -24,14 +24,15 @@ public class DriverRepository(AppDbContext db) : IDriverRepository
         await db.SaveChangesAsync();
     }
 
-    public async Task<DriverListRepositoryDto> GetAllAsync(short count = 50, short offset = 0)
+    public async Task<DriverListRepositoryDto> GetAllAsync(DriverQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<Driver,DriverRepositoryDto>());
         var mapper = new Mapper(config);
         return new DriverListRepositoryDto()
         {
             Items = mapper.Map<List<DriverRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

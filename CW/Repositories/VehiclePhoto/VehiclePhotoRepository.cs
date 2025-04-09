@@ -24,14 +24,15 @@ public class VehiclePhotoRepository(AppDbContext db) : IVehiclePhotoRepository
         await db.SaveChangesAsync();
     }
 
-    public async Task<VehiclePhotoListRepositoryDto> GetAllAsync(int count = 50, int offset = 0)
+    public async Task<VehiclePhotoListRepositoryDto> GetAllAsync(VehiclePhotoQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<VehiclePhoto,VehiclePhotoRepositoryDto>());
         var mapper = new Mapper(config);
         return new VehiclePhotoListRepositoryDto()
         {
             Items = mapper.Map<List<VehiclePhotoRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

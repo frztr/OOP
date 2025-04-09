@@ -24,14 +24,15 @@ public class AutomechanicRepository(AppDbContext db) : IAutomechanicRepository
         await db.SaveChangesAsync();
     }
 
-    public async Task<AutomechanicListRepositoryDto> GetAllAsync(short count = 50, short offset = 0)
+    public async Task<AutomechanicListRepositoryDto> GetAllAsync(AutomechanicQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<Automechanic,AutomechanicRepositoryDto>());
         var mapper = new Mapper(config);
         return new AutomechanicListRepositoryDto()
         {
             Items = mapper.Map<List<AutomechanicRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

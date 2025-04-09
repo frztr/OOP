@@ -24,12 +24,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {{
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidIssuer = ""{AppContext.Get().ProjectPath.Split("/").LastOrDefault()}"",
-            ValidAudience = ""{AppContext.Get().ProjectPath.Split("/").LastOrDefault()}"",
+            ValidIssuer = AppConfig.ISSUER,
+            ValidAudience = AppConfig.AUDIENCE,
             ValidateLifetime = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(""J9gGkPrHnbT6rZHjkiaGLvFpRGkEMMDr"")),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppConfig.KEY)),
             ValidateIssuerSigningKey = true
         }};
+}});
+builder.Services.AddLogging(builder =>
+{{
+    builder.SetMinimumLevel(LogLevel.Trace);
 }});
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();

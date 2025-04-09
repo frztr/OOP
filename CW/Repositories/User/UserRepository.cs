@@ -24,14 +24,14 @@ public class UserRepository(AppDbContext db) : IUserRepository
         await db.SaveChangesAsync();
     }
 
-    public async Task<UserListRepositoryDto> GetAllAsync(short count = 50, short offset = 0)
+    public async Task<UserListRepositoryDto> GetAllAsync(UserQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<User,UserRepositoryDto>());
         var mapper = new Mapper(config);
         return new UserListRepositoryDto()
         {
             Items = mapper.Map<List<UserRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

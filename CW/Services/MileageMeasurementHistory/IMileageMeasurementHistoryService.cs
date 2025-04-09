@@ -2,7 +2,7 @@
 namespace Global;
 public interface IMileageMeasurementHistoryService
     {
-        public Task<MileageMeasurementHistoryListServiceDto> GetAllAsync(int count = 50, int offset = 0);
+        public Task<MileageMeasurementHistoryListServiceDto> GetAllAsync(MileageMeasurementHistoryQueryServiceDto queryDto);
 
         public Task<MileageMeasurementHistoryServiceDto> GetByIdAsync(int id);
 

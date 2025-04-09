@@ -24,14 +24,15 @@ public class MileageMeasurementHistoryRepository(AppDbContext db) : IMileageMeas
         await db.SaveChangesAsync();
     }
 
-    public async Task<MileageMeasurementHistoryListRepositoryDto> GetAllAsync(int count = 50, int offset = 0)
+    public async Task<MileageMeasurementHistoryListRepositoryDto> GetAllAsync(MileageMeasurementHistoryQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<MileageMeasurementHistory,MileageMeasurementHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         return new MileageMeasurementHistoryListRepositoryDto()
         {
             Items = mapper.Map<List<MileageMeasurementHistoryRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

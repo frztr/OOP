@@ -24,14 +24,15 @@ public class SparePartRepository(AppDbContext db) : ISparePartRepository
         await db.SaveChangesAsync();
     }
 
-    public async Task<SparePartListRepositoryDto> GetAllAsync(int count = 50, int offset = 0)
+    public async Task<SparePartListRepositoryDto> GetAllAsync(SparePartQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<SparePart,SparePartRepositoryDto>());
         var mapper = new Mapper(config);
         return new SparePartListRepositoryDto()
         {
             Items = mapper.Map<List<SparePartRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

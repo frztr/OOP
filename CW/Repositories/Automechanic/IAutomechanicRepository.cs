@@ -2,7 +2,7 @@
         namespace Global;
         public interface IAutomechanicRepository
 {
-    public Task<AutomechanicListRepositoryDto> GetAllAsync(short count = 50, short offset = 0);
+    public Task<AutomechanicListRepositoryDto> GetAllAsync(AutomechanicQueryRepositoryDto queryDto);
 
     public Task<AutomechanicRepositoryDto> GetByIdAsync(short id);
 

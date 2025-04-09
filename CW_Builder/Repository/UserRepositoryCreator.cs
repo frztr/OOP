@@ -50,14 +50,14 @@ public class {entity.Name}Repository(AppDbContext db) : I{entity.Name}Repository
         await db.SaveChangesAsync();
     }}
 
-    public async Task<{entity.Name}ListRepositoryDto> GetAllAsync({pk.Type} count = 50, {pk.Type} offset = 0)
+    public async Task<{entity.Name}ListRepositoryDto> GetAllAsync({entity.Name}QueryRepositoryDto queryDto)
     {{
         var config = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name},{entity.Name}RepositoryDto>());
         var mapper = new Mapper(config);
         return new {entity.Name}ListRepositoryDto()
         {{
             Items = mapper.Map<List<{entity.Name}RepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         }};
     }}

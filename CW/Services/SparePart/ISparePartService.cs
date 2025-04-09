@@ -2,7 +2,7 @@
 namespace Global;
 public interface ISparePartService
     {
-        public Task<SparePartListServiceDto> GetAllAsync(int count = 50, int offset = 0);
+        public Task<SparePartListServiceDto> GetAllAsync(SparePartQueryServiceDto queryDto);
 
         public Task<SparePartServiceDto> GetByIdAsync(int id);
 

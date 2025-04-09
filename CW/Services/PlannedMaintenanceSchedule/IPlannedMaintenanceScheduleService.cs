@@ -2,7 +2,7 @@
 namespace Global;
 public interface IPlannedMaintenanceScheduleService
     {
-        public Task<PlannedMaintenanceScheduleListServiceDto> GetAllAsync(int count = 50, int offset = 0);
+        public Task<PlannedMaintenanceScheduleListServiceDto> GetAllAsync(PlannedMaintenanceScheduleQueryServiceDto queryDto);
 
         public Task<PlannedMaintenanceScheduleServiceDto> GetByIdAsync(int id);
 

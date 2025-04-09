@@ -1,10 +1,11 @@
 
 using AutoMapper;
 namespace Global;
-public class MaintenanceTypeService(IMaintenanceTypeRepository repository) : IMaintenanceTypeService
+public class MaintenanceTypeService(IMaintenanceTypeRepository repository, ILogger<MaintenanceTypeService> logger) : IMaintenanceTypeService
 {
     public async Task<MaintenanceTypeServiceDto> AddAsync(AddMaintenanceTypeServiceDto addServiceDto)
     {
+        logger.Log(LogLevel.Debug,"Add()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddMaintenanceTypeServiceDto, AddMaintenanceTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddMaintenanceTypeServiceDto, AddMaintenanceTypeRepositoryDto>(addServiceDto);
@@ -16,20 +17,26 @@ public class MaintenanceTypeService(IMaintenanceTypeRepository repository) : IMa
 
     public async Task DeleteAsync(short id)
     {
+        logger.Log(LogLevel.Debug,"Delete()");
         await repository.DeleteAsync(id);
     }
 
-    public async Task<MaintenanceTypeListServiceDto> GetAllAsync(short count = 50, short offset = 0)
+    public async Task<MaintenanceTypeListServiceDto> GetAllAsync(MaintenanceTypeQueryServiceDto queryDto)
     {
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<MaintenanceTypeRepositoryDto,MaintenanceTypeServiceDto>());
+        logger.Log(LogLevel.Debug,"GetAll()");
+        var config = new MapperConfiguration(cfg => cfg.CreateMap<MaintenanceTypeQueryServiceDto,MaintenanceTypeQueryRepositoryDto>());
         var mapper = new Mapper(config);
+        var dto = mapper.Map<MaintenanceTypeQueryServiceDto,MaintenanceTypeQueryRepositoryDto>(queryDto);    
+        var config2 = new MapperConfiguration(cfg => cfg.CreateMap<MaintenanceTypeRepositoryDto,MaintenanceTypeServiceDto>());
+        var mapper2 = new Mapper(config2);
         return new MaintenanceTypeListServiceDto(){
-            Items = (await repository.GetAllAsync(count, offset)).Items.Select(x=>mapper.Map<MaintenanceTypeServiceDto>(x))
+            Items = (await repository.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<MaintenanceTypeServiceDto>(x))
         };
     }
 
     public async Task<MaintenanceTypeServiceDto> GetByIdAsync(short id)
     {
+        logger.Log(LogLevel.Debug,"GetById()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<MaintenanceTypeRepositoryDto, MaintenanceTypeServiceDto>());
         var mapper = new Mapper(config);
         return mapper.Map<MaintenanceTypeRepositoryDto, MaintenanceTypeServiceDto>(await repository.GetByIdAsync(id));
@@ -37,6 +44,7 @@ public class MaintenanceTypeService(IMaintenanceTypeRepository repository) : IMa
 
     public async Task UpdateAsync(UpdateMaintenanceTypeServiceDto updateDto)
     {
+        logger.Log(LogLevel.Debug,"Update()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateMaintenanceTypeServiceDto, UpdateMaintenanceTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateMaintenanceTypeServiceDto, UpdateMaintenanceTypeRepositoryDto>(updateDto);

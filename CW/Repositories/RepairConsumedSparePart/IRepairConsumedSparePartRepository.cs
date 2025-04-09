@@ -2,7 +2,7 @@
         namespace Global;
         public interface IRepairConsumedSparePartRepository
 {
-    public Task<RepairConsumedSparePartListRepositoryDto> GetAllAsync(int count = 50, int offset = 0);
+    public Task<RepairConsumedSparePartListRepositoryDto> GetAllAsync(RepairConsumedSparePartQueryRepositoryDto queryDto);
 
     public Task<RepairConsumedSparePartRepositoryDto> GetByIdAsync(int id);
 

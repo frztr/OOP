@@ -7,7 +7,7 @@ public class RepositoryInterfaceCreator
         namespace Global;
         public interface I{entity.Name}Repository
 {{
-    public Task<{entity.Name}ListRepositoryDto> GetAllAsync({pk} count = 50, {pk} offset = 0);
+    public Task<{entity.Name}ListRepositoryDto> GetAllAsync({entity.Name}QueryRepositoryDto queryDto);
 
     public Task<{entity.Name}RepositoryDto> GetByIdAsync({pk} id);
 

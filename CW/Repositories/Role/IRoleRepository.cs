@@ -2,7 +2,7 @@
         namespace Global;
         public interface IRoleRepository
 {
-    public Task<RoleListRepositoryDto> GetAllAsync(short count = 50, short offset = 0);
+    public Task<RoleListRepositoryDto> GetAllAsync(RoleQueryRepositoryDto queryDto);
 
     public Task<RoleRepositoryDto> GetByIdAsync(short id);
 

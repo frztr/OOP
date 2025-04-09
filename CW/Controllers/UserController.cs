@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 namespace Global;
 [Authorize(Roles="admin")]
 [ApiController]
@@ -46,14 +47,17 @@ public class UserController(IUserService service)
 
     [HttpGet]
     [Route("")]
-    public async Task<IResult> GetAll(short count = 50, short offset = 0)
+    public async Task<IResult> GetAll([FromQuery]UserQueryControllerDto queryDto)
     {
         try
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserServiceDto,UserControllerDto>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserQueryControllerDto,UserQueryServiceDto>());
             var mapper = new Mapper(config);
+            var dto = mapper.Map<UserQueryControllerDto,UserQueryServiceDto>(queryDto);
+            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<UserServiceDto,UserControllerDto>());
+            var mapper2 = new Mapper(config2);
             return Results.Json(new UserListControllerDto(){
-                Items = (await service.GetAllAsync(count,offset)).Items.Select(x=>mapper.Map<UserControllerDto>(x))
+                Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<UserServiceDto,UserControllerDto>(x))
             });
         }
         catch (Exception ex)
@@ -97,6 +101,7 @@ public class UserController(IUserService service)
 
     [HttpPost]
     [Route("login")]
+    [AllowAnonymous]
     public async Task<IResult> Login(UserLoginControllerDto loginDto)
     {
         try

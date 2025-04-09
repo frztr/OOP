@@ -2,7 +2,7 @@
         namespace Global;
         public interface IFuelMeasurementHistoryRepository
 {
-    public Task<FuelMeasurementHistoryListRepositoryDto> GetAllAsync(int count = 50, int offset = 0);
+    public Task<FuelMeasurementHistoryListRepositoryDto> GetAllAsync(FuelMeasurementHistoryQueryRepositoryDto queryDto);
 
     public Task<FuelMeasurementHistoryRepositoryDto> GetByIdAsync(int id);
 

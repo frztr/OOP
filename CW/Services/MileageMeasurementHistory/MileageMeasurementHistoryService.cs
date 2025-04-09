@@ -1,10 +1,11 @@
 
 using AutoMapper;
 namespace Global;
-public class MileageMeasurementHistoryService(IMileageMeasurementHistoryRepository repository) : IMileageMeasurementHistoryService
+public class MileageMeasurementHistoryService(IMileageMeasurementHistoryRepository repository, ILogger<MileageMeasurementHistoryService> logger) : IMileageMeasurementHistoryService
 {
     public async Task<MileageMeasurementHistoryServiceDto> AddAsync(AddMileageMeasurementHistoryServiceDto addServiceDto)
     {
+        logger.Log(LogLevel.Debug,"Add()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddMileageMeasurementHistoryServiceDto, AddMileageMeasurementHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddMileageMeasurementHistoryServiceDto, AddMileageMeasurementHistoryRepositoryDto>(addServiceDto);
@@ -16,20 +17,26 @@ public class MileageMeasurementHistoryService(IMileageMeasurementHistoryReposito
 
     public async Task DeleteAsync(int id)
     {
+        logger.Log(LogLevel.Debug,"Delete()");
         await repository.DeleteAsync(id);
     }
 
-    public async Task<MileageMeasurementHistoryListServiceDto> GetAllAsync(int count = 50, int offset = 0)
+    public async Task<MileageMeasurementHistoryListServiceDto> GetAllAsync(MileageMeasurementHistoryQueryServiceDto queryDto)
     {
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<MileageMeasurementHistoryRepositoryDto,MileageMeasurementHistoryServiceDto>());
+        logger.Log(LogLevel.Debug,"GetAll()");
+        var config = new MapperConfiguration(cfg => cfg.CreateMap<MileageMeasurementHistoryQueryServiceDto,MileageMeasurementHistoryQueryRepositoryDto>());
         var mapper = new Mapper(config);
+        var dto = mapper.Map<MileageMeasurementHistoryQueryServiceDto,MileageMeasurementHistoryQueryRepositoryDto>(queryDto);    
+        var config2 = new MapperConfiguration(cfg => cfg.CreateMap<MileageMeasurementHistoryRepositoryDto,MileageMeasurementHistoryServiceDto>());
+        var mapper2 = new Mapper(config2);
         return new MileageMeasurementHistoryListServiceDto(){
-            Items = (await repository.GetAllAsync(count, offset)).Items.Select(x=>mapper.Map<MileageMeasurementHistoryServiceDto>(x))
+            Items = (await repository.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<MileageMeasurementHistoryServiceDto>(x))
         };
     }
 
     public async Task<MileageMeasurementHistoryServiceDto> GetByIdAsync(int id)
     {
+        logger.Log(LogLevel.Debug,"GetById()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<MileageMeasurementHistoryRepositoryDto, MileageMeasurementHistoryServiceDto>());
         var mapper = new Mapper(config);
         return mapper.Map<MileageMeasurementHistoryRepositoryDto, MileageMeasurementHistoryServiceDto>(await repository.GetByIdAsync(id));
@@ -37,6 +44,7 @@ public class MileageMeasurementHistoryService(IMileageMeasurementHistoryReposito
 
     public async Task UpdateAsync(UpdateMileageMeasurementHistoryServiceDto updateDto)
     {
+        logger.Log(LogLevel.Debug,"Update()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateMileageMeasurementHistoryServiceDto, UpdateMileageMeasurementHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateMileageMeasurementHistoryServiceDto, UpdateMileageMeasurementHistoryRepositoryDto>(updateDto);

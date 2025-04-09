@@ -2,7 +2,7 @@
         namespace Global;
         public interface IFuelTypeRepository
 {
-    public Task<FuelTypeListRepositoryDto> GetAllAsync(short count = 50, short offset = 0);
+    public Task<FuelTypeListRepositoryDto> GetAllAsync(FuelTypeQueryRepositoryDto queryDto);
 
     public Task<FuelTypeRepositoryDto> GetByIdAsync(short id);
 

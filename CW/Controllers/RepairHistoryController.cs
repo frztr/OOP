@@ -3,15 +3,18 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+using Microsoft.AspNetCore.Mvc;
 namespace Global;
 [Authorize(Roles="admin")]
 [ApiController]
 [Route("RepairHistory")]
-public class RepairHistoryController(IRepairHistoryService service)
+public class RepairHistoryController(IRepairHistoryService service) : Controller
 {
     [HttpPost]
     [Route("add")]
-    public async Task<IResult> Add(AddRepairHistoryControllerDto addDto)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
+    public async Task<IResult> Add(AddRepairHistoryControllerDto addDto) 
     {
         try
         {
@@ -31,6 +34,8 @@ public class RepairHistoryController(IRepairHistoryService service)
 
     [HttpDelete]
     [Route("{id}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<IResult> Delete(int id)
     {
         try
@@ -46,14 +51,19 @@ public class RepairHistoryController(IRepairHistoryService service)
 
     [HttpGet]
     [Route("")]
-    public async Task<IResult> GetAll(int count = 50, int offset = 0)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
+    public async Task<IResult> GetAll([FromQuery]RepairHistoryQueryControllerDto queryDto)
     {
         try
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RepairHistoryServiceDto,RepairHistoryControllerDto>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RepairHistoryQueryControllerDto,RepairHistoryQueryServiceDto>());
             var mapper = new Mapper(config);
+            var dto = mapper.Map<RepairHistoryQueryControllerDto,RepairHistoryQueryServiceDto>(queryDto);
+            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<RepairHistoryServiceDto,RepairHistoryControllerDto>());
+            var mapper2 = new Mapper(config2);
             return Results.Json(new RepairHistoryListControllerDto(){
-                Items = (await service.GetAllAsync(count,offset)).Items.Select(x=>mapper.Map<RepairHistoryServiceDto,RepairHistoryControllerDto>(x))
+                Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<RepairHistoryServiceDto,RepairHistoryControllerDto>(x))
             });
         }
         catch (Exception ex)
@@ -64,6 +74,8 @@ public class RepairHistoryController(IRepairHistoryService service)
 
     [HttpGet]
     [Route("{id}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<IResult> GetById(int id)
     {
         try
@@ -79,6 +91,8 @@ public class RepairHistoryController(IRepairHistoryService service)
     }
     [HttpPatch]
     [Route("update")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<IResult> UpdateAsync(UpdateRepairHistoryControllerDto updateDto)
     {
         try

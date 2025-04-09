@@ -24,14 +24,15 @@ public class MaintenanceTypeRepository(AppDbContext db) : IMaintenanceTypeReposi
         await db.SaveChangesAsync();
     }
 
-    public async Task<MaintenanceTypeListRepositoryDto> GetAllAsync(short count = 50, short offset = 0)
+    public async Task<MaintenanceTypeListRepositoryDto> GetAllAsync(MaintenanceTypeQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<MaintenanceType,MaintenanceTypeRepositoryDto>());
         var mapper = new Mapper(config);
         return new MaintenanceTypeListRepositoryDto()
         {
             Items = mapper.Map<List<MaintenanceTypeRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

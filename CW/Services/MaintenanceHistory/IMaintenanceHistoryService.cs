@@ -2,7 +2,7 @@
 namespace Global;
 public interface IMaintenanceHistoryService
     {
-        public Task<MaintenanceHistoryListServiceDto> GetAllAsync(int count = 50, int offset = 0);
+        public Task<MaintenanceHistoryListServiceDto> GetAllAsync(MaintenanceHistoryQueryServiceDto queryDto);
 
         public Task<MaintenanceHistoryServiceDto> GetByIdAsync(int id);
 

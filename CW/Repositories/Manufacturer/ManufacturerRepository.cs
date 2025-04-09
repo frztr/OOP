@@ -24,14 +24,15 @@ public class ManufacturerRepository(AppDbContext db) : IManufacturerRepository
         await db.SaveChangesAsync();
     }
 
-    public async Task<ManufacturerListRepositoryDto> GetAllAsync(short count = 50, short offset = 0)
+    public async Task<ManufacturerListRepositoryDto> GetAllAsync(ManufacturerQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<Manufacturer,ManufacturerRepositoryDto>());
         var mapper = new Mapper(config);
         return new ManufacturerListRepositoryDto()
         {
             Items = mapper.Map<List<ManufacturerRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

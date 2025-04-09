@@ -1,10 +1,11 @@
 
 using AutoMapper;
 namespace Global;
-public class AutomechanicService(IAutomechanicRepository repository) : IAutomechanicService
+public class AutomechanicService(IAutomechanicRepository repository, ILogger<AutomechanicService> logger) : IAutomechanicService
 {
     public async Task<AutomechanicServiceDto> AddAsync(AddAutomechanicServiceDto addServiceDto)
     {
+        logger.Log(LogLevel.Debug,"Add()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddAutomechanicServiceDto, AddAutomechanicRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddAutomechanicServiceDto, AddAutomechanicRepositoryDto>(addServiceDto);
@@ -16,20 +17,26 @@ public class AutomechanicService(IAutomechanicRepository repository) : IAutomech
 
     public async Task DeleteAsync(short id)
     {
+        logger.Log(LogLevel.Debug,"Delete()");
         await repository.DeleteAsync(id);
     }
 
-    public async Task<AutomechanicListServiceDto> GetAllAsync(short count = 50, short offset = 0)
+    public async Task<AutomechanicListServiceDto> GetAllAsync(AutomechanicQueryServiceDto queryDto)
     {
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<AutomechanicRepositoryDto,AutomechanicServiceDto>());
+        logger.Log(LogLevel.Debug,"GetAll()");
+        var config = new MapperConfiguration(cfg => cfg.CreateMap<AutomechanicQueryServiceDto,AutomechanicQueryRepositoryDto>());
         var mapper = new Mapper(config);
+        var dto = mapper.Map<AutomechanicQueryServiceDto,AutomechanicQueryRepositoryDto>(queryDto);    
+        var config2 = new MapperConfiguration(cfg => cfg.CreateMap<AutomechanicRepositoryDto,AutomechanicServiceDto>());
+        var mapper2 = new Mapper(config2);
         return new AutomechanicListServiceDto(){
-            Items = (await repository.GetAllAsync(count, offset)).Items.Select(x=>mapper.Map<AutomechanicServiceDto>(x))
+            Items = (await repository.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<AutomechanicServiceDto>(x))
         };
     }
 
     public async Task<AutomechanicServiceDto> GetByIdAsync(short id)
     {
+        logger.Log(LogLevel.Debug,"GetById()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AutomechanicRepositoryDto, AutomechanicServiceDto>());
         var mapper = new Mapper(config);
         return mapper.Map<AutomechanicRepositoryDto, AutomechanicServiceDto>(await repository.GetByIdAsync(id));
@@ -37,6 +44,7 @@ public class AutomechanicService(IAutomechanicRepository repository) : IAutomech
 
     public async Task UpdateAsync(UpdateAutomechanicServiceDto updateDto)
     {
+        logger.Log(LogLevel.Debug,"Update()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateAutomechanicServiceDto, UpdateAutomechanicRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateAutomechanicServiceDto, UpdateAutomechanicRepositoryDto>(updateDto);

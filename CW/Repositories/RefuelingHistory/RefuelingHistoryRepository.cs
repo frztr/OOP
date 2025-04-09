@@ -24,14 +24,15 @@ public class RefuelingHistoryRepository(AppDbContext db) : IRefuelingHistoryRepo
         await db.SaveChangesAsync();
     }
 
-    public async Task<RefuelingHistoryListRepositoryDto> GetAllAsync(int count = 50, int offset = 0)
+    public async Task<RefuelingHistoryListRepositoryDto> GetAllAsync(RefuelingHistoryQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<RefuelingHistory,RefuelingHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         return new RefuelingHistoryListRepositoryDto()
         {
             Items = mapper.Map<List<RefuelingHistoryRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

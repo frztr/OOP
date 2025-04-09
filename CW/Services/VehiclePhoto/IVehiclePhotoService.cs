@@ -2,7 +2,7 @@
 namespace Global;
 public interface IVehiclePhotoService
     {
-        public Task<VehiclePhotoListServiceDto> GetAllAsync(int count = 50, int offset = 0);
+        public Task<VehiclePhotoListServiceDto> GetAllAsync(VehiclePhotoQueryServiceDto queryDto);
 
         public Task<VehiclePhotoServiceDto> GetByIdAsync(int id);
 

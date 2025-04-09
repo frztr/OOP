@@ -2,7 +2,7 @@
 namespace Global;
 public interface IFuelTypeService
     {
-        public Task<FuelTypeListServiceDto> GetAllAsync(short count = 50, short offset = 0);
+        public Task<FuelTypeListServiceDto> GetAllAsync(FuelTypeQueryServiceDto queryDto);
 
         public Task<FuelTypeServiceDto> GetByIdAsync(short id);
 

@@ -24,14 +24,15 @@ public class RepairConsumedSparePartRepository(AppDbContext db) : IRepairConsume
         await db.SaveChangesAsync();
     }
 
-    public async Task<RepairConsumedSparePartListRepositoryDto> GetAllAsync(int count = 50, int offset = 0)
+    public async Task<RepairConsumedSparePartListRepositoryDto> GetAllAsync(RepairConsumedSparePartQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<RepairConsumedSparePart,RepairConsumedSparePartRepositoryDto>());
         var mapper = new Mapper(config);
         return new RepairConsumedSparePartListRepositoryDto()
         {
             Items = mapper.Map<List<RepairConsumedSparePartRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

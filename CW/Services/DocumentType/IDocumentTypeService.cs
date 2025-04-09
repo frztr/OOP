@@ -2,7 +2,7 @@
 namespace Global;
 public interface IDocumentTypeService
     {
-        public Task<DocumentTypeListServiceDto> GetAllAsync(short count = 50, short offset = 0);
+        public Task<DocumentTypeListServiceDto> GetAllAsync(DocumentTypeQueryServiceDto queryDto);
 
         public Task<DocumentTypeServiceDto> GetByIdAsync(short id);
 

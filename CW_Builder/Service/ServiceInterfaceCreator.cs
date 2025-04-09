@@ -7,7 +7,7 @@ public class ServiceInterfaceCreator
 namespace Global;
 public interface I{entity.Name}Service
     {{
-        public Task<{entity.Name}ListServiceDto> GetAllAsync({pk} count = 50, {pk} offset = 0);
+        public Task<{entity.Name}ListServiceDto> GetAllAsync({entity.Name}QueryServiceDto queryDto);
 
         public Task<{entity.Name}ServiceDto> GetByIdAsync({pk} id);
 

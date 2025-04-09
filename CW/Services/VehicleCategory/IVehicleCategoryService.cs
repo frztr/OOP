@@ -2,7 +2,7 @@
 namespace Global;
 public interface IVehicleCategoryService
     {
-        public Task<VehicleCategoryListServiceDto> GetAllAsync(short count = 50, short offset = 0);
+        public Task<VehicleCategoryListServiceDto> GetAllAsync(VehicleCategoryQueryServiceDto queryDto);
 
         public Task<VehicleCategoryServiceDto> GetByIdAsync(short id);
 

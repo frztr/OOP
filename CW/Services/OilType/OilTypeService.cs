@@ -1,10 +1,11 @@
 
 using AutoMapper;
 namespace Global;
-public class OilTypeService(IOilTypeRepository repository) : IOilTypeService
+public class OilTypeService(IOilTypeRepository repository, ILogger<OilTypeService> logger) : IOilTypeService
 {
     public async Task<OilTypeServiceDto> AddAsync(AddOilTypeServiceDto addServiceDto)
     {
+        logger.Log(LogLevel.Debug,"Add()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddOilTypeServiceDto, AddOilTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddOilTypeServiceDto, AddOilTypeRepositoryDto>(addServiceDto);
@@ -16,20 +17,26 @@ public class OilTypeService(IOilTypeRepository repository) : IOilTypeService
 
     public async Task DeleteAsync(short id)
     {
+        logger.Log(LogLevel.Debug,"Delete()");
         await repository.DeleteAsync(id);
     }
 
-    public async Task<OilTypeListServiceDto> GetAllAsync(short count = 50, short offset = 0)
+    public async Task<OilTypeListServiceDto> GetAllAsync(OilTypeQueryServiceDto queryDto)
     {
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<OilTypeRepositoryDto,OilTypeServiceDto>());
+        logger.Log(LogLevel.Debug,"GetAll()");
+        var config = new MapperConfiguration(cfg => cfg.CreateMap<OilTypeQueryServiceDto,OilTypeQueryRepositoryDto>());
         var mapper = new Mapper(config);
+        var dto = mapper.Map<OilTypeQueryServiceDto,OilTypeQueryRepositoryDto>(queryDto);    
+        var config2 = new MapperConfiguration(cfg => cfg.CreateMap<OilTypeRepositoryDto,OilTypeServiceDto>());
+        var mapper2 = new Mapper(config2);
         return new OilTypeListServiceDto(){
-            Items = (await repository.GetAllAsync(count, offset)).Items.Select(x=>mapper.Map<OilTypeServiceDto>(x))
+            Items = (await repository.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<OilTypeServiceDto>(x))
         };
     }
 
     public async Task<OilTypeServiceDto> GetByIdAsync(short id)
     {
+        logger.Log(LogLevel.Debug,"GetById()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<OilTypeRepositoryDto, OilTypeServiceDto>());
         var mapper = new Mapper(config);
         return mapper.Map<OilTypeRepositoryDto, OilTypeServiceDto>(await repository.GetByIdAsync(id));
@@ -37,6 +44,7 @@ public class OilTypeService(IOilTypeRepository repository) : IOilTypeService
 
     public async Task UpdateAsync(UpdateOilTypeServiceDto updateDto)
     {
+        logger.Log(LogLevel.Debug,"Update()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateOilTypeServiceDto, UpdateOilTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateOilTypeServiceDto, UpdateOilTypeRepositoryDto>(updateDto);

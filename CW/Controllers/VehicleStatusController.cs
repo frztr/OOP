@@ -3,15 +3,18 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+using Microsoft.AspNetCore.Mvc;
 namespace Global;
 [Authorize(Roles="admin")]
 [ApiController]
 [Route("VehicleStatus")]
-public class VehicleStatusController(IVehicleStatusService service)
+public class VehicleStatusController(IVehicleStatusService service) : Controller
 {
     [HttpPost]
     [Route("add")]
-    public async Task<IResult> Add(AddVehicleStatusControllerDto addDto)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
+    public async Task<IResult> Add(AddVehicleStatusControllerDto addDto) 
     {
         try
         {
@@ -31,6 +34,8 @@ public class VehicleStatusController(IVehicleStatusService service)
 
     [HttpDelete]
     [Route("{id}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<IResult> Delete(short id)
     {
         try
@@ -46,14 +51,19 @@ public class VehicleStatusController(IVehicleStatusService service)
 
     [HttpGet]
     [Route("")]
-    public async Task<IResult> GetAll(short count = 50, short offset = 0)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
+    public async Task<IResult> GetAll([FromQuery]VehicleStatusQueryControllerDto queryDto)
     {
         try
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<VehicleStatusServiceDto,VehicleStatusControllerDto>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<VehicleStatusQueryControllerDto,VehicleStatusQueryServiceDto>());
             var mapper = new Mapper(config);
+            var dto = mapper.Map<VehicleStatusQueryControllerDto,VehicleStatusQueryServiceDto>(queryDto);
+            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<VehicleStatusServiceDto,VehicleStatusControllerDto>());
+            var mapper2 = new Mapper(config2);
             return Results.Json(new VehicleStatusListControllerDto(){
-                Items = (await service.GetAllAsync(count,offset)).Items.Select(x=>mapper.Map<VehicleStatusServiceDto,VehicleStatusControllerDto>(x))
+                Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<VehicleStatusServiceDto,VehicleStatusControllerDto>(x))
             });
         }
         catch (Exception ex)
@@ -64,6 +74,8 @@ public class VehicleStatusController(IVehicleStatusService service)
 
     [HttpGet]
     [Route("{id}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<IResult> GetById(short id)
     {
         try
@@ -79,6 +91,8 @@ public class VehicleStatusController(IVehicleStatusService service)
     }
     [HttpPatch]
     [Route("update")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<IResult> UpdateAsync(UpdateVehicleStatusControllerDto updateDto)
     {
         try

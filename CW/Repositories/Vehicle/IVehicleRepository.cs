@@ -2,7 +2,7 @@
         namespace Global;
         public interface IVehicleRepository
 {
-    public Task<VehicleListRepositoryDto> GetAllAsync(int count = 50, int offset = 0);
+    public Task<VehicleListRepositoryDto> GetAllAsync(VehicleQueryRepositoryDto queryDto);
 
     public Task<VehicleRepositoryDto> GetByIdAsync(int id);
 

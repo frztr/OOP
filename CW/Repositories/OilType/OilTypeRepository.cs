@@ -24,14 +24,15 @@ public class OilTypeRepository(AppDbContext db) : IOilTypeRepository
         await db.SaveChangesAsync();
     }
 
-    public async Task<OilTypeListRepositoryDto> GetAllAsync(short count = 50, short offset = 0)
+    public async Task<OilTypeListRepositoryDto> GetAllAsync(OilTypeQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<OilType,OilTypeRepositoryDto>());
         var mapper = new Mapper(config);
         return new OilTypeListRepositoryDto()
         {
             Items = mapper.Map<List<OilTypeRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

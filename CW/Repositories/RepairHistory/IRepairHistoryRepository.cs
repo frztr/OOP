@@ -2,7 +2,7 @@
         namespace Global;
         public interface IRepairHistoryRepository
 {
-    public Task<RepairHistoryListRepositoryDto> GetAllAsync(int count = 50, int offset = 0);
+    public Task<RepairHistoryListRepositoryDto> GetAllAsync(RepairHistoryQueryRepositoryDto queryDto);
 
     public Task<RepairHistoryRepositoryDto> GetByIdAsync(int id);
 

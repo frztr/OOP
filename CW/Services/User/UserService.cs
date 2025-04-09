@@ -6,10 +6,11 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 namespace Global;
-public class UserService(IUserRepository repository) : IUserService
+public class UserService(IUserRepository repository, ILogger<UserService> logger) : IUserService
 {
     public async Task<UserServiceDto> AddAsync(AddUserServiceDto addServiceDto)
     {
+        logger.Log(LogLevel.Debug,"Add()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddUserServiceDto, AddUserRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddUserServiceDto, AddUserRepositoryDto>(addServiceDto);
@@ -22,20 +23,26 @@ public class UserService(IUserRepository repository) : IUserService
 
     public async Task DeleteAsync(short id)
     {
+        logger.Log(LogLevel.Debug,"Delete()");
         await repository.DeleteAsync(id);
     }
 
-    public async Task<UserListServiceDto> GetAllAsync(short count = 50, short offset = 0)
+    public async Task<UserListServiceDto> GetAllAsync(UserQueryServiceDto queryDto)
     {
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UserRepositoryDto,UserServiceDto>());
+        logger.Log(LogLevel.Debug,"GetAll()");
+        var config = new MapperConfiguration(cfg => cfg.CreateMap<UserQueryServiceDto,UserQueryRepositoryDto>());
         var mapper = new Mapper(config);
+        var dto = mapper.Map<UserQueryServiceDto,UserQueryRepositoryDto>(queryDto);    
+        var config2 = new MapperConfiguration(cfg => cfg.CreateMap<UserRepositoryDto,UserServiceDto>());
+        var mapper2 = new Mapper(config2);
         return new UserListServiceDto(){
-            Items = (await repository.GetAllAsync(count, offset)).Items.Select(x=>mapper.Map<UserServiceDto>(x))
+            Items = (await repository.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<UserServiceDto>(x))
         };
     }
 
     public async Task<UserServiceDto> GetByIdAsync(short id)
     {
+        logger.Log(LogLevel.Debug,"GetById()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UserRepositoryDto, UserServiceDto>());
         var mapper = new Mapper(config);
         return mapper.Map<UserRepositoryDto, UserServiceDto>(await repository.GetByIdAsync(id));
@@ -43,14 +50,16 @@ public class UserService(IUserRepository repository) : IUserService
 
     public async Task UpdateAsync(UpdateUserServiceDto updateDto)
     {
+        logger.Log(LogLevel.Debug,"Update()");
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateUserServiceDto, UpdateUserRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateUserServiceDto, UpdateUserRepositoryDto>(updateDto);
         await repository.UpdateAsync(updateRepositoryDto);
     }
-
+    
     public async Task<UserLoginResultServiceDto> Login(UserLoginServiceDto loginDto)
     {
+        logger.Log(LogLevel.Debug,"Login()");
         var passwordHash = Convert.ToHexString(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password))).ToLower();
         var credentials = await repository.Login(new UserLoginRepositoryDto(){
             Login = loginDto.Login,
@@ -62,11 +71,11 @@ public class UserService(IUserRepository repository) : IUserService
                 new Claim(ClaimTypes.Role, credentials.RoleName)
                 };
         var jwt = new JwtSecurityToken(
-                issuer: "CW",
-                audience: "CW",
+                issuer: AppConfig.ISSUER,
+                audience: AppConfig.AUDIENCE,
                 claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromDays(90)),
-                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("J9gGkPrHnbT6rZHjkiaGLvFpRGkEMMDr")), SecurityAlgorithms.HmacSha256));
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppConfig.KEY)), SecurityAlgorithms.HmacSha256));
 
         return new UserLoginResultServiceDto(){
             Token = new JwtSecurityTokenHandler().WriteToken(jwt)

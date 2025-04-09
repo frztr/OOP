@@ -24,14 +24,15 @@ public class DocumentTypeRepository(AppDbContext db) : IDocumentTypeRepository
         await db.SaveChangesAsync();
     }
 
-    public async Task<DocumentTypeListRepositoryDto> GetAllAsync(short count = 50, short offset = 0)
+    public async Task<DocumentTypeListRepositoryDto> GetAllAsync(DocumentTypeQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<DocumentType,DocumentTypeRepositoryDto>());
         var mapper = new Mapper(config);
         return new DocumentTypeListRepositoryDto()
         {
             Items = mapper.Map<List<DocumentTypeRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

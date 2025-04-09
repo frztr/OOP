@@ -24,14 +24,15 @@ public class FuelMeasurementHistoryRepository(AppDbContext db) : IFuelMeasuremen
         await db.SaveChangesAsync();
     }
 
-    public async Task<FuelMeasurementHistoryListRepositoryDto> GetAllAsync(int count = 50, int offset = 0)
+    public async Task<FuelMeasurementHistoryListRepositoryDto> GetAllAsync(FuelMeasurementHistoryQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<FuelMeasurementHistory,FuelMeasurementHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         return new FuelMeasurementHistoryListRepositoryDto()
         {
             Items = mapper.Map<List<FuelMeasurementHistoryRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

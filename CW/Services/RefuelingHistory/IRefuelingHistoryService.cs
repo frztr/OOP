@@ -2,7 +2,7 @@
 namespace Global;
 public interface IRefuelingHistoryService
     {
-        public Task<RefuelingHistoryListServiceDto> GetAllAsync(int count = 50, int offset = 0);
+        public Task<RefuelingHistoryListServiceDto> GetAllAsync(RefuelingHistoryQueryServiceDto queryDto);
 
         public Task<RefuelingHistoryServiceDto> GetByIdAsync(int id);
 

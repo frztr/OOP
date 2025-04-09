@@ -24,14 +24,15 @@ public class PlannedMaintenanceScheduleRepository(AppDbContext db) : IPlannedMai
         await db.SaveChangesAsync();
     }
 
-    public async Task<PlannedMaintenanceScheduleListRepositoryDto> GetAllAsync(int count = 50, int offset = 0)
+    public async Task<PlannedMaintenanceScheduleListRepositoryDto> GetAllAsync(PlannedMaintenanceScheduleQueryRepositoryDto queryDto)
     {
         var config = new MapperConfiguration(cfg => cfg.CreateMap<PlannedMaintenanceSchedule,PlannedMaintenanceScheduleRepositoryDto>());
         var mapper = new Mapper(config);
         return new PlannedMaintenanceScheduleListRepositoryDto()
         {
             Items = mapper.Map<List<PlannedMaintenanceScheduleRepositoryDto>>(
-            await set.Skip(offset).Take(count < 50 ? count : 50).ToListAsync()
+            await set
+.Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
     }

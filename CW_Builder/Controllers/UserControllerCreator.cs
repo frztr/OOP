@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 namespace Global;
 [Authorize(Roles=""admin"")]
 [ApiController]
@@ -51,14 +52,17 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
 
     [HttpGet]
     [Route("""")]
-    public async Task<IResult> GetAll({pk} count = 50, {pk} offset = 0)
+    public async Task<IResult> GetAll([FromQuery]{entity.Name}QueryControllerDto queryDto)
     {{
         try
         {{
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name}ServiceDto,{entity.Name}ControllerDto>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name}QueryControllerDto,{entity.Name}QueryServiceDto>());
             var mapper = new Mapper(config);
+            var dto = mapper.Map<{entity.Name}QueryControllerDto,{entity.Name}QueryServiceDto>(queryDto);
+            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name}ServiceDto,{entity.Name}ControllerDto>());
+            var mapper2 = new Mapper(config2);
             return Results.Json(new {entity.Name}ListControllerDto(){{
-                Items = (await service.GetAllAsync(count,offset)).Items.Select(x=>mapper.Map<{entity.Name}ControllerDto>(x))
+                Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<{entity.Name}ServiceDto,{entity.Name}ControllerDto>(x))
             }});
         }}
         catch (Exception ex)
@@ -102,6 +106,7 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
 
     [HttpPost]
     [Route(""login"")]
+    [AllowAnonymous]
     public async Task<IResult> Login(UserLoginControllerDto loginDto)
     {{
         try

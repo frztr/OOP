@@ -2,7 +2,7 @@
         namespace Global;
         public interface IManufacturerRepository
 {
-    public Task<ManufacturerListRepositoryDto> GetAllAsync(short count = 50, short offset = 0);
+    public Task<ManufacturerListRepositoryDto> GetAllAsync(ManufacturerQueryRepositoryDto queryDto);
 
     public Task<ManufacturerRepositoryDto> GetByIdAsync(short id);
 

@@ -3,15 +3,18 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+using Microsoft.AspNetCore.Mvc;
 namespace Global;
 [Authorize(Roles="admin")]
 [ApiController]
 [Route("VehiclePhoto")]
-public class VehiclePhotoController(IVehiclePhotoService service)
+public class VehiclePhotoController(IVehiclePhotoService service) : Controller
 {
     [HttpPost]
     [Route("add")]
-    public async Task<IResult> Add(AddVehiclePhotoControllerDto addDto)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
+    public async Task<IResult> Add(AddVehiclePhotoControllerDto addDto) 
     {
         try
         {
@@ -31,6 +34,8 @@ public class VehiclePhotoController(IVehiclePhotoService service)
 
     [HttpDelete]
     [Route("{id}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<IResult> Delete(int id)
     {
         try
@@ -46,14 +51,19 @@ public class VehiclePhotoController(IVehiclePhotoService service)
 
     [HttpGet]
     [Route("")]
-    public async Task<IResult> GetAll(int count = 50, int offset = 0)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
+    public async Task<IResult> GetAll([FromQuery]VehiclePhotoQueryControllerDto queryDto)
     {
         try
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<VehiclePhotoServiceDto,VehiclePhotoControllerDto>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<VehiclePhotoQueryControllerDto,VehiclePhotoQueryServiceDto>());
             var mapper = new Mapper(config);
+            var dto = mapper.Map<VehiclePhotoQueryControllerDto,VehiclePhotoQueryServiceDto>(queryDto);
+            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<VehiclePhotoServiceDto,VehiclePhotoControllerDto>());
+            var mapper2 = new Mapper(config2);
             return Results.Json(new VehiclePhotoListControllerDto(){
-                Items = (await service.GetAllAsync(count,offset)).Items.Select(x=>mapper.Map<VehiclePhotoServiceDto,VehiclePhotoControllerDto>(x))
+                Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<VehiclePhotoServiceDto,VehiclePhotoControllerDto>(x))
             });
         }
         catch (Exception ex)
@@ -64,6 +74,8 @@ public class VehiclePhotoController(IVehiclePhotoService service)
 
     [HttpGet]
     [Route("{id}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<IResult> GetById(int id)
     {
         try
@@ -79,6 +91,8 @@ public class VehiclePhotoController(IVehiclePhotoService service)
     }
     [HttpPatch]
     [Route("update")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<IResult> UpdateAsync(UpdateVehiclePhotoControllerDto updateDto)
     {
         try

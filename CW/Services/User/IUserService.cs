@@ -2,7 +2,7 @@
 namespace Global;
 public interface IUserService
     {
-        public Task<UserListServiceDto> GetAllAsync(short count = 50, short offset = 0);
+        public Task<UserListServiceDto> GetAllAsync(UserQueryServiceDto queryDto);
 
         public Task<UserServiceDto> GetByIdAsync(short id);
 

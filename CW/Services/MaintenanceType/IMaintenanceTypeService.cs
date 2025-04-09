@@ -2,7 +2,7 @@
 namespace Global;
 public interface IMaintenanceTypeService
     {
-        public Task<MaintenanceTypeListServiceDto> GetAllAsync(short count = 50, short offset = 0);
+        public Task<MaintenanceTypeListServiceDto> GetAllAsync(MaintenanceTypeQueryServiceDto queryDto);
 
         public Task<MaintenanceTypeServiceDto> GetByIdAsync(short id);
 

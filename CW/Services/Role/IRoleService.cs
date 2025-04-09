@@ -2,7 +2,7 @@
 namespace Global;
 public interface IRoleService
     {
-        public Task<RoleListServiceDto> GetAllAsync(short count = 50, short offset = 0);
+        public Task<RoleListServiceDto> GetAllAsync(RoleQueryServiceDto queryDto);
 
         public Task<RoleServiceDto> GetByIdAsync(short id);
 
