@@ -13,17 +13,17 @@ namespace Global;
 public class Update{entity.Name}{layer}Dto
 {{
     [Required]
-    {prop}
+{prop}
     
-    {String.Join("\n\t", entity.Props
+    {String.Join("\n", entity.Props
 .Where(x => !(x.PK) && !(x.Identity)
 && AppContext.Get().AllowedValues.Contains(x.Type))
 .Select(x =>
 {
     string prop = "";
     if (x.HasMaxLength.HasValue)
-        prop += $"\t[StringLength({x.HasMaxLength.Value})]\n";
-    prop += $"\tpublic {x.Type} {x.Name} {{ get; set; }}";
+        prop += $"[StringLength({x.HasMaxLength.Value})]\n";
+    prop += $"\tpublic {x.Type}{((x.PK || x.Identity)?"":"?")} {x.Name} {{ get; set; }}";
     return prop;
 }))}
 }}";

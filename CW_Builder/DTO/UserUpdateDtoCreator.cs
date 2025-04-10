@@ -26,7 +26,7 @@ public class Update{entity.Name}{layer}Dto
         prop += $"[Required]\n";
     if (x.HasMaxLength.HasValue)
         prop += $"\t[StringLength({x.HasMaxLength.Value})]\n";
-    prop += $"\tpublic {x.Type} {x.Name} {{ get; set; }}";
+    prop += $"\tpublic {x.Type}{(x.IsRequired || (x.PK && !x.Identity)?"":"?")} {x.Name} {{ get; set; }}";
     return prop;
 }))}
     public string {(layer == "Repository" ? "PasswordHash" : "Password")} {{ get; set; }}

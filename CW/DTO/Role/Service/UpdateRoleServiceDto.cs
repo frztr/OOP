@@ -4,8 +4,8 @@ namespace Global;
 public class UpdateRoleServiceDto
 {
     [Required]
-    	public short Id { get; set; }
+	public short Id { get; set; }
     
-    	[StringLength(30)]
-	public string Name { get; set; }
+    [StringLength(30)]
+	public string? Name { get; set; }
 }

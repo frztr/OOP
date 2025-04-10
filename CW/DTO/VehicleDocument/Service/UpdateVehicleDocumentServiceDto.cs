@@ -4,10 +4,10 @@ namespace Global;
 public class UpdateVehicleDocumentServiceDto
 {
     [Required]
-    	public int Id { get; set; }
+	public int Id { get; set; }
     
-    	public short DocTypeId { get; set; }
-		[StringLength(255)]
-	public string Src { get; set; }
-		public int VehicleId { get; set; }
+    	public short? DocTypeId { get; set; }
+[StringLength(255)]
+	public string? Src { get; set; }
+	public int? VehicleId { get; set; }
 }
