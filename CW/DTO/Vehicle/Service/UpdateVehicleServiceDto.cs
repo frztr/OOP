@@ -5,10 +5,9 @@ public class UpdateVehicleServiceDto
 {
     [Required]
 	public int Id { get; set; }
-    
-    [StringLength(17)]
+	[StringLength(17)]
 	public string? VinNumber { get; set; }
-[StringLength(15)]
+	[StringLength(15)]
 	public string? PlateNumber { get; set; }
 	public int? VehicleModelId { get; set; }
 	public short? ReleaseYear { get; set; }

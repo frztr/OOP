@@ -14,15 +14,14 @@ public class Update{entity.Name}{layer}Dto
 {{
     [Required]
 {prop}
-    
-    {String.Join("\n", entity.Props
+{String.Join("\n", entity.Props
 .Where(x => !(x.PK) && !(x.Identity)
 && AppContext.Get().AllowedValues.Contains(x.Type))
 .Select(x =>
 {
     string prop = "";
     if (x.HasMaxLength.HasValue)
-        prop += $"[StringLength({x.HasMaxLength.Value})]\n";
+        prop += $"\t[StringLength({x.HasMaxLength.Value})]\n";
     prop += $"\tpublic {x.Type}{((x.PK || x.Identity)?"":"?")} {x.Name} {{ get; set; }}";
     return prop;
 }))}

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddVehiclePhotoServiceDto
 {
-    [Required]
+	[Required]
 	[StringLength(255)]
 	public string Src { get; set; }
 	[Required]

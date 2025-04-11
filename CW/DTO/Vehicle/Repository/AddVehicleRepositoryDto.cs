@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddVehicleRepositoryDto
 {
-    [Required]
+	[Required]
 	[StringLength(17)]
 	public string VinNumber { get; set; }
 	[Required]

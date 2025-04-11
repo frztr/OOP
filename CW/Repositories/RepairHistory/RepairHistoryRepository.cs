@@ -54,9 +54,6 @@ public class RepairHistoryRepository(AppDbContext db) : IRepairHistoryRepository
 		if(updateDto.DateTimeBegin.HasValue){
             entity.DateTimeBegin = updateDto.DateTimeBegin.Value;
         }
-		if(updateDto.DateTimeEnd.HasValue){
-            entity.DateTimeEnd = updateDto.DateTimeEnd.Value;
-        }
 		if(!String.IsNullOrEmpty(updateDto.CompletedWork)){
             entity.CompletedWork = updateDto.CompletedWork;
         }

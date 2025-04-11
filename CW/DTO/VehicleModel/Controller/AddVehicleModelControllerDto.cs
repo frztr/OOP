@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddVehicleModelControllerDto
 {
-    [Required]
+	[Required]
 	[StringLength(40)]
 	public string Name { get; set; }
 	[Required]

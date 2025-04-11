@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddDriverRepositoryDto
 {
-    [Required]
+	[Required]
 	public short UserId { get; set; }
 	[Required]
 	public long DriverLicense { get; set; }

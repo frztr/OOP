@@ -5,7 +5,6 @@ public class UpdateVehicleCategoryServiceDto
 {
     [Required]
 	public short Id { get; set; }
-    
-    [StringLength(25)]
+	[StringLength(25)]
 	public string? Name { get; set; }
 }

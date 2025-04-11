@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddVehicleDocumentControllerDto
 {
-    [Required]
+	[Required]
 	public short DocTypeId { get; set; }
 	[Required]
 	[StringLength(255)]

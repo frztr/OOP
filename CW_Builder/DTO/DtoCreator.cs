@@ -8,7 +8,7 @@ public class {entity.Name}{layer}Dto
 {{
     {String.Join("\n\t", entity.Props
 .Where(x => AppContext.Get().AllowedValues.Contains(x.Type))
-.Select(x => $"public {x.Type} {x.Name} {{ get; set; }}"))}
+.Select(x => $"public {x.Type}{((x.PK || x.Identity || x.IsRequired)?"":"?")} {x.Name} {{ get; set; }}"))}
 }}";
     }
 }

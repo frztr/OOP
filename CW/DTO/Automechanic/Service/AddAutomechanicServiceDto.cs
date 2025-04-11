@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddAutomechanicServiceDto
 {
-    [Required]
+	[Required]
 	public short UserId { get; set; }
 	[Required]
 	[StringLength(30)]

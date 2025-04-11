@@ -5,8 +5,7 @@ public class UpdateRefuelingHistoryControllerDto
 {
     [Required]
 	public int Id { get; set; }
-    
-    	public decimal? Volume { get; set; }
+	public decimal? Volume { get; set; }
 	public short? OilTypeId { get; set; }
 	public long? FuelStationTinNumber { get; set; }
 	public int? VehicleId { get; set; }

@@ -5,8 +5,7 @@ public class UpdateVehicleModelControllerDto
 {
     [Required]
 	public int Id { get; set; }
-    
-    [StringLength(40)]
+	[StringLength(40)]
 	public string? Name { get; set; }
 	public short? ManufacturerId { get; set; }
 	public short? VehicleCategoryId { get; set; }

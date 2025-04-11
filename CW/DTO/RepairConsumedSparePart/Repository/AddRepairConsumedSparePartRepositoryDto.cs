@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddRepairConsumedSparePartRepositoryDto
 {
-    [Required]
+	[Required]
 	public int RepairId { get; set; }
 	[Required]
 	public int SparePartId { get; set; }

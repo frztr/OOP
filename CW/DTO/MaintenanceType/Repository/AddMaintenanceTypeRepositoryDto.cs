@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddMaintenanceTypeRepositoryDto
 {
-    [Required]
+	[Required]
 	[StringLength(30)]
 	public string Name { get; set; }
 }

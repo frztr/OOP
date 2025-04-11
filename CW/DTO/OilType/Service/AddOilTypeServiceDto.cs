@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddOilTypeServiceDto
 {
-    [Required]
+	[Required]
 	[StringLength(10)]
 	public string Name { get; set; }
 	[Required]

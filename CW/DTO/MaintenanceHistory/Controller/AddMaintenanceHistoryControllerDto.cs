@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddMaintenanceHistoryControllerDto
 {
-    [Required]
+	[Required]
 	public DateTime Date { get; set; }
 	[Required]
 	public int VehicleId { get; set; }
