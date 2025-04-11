@@ -48,9 +48,17 @@ public class RepairConsumedSparePartRepository(AppDbContext db) : IRepairConsume
     public async Task UpdateAsync(UpdateRepairConsumedSparePartRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateRepairConsumedSparePartRepositoryDto, RepairConsumedSparePart>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateRepairConsumedSparePartRepositoryDto, RepairConsumedSparePart>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(updateDto.RepairId.HasValue){
+            entity.RepairId = updateDto.RepairId.Value;
+        }
+		if(updateDto.SparePartId.HasValue){
+            entity.SparePartId = updateDto.SparePartId.Value;
+        }
+		if(updateDto.PartCount.HasValue){
+            entity.PartCount = updateDto.PartCount.Value;
+        }
+
+
+        await db.SaveChangesAsync();
     }
 }

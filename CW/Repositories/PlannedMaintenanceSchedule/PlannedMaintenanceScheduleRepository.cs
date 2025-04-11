@@ -48,9 +48,17 @@ public class PlannedMaintenanceScheduleRepository(AppDbContext db) : IPlannedMai
     public async Task UpdateAsync(UpdatePlannedMaintenanceScheduleRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdatePlannedMaintenanceScheduleRepositoryDto, PlannedMaintenanceSchedule>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdatePlannedMaintenanceScheduleRepositoryDto, PlannedMaintenanceSchedule>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(updateDto.PlannedDate.HasValue){
+            entity.PlannedDate = updateDto.PlannedDate.Value;
+        }
+		if(updateDto.MaintenanceTypeId.HasValue){
+            entity.MaintenanceTypeId = updateDto.MaintenanceTypeId.Value;
+        }
+		if(updateDto.VehicleId.HasValue){
+            entity.VehicleId = updateDto.VehicleId.Value;
+        }
+
+
+        await db.SaveChangesAsync();
     }
 }

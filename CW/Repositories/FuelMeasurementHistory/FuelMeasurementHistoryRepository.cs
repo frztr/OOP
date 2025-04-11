@@ -48,9 +48,16 @@ public class FuelMeasurementHistoryRepository(AppDbContext db) : IFuelMeasuremen
     public async Task UpdateAsync(UpdateFuelMeasurementHistoryRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateFuelMeasurementHistoryRepositoryDto, FuelMeasurementHistory>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateFuelMeasurementHistoryRepositoryDto, FuelMeasurementHistory>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(updateDto.Volume.HasValue){
+            entity.Volume = updateDto.Volume.Value;
+        }
+		if(updateDto.MeasurementDate.HasValue){
+            entity.MeasurementDate = updateDto.MeasurementDate.Value;
+        }
+		if(updateDto.VehicleId.HasValue){
+            entity.VehicleId = updateDto.VehicleId.Value;
+        }
+
+        await db.SaveChangesAsync();
     }
 }

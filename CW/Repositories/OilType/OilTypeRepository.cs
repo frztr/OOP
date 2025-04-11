@@ -48,9 +48,13 @@ public class OilTypeRepository(AppDbContext db) : IOilTypeRepository
     public async Task UpdateAsync(UpdateOilTypeRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateOilTypeRepositoryDto, OilType>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateOilTypeRepositoryDto, OilType>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(!String.IsNullOrEmpty(updateDto.Name)){
+            entity.Name = updateDto.Name;
+        }
+		if(updateDto.FuelTypeId.HasValue){
+            entity.FuelTypeId = updateDto.FuelTypeId.Value;
+        }
+
+        await db.SaveChangesAsync();
     }
 }

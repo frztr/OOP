@@ -47,10 +47,22 @@ public class UserRepository(AppDbContext db) : IUserRepository
     public async Task UpdateAsync(UpdateUserRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateUserRepositoryDto, User>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateUserRepositoryDto, User>(updateDto,entity);
-        db.SaveChangesAsync();
+        		if(!String.IsNullOrEmpty(updateDto.Login)){
+            entity.Login = updateDto.Login;
+        }
+		if(!String.IsNullOrEmpty(updateDto.PasswordHash)){
+            entity.PasswordHash = updateDto.PasswordHash;
+        }
+		if(updateDto.RoleId.HasValue){
+            entity.RoleId = updateDto.RoleId.Value;
+        }
+		if(!String.IsNullOrEmpty(updateDto.Fio)){
+            entity.Fio = updateDto.Fio;
+        }
+
+
+
+        await db.SaveChangesAsync();
     }
 
     public async Task<UserLoginResultRepositoryDto> Login(UserLoginRepositoryDto loginDto)

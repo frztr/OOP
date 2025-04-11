@@ -73,10 +73,8 @@ public class {entity.Name}Repository(AppDbContext db) : I{entity.Name}Repository
     public async Task UpdateAsync(Update{entity.Name}RepositoryDto updateDto)
     {{
         var entity = await set.FirstOrDefaultAsync(x => x.{pk.Name} == updateDto.{pk.Name});
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<Update{entity.Name}RepositoryDto, {entity.Name}>());
-        var mapper = new Mapper(config);
-        mapper.Map<Update{entity.Name}RepositoryDto, {entity.Name}>(updateDto,entity);
-        db.SaveChangesAsync();
+        {String.Join("\n", entity.Props.Where(x=>!x.PK).Select(x => PropUpdater(x)))}
+        await db.SaveChangesAsync();
     }}
 
     public async Task<UserLoginResultRepositoryDto> Login(UserLoginRepositoryDto loginDto)
@@ -92,3 +90,8 @@ public class {entity.Name}Repository(AppDbContext db) : I{entity.Name}Repository
 
     }
 }
+
+// 
+//         var config = new MapperConfiguration(cfg => cfg.CreateMap<Update{entity.Name}RepositoryDto, {entity.Name}>());
+//         var mapper = new Mapper(config);
+//         mapper.Map<Update{entity.Name}RepositoryDto, {entity.Name}>(updateDto,entity);

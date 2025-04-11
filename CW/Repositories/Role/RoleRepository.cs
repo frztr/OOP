@@ -48,9 +48,9 @@ public class RoleRepository(AppDbContext db) : IRoleRepository
     public async Task UpdateAsync(UpdateRoleRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateRoleRepositoryDto, Role>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateRoleRepositoryDto, Role>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(!String.IsNullOrEmpty(updateDto.Name)){
+            entity.Name = updateDto.Name;
+        }
+        await db.SaveChangesAsync();
     }
 }

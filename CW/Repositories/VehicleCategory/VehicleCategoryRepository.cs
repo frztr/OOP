@@ -48,9 +48,9 @@ public class VehicleCategoryRepository(AppDbContext db) : IVehicleCategoryReposi
     public async Task UpdateAsync(UpdateVehicleCategoryRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateVehicleCategoryRepositoryDto, VehicleCategory>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateVehicleCategoryRepositoryDto, VehicleCategory>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(!String.IsNullOrEmpty(updateDto.Name)){
+            entity.Name = updateDto.Name;
+        }
+        await db.SaveChangesAsync();
     }
 }

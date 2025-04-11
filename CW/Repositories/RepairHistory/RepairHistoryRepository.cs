@@ -48,9 +48,20 @@ public class RepairHistoryRepository(AppDbContext db) : IRepairHistoryRepository
     public async Task UpdateAsync(UpdateRepairHistoryRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateRepairHistoryRepositoryDto, RepairHistory>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateRepairHistoryRepositoryDto, RepairHistory>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(updateDto.VehicleId.HasValue){
+            entity.VehicleId = updateDto.VehicleId.Value;
+        }
+		if(updateDto.DateTimeBegin.HasValue){
+            entity.DateTimeBegin = updateDto.DateTimeBegin.Value;
+        }
+		if(updateDto.DateTimeEnd.HasValue){
+            entity.DateTimeEnd = updateDto.DateTimeEnd.Value;
+        }
+		if(!String.IsNullOrEmpty(updateDto.CompletedWork)){
+            entity.CompletedWork = updateDto.CompletedWork;
+        }
+
+
+        await db.SaveChangesAsync();
     }
 }

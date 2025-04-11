@@ -48,9 +48,16 @@ public class MileageMeasurementHistoryRepository(AppDbContext db) : IMileageMeas
     public async Task UpdateAsync(UpdateMileageMeasurementHistoryRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateMileageMeasurementHistoryRepositoryDto, MileageMeasurementHistory>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateMileageMeasurementHistoryRepositoryDto, MileageMeasurementHistory>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(updateDto.KmCount.HasValue){
+            entity.KmCount = updateDto.KmCount.Value;
+        }
+		if(updateDto.MeasurementDate.HasValue){
+            entity.MeasurementDate = updateDto.MeasurementDate.Value;
+        }
+		if(updateDto.VehicleId.HasValue){
+            entity.VehicleId = updateDto.VehicleId.Value;
+        }
+
+        await db.SaveChangesAsync();
     }
 }

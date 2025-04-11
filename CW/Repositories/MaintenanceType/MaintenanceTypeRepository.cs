@@ -48,9 +48,9 @@ public class MaintenanceTypeRepository(AppDbContext db) : IMaintenanceTypeReposi
     public async Task UpdateAsync(UpdateMaintenanceTypeRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateMaintenanceTypeRepositoryDto, MaintenanceType>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateMaintenanceTypeRepositoryDto, MaintenanceType>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(!String.IsNullOrEmpty(updateDto.Name)){
+            entity.Name = updateDto.Name;
+        }
+        await db.SaveChangesAsync();
     }
 }

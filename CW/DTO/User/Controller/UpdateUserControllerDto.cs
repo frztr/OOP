@@ -9,11 +9,11 @@ public class UpdateUserControllerDto
 
     [Required]
 	[StringLength(32)]
-	public string Login { get; set; }
+	public string? Login { get; set; }
 	[Required]
-	public short RoleId { get; set; }
+	public short? RoleId { get; set; }
 	[Required]
 	[StringLength(100)]
-	public string Fio { get; set; }
+	public string? Fio { get; set; }
     public string Password { get; set; }
 }

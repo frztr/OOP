@@ -48,9 +48,9 @@ public class DocumentTypeRepository(AppDbContext db) : IDocumentTypeRepository
     public async Task UpdateAsync(UpdateDocumentTypeRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateDocumentTypeRepositoryDto, DocumentType>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateDocumentTypeRepositoryDto, DocumentType>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(!String.IsNullOrEmpty(updateDto.Name)){
+            entity.Name = updateDto.Name;
+        }
+        await db.SaveChangesAsync();
     }
 }

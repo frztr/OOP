@@ -48,9 +48,13 @@ public class DriverRepository(AppDbContext db) : IDriverRepository
     public async Task UpdateAsync(UpdateDriverRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.UserId == updateDto.UserId);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateDriverRepositoryDto, Driver>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateDriverRepositoryDto, Driver>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(updateDto.DriverLicense.HasValue){
+            entity.DriverLicense = updateDto.DriverLicense.Value;
+        }
+		if(updateDto.Experience.HasValue){
+            entity.Experience = updateDto.Experience.Value;
+        }
+
+        await db.SaveChangesAsync();
     }
 }

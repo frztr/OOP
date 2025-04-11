@@ -48,9 +48,12 @@ public class SparePartRepository(AppDbContext db) : ISparePartRepository
     public async Task UpdateAsync(UpdateSparePartRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateSparePartRepositoryDto, SparePart>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateSparePartRepositoryDto, SparePart>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(!String.IsNullOrEmpty(updateDto.Name)){
+            entity.Name = updateDto.Name;
+        }
+		if(updateDto.CountLeft.HasValue){
+            entity.CountLeft = updateDto.CountLeft.Value;
+        }
+        await db.SaveChangesAsync();
     }
 }

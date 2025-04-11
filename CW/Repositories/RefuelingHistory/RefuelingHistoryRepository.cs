@@ -48,9 +48,30 @@ public class RefuelingHistoryRepository(AppDbContext db) : IRefuelingHistoryRepo
     public async Task UpdateAsync(UpdateRefuelingHistoryRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateRefuelingHistoryRepositoryDto, RefuelingHistory>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateRefuelingHistoryRepositoryDto, RefuelingHistory>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(updateDto.Volume.HasValue){
+            entity.Volume = updateDto.Volume.Value;
+        }
+		if(updateDto.OilTypeId.HasValue){
+            entity.OilTypeId = updateDto.OilTypeId.Value;
+        }
+		if(updateDto.FuelStationTinNumber.HasValue){
+            entity.FuelStationTinNumber = updateDto.FuelStationTinNumber.Value;
+        }
+		if(updateDto.VehicleId.HasValue){
+            entity.VehicleId = updateDto.VehicleId.Value;
+        }
+		if(updateDto.Price.HasValue){
+            entity.Price = updateDto.Price.Value;
+        }
+		if(updateDto.DateTime.HasValue){
+            entity.DateTime = updateDto.DateTime.Value;
+        }
+		if(updateDto.DriverId.HasValue){
+            entity.DriverId = updateDto.DriverId.Value;
+        }
+
+
+
+        await db.SaveChangesAsync();
     }
 }

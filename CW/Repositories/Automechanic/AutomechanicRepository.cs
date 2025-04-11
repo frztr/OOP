@@ -48,9 +48,10 @@ public class AutomechanicRepository(AppDbContext db) : IAutomechanicRepository
     public async Task UpdateAsync(UpdateAutomechanicRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.UserId == updateDto.UserId);
-        var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateAutomechanicRepositoryDto, Automechanic>());
-        var mapper = new Mapper(config);
-        mapper.Map<UpdateAutomechanicRepositoryDto, Automechanic>(updateDto,entity);
-        db.SaveChangesAsync();
+		if(!String.IsNullOrEmpty(updateDto.Qualification)){
+            entity.Qualification = updateDto.Qualification;
+        }
+
+        await db.SaveChangesAsync();
     }
 }
