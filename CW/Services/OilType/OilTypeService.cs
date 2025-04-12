@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class OilTypeService(IOilTypeRepository repository, ILogger<OilTypeService> logger) : IOilTypeService
+public class OilTypeService(IOilTypeRepository repository,
+IFuelTypeRepository fuelTypeRepository,
+ILogger<OilTypeService> logger) : IOilTypeService
 {
     public async Task<OilTypeServiceDto> AddAsync(AddOilTypeServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class OilTypeService(IOilTypeRepository repository, ILogger<OilTypeServic
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddOilTypeServiceDto, AddOilTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddOilTypeServiceDto, AddOilTypeRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        fuelTypeRepository.GetByIdAsync(addRepositoryDto.FuelTypeId));
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<OilTypeRepositoryDto, OilTypeServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class OilTypeService(IOilTypeRepository repository, ILogger<OilTypeServic
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateOilTypeServiceDto, UpdateOilTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateOilTypeServiceDto, UpdateOilTypeRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        updateDto.FuelTypeId.HasValue ? fuelTypeRepository.GetByIdAsync(updateDto.FuelTypeId.Value) : Task.CompletedTask);
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

@@ -1,7 +1,10 @@
 
 using AutoMapper;
 namespace Global;
-public class VehicleDocumentService(IVehicleDocumentRepository repository, ILogger<VehicleDocumentService> logger) : IVehicleDocumentService
+public class VehicleDocumentService(IVehicleDocumentRepository repository,
+IDocumentTypeRepository documentTypeRepository,
+IVehicleRepository vehicleRepository,
+ILogger<VehicleDocumentService> logger) : IVehicleDocumentService
 {
     public async Task<VehicleDocumentServiceDto> AddAsync(AddVehicleDocumentServiceDto addServiceDto)
     {
@@ -9,6 +12,9 @@ public class VehicleDocumentService(IVehicleDocumentRepository repository, ILogg
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddVehicleDocumentServiceDto, AddVehicleDocumentRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddVehicleDocumentServiceDto, AddVehicleDocumentRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        documentTypeRepository.GetByIdAsync(addRepositoryDto.DocTypeId),
+		vehicleRepository.GetByIdAsync(addRepositoryDto.VehicleId));
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<VehicleDocumentRepositoryDto, VehicleDocumentServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +54,9 @@ public class VehicleDocumentService(IVehicleDocumentRepository repository, ILogg
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateVehicleDocumentServiceDto, UpdateVehicleDocumentRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateVehicleDocumentServiceDto, UpdateVehicleDocumentRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        updateDto.DocTypeId.HasValue ? documentTypeRepository.GetByIdAsync(updateDto.DocTypeId.Value) : Task.CompletedTask,
+		updateDto.VehicleId.HasValue ? vehicleRepository.GetByIdAsync(updateDto.VehicleId.Value) : Task.CompletedTask);
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

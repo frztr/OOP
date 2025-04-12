@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class DriverService(IDriverRepository repository, ILogger<DriverService> logger) : IDriverService
+public class DriverService(IDriverRepository repository,
+
+ILogger<DriverService> logger) : IDriverService
 {
     public async Task<DriverServiceDto> AddAsync(AddDriverServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class DriverService(IDriverRepository repository, ILogger<DriverService> 
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddDriverServiceDto, AddDriverRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddDriverServiceDto, AddDriverRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        );
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<DriverRepositoryDto, DriverServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class DriverService(IDriverRepository repository, ILogger<DriverService> 
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateDriverServiceDto, UpdateDriverRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateDriverServiceDto, UpdateDriverRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        );
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

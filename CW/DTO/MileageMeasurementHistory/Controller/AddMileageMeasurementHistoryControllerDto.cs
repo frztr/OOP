@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Global;
 public class AddMileageMeasurementHistoryControllerDto
 {
-	public decimal? KmCount { get; set; }
+	public decimal KmCount { get; set; }
 	[Required]
 	public DateTime MeasurementDate { get; set; }
 	[Required]

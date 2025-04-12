@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class RoleService(IRoleRepository repository, ILogger<RoleService> logger) : IRoleService
+public class RoleService(IRoleRepository repository,
+
+ILogger<RoleService> logger) : IRoleService
 {
     public async Task<RoleServiceDto> AddAsync(AddRoleServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class RoleService(IRoleRepository repository, ILogger<RoleService> logger
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddRoleServiceDto, AddRoleRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddRoleServiceDto, AddRoleRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        );
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<RoleRepositoryDto, RoleServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class RoleService(IRoleRepository repository, ILogger<RoleService> logger
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateRoleServiceDto, UpdateRoleRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateRoleServiceDto, UpdateRoleRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        );
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

@@ -11,4 +11,6 @@ public class EntityProp
     public int? HasMaxLength { get; set; } = null;
 
     public bool IsRequired { get; set; } = false;
+
+    public string? FK { get; set; } = null;
 }

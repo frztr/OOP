@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class FuelMeasurementHistoryService(IFuelMeasurementHistoryRepository repository, ILogger<FuelMeasurementHistoryService> logger) : IFuelMeasurementHistoryService
+public class FuelMeasurementHistoryService(IFuelMeasurementHistoryRepository repository,
+IVehicleRepository vehicleRepository,
+ILogger<FuelMeasurementHistoryService> logger) : IFuelMeasurementHistoryService
 {
     public async Task<FuelMeasurementHistoryServiceDto> AddAsync(AddFuelMeasurementHistoryServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class FuelMeasurementHistoryService(IFuelMeasurementHistoryRepository rep
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddFuelMeasurementHistoryServiceDto, AddFuelMeasurementHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddFuelMeasurementHistoryServiceDto, AddFuelMeasurementHistoryRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        vehicleRepository.GetByIdAsync(addRepositoryDto.VehicleId));
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<FuelMeasurementHistoryRepositoryDto, FuelMeasurementHistoryServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class FuelMeasurementHistoryService(IFuelMeasurementHistoryRepository rep
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateFuelMeasurementHistoryServiceDto, UpdateFuelMeasurementHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateFuelMeasurementHistoryServiceDto, UpdateFuelMeasurementHistoryRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        updateDto.VehicleId.HasValue ? vehicleRepository.GetByIdAsync(updateDto.VehicleId.Value) : Task.CompletedTask);
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

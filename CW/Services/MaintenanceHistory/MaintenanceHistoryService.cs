@@ -1,7 +1,11 @@
 
 using AutoMapper;
 namespace Global;
-public class MaintenanceHistoryService(IMaintenanceHistoryRepository repository, ILogger<MaintenanceHistoryService> logger) : IMaintenanceHistoryService
+public class MaintenanceHistoryService(IMaintenanceHistoryRepository repository,
+IVehicleRepository vehicleRepository,
+IMaintenanceTypeRepository maintenanceTypeRepository,
+IAutomechanicRepository automechanicRepository,
+ILogger<MaintenanceHistoryService> logger) : IMaintenanceHistoryService
 {
     public async Task<MaintenanceHistoryServiceDto> AddAsync(AddMaintenanceHistoryServiceDto addServiceDto)
     {
@@ -9,6 +13,10 @@ public class MaintenanceHistoryService(IMaintenanceHistoryRepository repository,
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddMaintenanceHistoryServiceDto, AddMaintenanceHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddMaintenanceHistoryServiceDto, AddMaintenanceHistoryRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        vehicleRepository.GetByIdAsync(addRepositoryDto.VehicleId),
+		maintenanceTypeRepository.GetByIdAsync(addRepositoryDto.MaintenanceTypeId),
+		automechanicRepository.GetByIdAsync(addRepositoryDto.AutomechanicId));
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<MaintenanceHistoryRepositoryDto, MaintenanceHistoryServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +56,10 @@ public class MaintenanceHistoryService(IMaintenanceHistoryRepository repository,
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateMaintenanceHistoryServiceDto, UpdateMaintenanceHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateMaintenanceHistoryServiceDto, UpdateMaintenanceHistoryRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        updateDto.VehicleId.HasValue ? vehicleRepository.GetByIdAsync(updateDto.VehicleId.Value) : Task.CompletedTask,
+		updateDto.MaintenanceTypeId.HasValue ? maintenanceTypeRepository.GetByIdAsync(updateDto.MaintenanceTypeId.Value) : Task.CompletedTask,
+		updateDto.AutomechanicId.HasValue ? automechanicRepository.GetByIdAsync(updateDto.AutomechanicId.Value) : Task.CompletedTask);
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

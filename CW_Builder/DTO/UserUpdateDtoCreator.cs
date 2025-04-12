@@ -24,7 +24,7 @@ public class Update{entity.Name}{layer}Dto
     string prop = "";
     if (x.HasMaxLength.HasValue)
         prop += $"\t[StringLength({x.HasMaxLength.Value})]\n";
-    prop += $"\tpublic {x.Type}{((x.PK || x.Identity)?"":"?")} {x.Name} {{ get; set; }}";
+    prop += $"\tpublic {(x.Type.Contains("?")?x.Type:$"{x.Type}?")} {x.Name} {{ get; set; }}";
     return prop;
 }))}
     public string? {(layer == "Repository" ? "PasswordHash" : "Password")} {{ get; set; }}

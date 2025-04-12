@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services
-.AddDbContext<AppDbContext>()
+.AddDbContext<AppDbContext>(ServiceLifetime.Transient)
 .AddScoped<IVehicleService,VehicleService>()
 .AddTransient<IVehicleRepository, VehicleRepository>()
 .AddScoped<IMileageMeasurementHistoryService,MileageMeasurementHistoryService>()

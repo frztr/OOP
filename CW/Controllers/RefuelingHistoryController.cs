@@ -28,7 +28,6 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"{ex.InnerException.ToString()} {ex.Source} {ex.Data}");
             return Results.InternalServerError(new {error = ex.Message});
         }
     }

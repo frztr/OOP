@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class FuelTypeService(IFuelTypeRepository repository, ILogger<FuelTypeService> logger) : IFuelTypeService
+public class FuelTypeService(IFuelTypeRepository repository,
+
+ILogger<FuelTypeService> logger) : IFuelTypeService
 {
     public async Task<FuelTypeServiceDto> AddAsync(AddFuelTypeServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class FuelTypeService(IFuelTypeRepository repository, ILogger<FuelTypeSer
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddFuelTypeServiceDto, AddFuelTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddFuelTypeServiceDto, AddFuelTypeRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        );
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<FuelTypeRepositoryDto, FuelTypeServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class FuelTypeService(IFuelTypeRepository repository, ILogger<FuelTypeSer
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateFuelTypeServiceDto, UpdateFuelTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateFuelTypeServiceDto, UpdateFuelTypeRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        );
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

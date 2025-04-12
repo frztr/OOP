@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class VehicleStatusService(IVehicleStatusRepository repository, ILogger<VehicleStatusService> logger) : IVehicleStatusService
+public class VehicleStatusService(IVehicleStatusRepository repository,
+
+ILogger<VehicleStatusService> logger) : IVehicleStatusService
 {
     public async Task<VehicleStatusServiceDto> AddAsync(AddVehicleStatusServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class VehicleStatusService(IVehicleStatusRepository repository, ILogger<V
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddVehicleStatusServiceDto, AddVehicleStatusRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddVehicleStatusServiceDto, AddVehicleStatusRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        );
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<VehicleStatusRepositoryDto, VehicleStatusServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class VehicleStatusService(IVehicleStatusRepository repository, ILogger<V
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateVehicleStatusServiceDto, UpdateVehicleStatusRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateVehicleStatusServiceDto, UpdateVehicleStatusRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        );
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

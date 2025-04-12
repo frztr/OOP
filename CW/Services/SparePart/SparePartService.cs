@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class SparePartService(ISparePartRepository repository, ILogger<SparePartService> logger) : ISparePartService
+public class SparePartService(ISparePartRepository repository,
+
+ILogger<SparePartService> logger) : ISparePartService
 {
     public async Task<SparePartServiceDto> AddAsync(AddSparePartServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class SparePartService(ISparePartRepository repository, ILogger<SparePart
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddSparePartServiceDto, AddSparePartRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddSparePartServiceDto, AddSparePartRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        );
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<SparePartRepositoryDto, SparePartServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class SparePartService(ISparePartRepository repository, ILogger<SparePart
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateSparePartServiceDto, UpdateSparePartRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateSparePartServiceDto, UpdateSparePartRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        );
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

@@ -1,7 +1,10 @@
 
 using AutoMapper;
 namespace Global;
-public class RepairConsumedSparePartService(IRepairConsumedSparePartRepository repository, ILogger<RepairConsumedSparePartService> logger) : IRepairConsumedSparePartService
+public class RepairConsumedSparePartService(IRepairConsumedSparePartRepository repository,
+IRepairHistoryRepository repairHistoryRepository,
+ISparePartRepository sparePartRepository,
+ILogger<RepairConsumedSparePartService> logger) : IRepairConsumedSparePartService
 {
     public async Task<RepairConsumedSparePartServiceDto> AddAsync(AddRepairConsumedSparePartServiceDto addServiceDto)
     {
@@ -9,6 +12,9 @@ public class RepairConsumedSparePartService(IRepairConsumedSparePartRepository r
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddRepairConsumedSparePartServiceDto, AddRepairConsumedSparePartRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddRepairConsumedSparePartServiceDto, AddRepairConsumedSparePartRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        repairHistoryRepository.GetByIdAsync(addRepositoryDto.RepairId),
+		sparePartRepository.GetByIdAsync(addRepositoryDto.SparePartId));
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<RepairConsumedSparePartRepositoryDto, RepairConsumedSparePartServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +54,9 @@ public class RepairConsumedSparePartService(IRepairConsumedSparePartRepository r
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateRepairConsumedSparePartServiceDto, UpdateRepairConsumedSparePartRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateRepairConsumedSparePartServiceDto, UpdateRepairConsumedSparePartRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        updateDto.RepairId.HasValue ? repairHistoryRepository.GetByIdAsync(updateDto.RepairId.Value) : Task.CompletedTask,
+		updateDto.SparePartId.HasValue ? sparePartRepository.GetByIdAsync(updateDto.SparePartId.Value) : Task.CompletedTask);
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

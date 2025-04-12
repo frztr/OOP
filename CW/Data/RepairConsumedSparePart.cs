@@ -6,6 +6,6 @@ public class RepairConsumedSparePart
     public int SparePartId { get; set; }
     public int PartCount { get; set; }
     
-    public RepairHistory Repair { get; set; }
+    public RepairHistory RepairHistory { get; set; }
     public SparePart SparePart { get; set; }
 }

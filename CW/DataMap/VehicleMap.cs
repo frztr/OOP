@@ -21,7 +21,7 @@ public class VehicleMap : IEntityTypeConfiguration<Vehicle>
             .WithMany(vm => vm.Vehicles)
             .HasForeignKey(v => v.VehicleModelId);
             
-        builder.HasOne(v => v.Status)
+        builder.HasOne(v => v.VehicleStatus)
             .WithMany(vs => vs.Vehicles)
             .HasForeignKey(v => v.StatusId);
     }

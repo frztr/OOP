@@ -25,6 +25,7 @@ public class AppContext
     {
         return context;
     }
-    public string[] AllowedValues { get; } = ["string", "short", "int", "long", "DateTime", "decimal"];
+    public string[] AllowedValues { get; } = ["string", "short", "int", "long", "DateTime", "decimal",
+    "string?", "short?", "int?", "long?", "DateTime?", "decimal?"];
     public string ProjectPath { get; }
 }

@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class MileageMeasurementHistoryService(IMileageMeasurementHistoryRepository repository, ILogger<MileageMeasurementHistoryService> logger) : IMileageMeasurementHistoryService
+public class MileageMeasurementHistoryService(IMileageMeasurementHistoryRepository repository,
+IVehicleRepository vehicleRepository,
+ILogger<MileageMeasurementHistoryService> logger) : IMileageMeasurementHistoryService
 {
     public async Task<MileageMeasurementHistoryServiceDto> AddAsync(AddMileageMeasurementHistoryServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class MileageMeasurementHistoryService(IMileageMeasurementHistoryReposito
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddMileageMeasurementHistoryServiceDto, AddMileageMeasurementHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddMileageMeasurementHistoryServiceDto, AddMileageMeasurementHistoryRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        vehicleRepository.GetByIdAsync(addRepositoryDto.VehicleId));
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<MileageMeasurementHistoryRepositoryDto, MileageMeasurementHistoryServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class MileageMeasurementHistoryService(IMileageMeasurementHistoryReposito
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateMileageMeasurementHistoryServiceDto, UpdateMileageMeasurementHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateMileageMeasurementHistoryServiceDto, UpdateMileageMeasurementHistoryRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        updateDto.VehicleId.HasValue ? vehicleRepository.GetByIdAsync(updateDto.VehicleId.Value) : Task.CompletedTask);
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

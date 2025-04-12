@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services
-.AddDbContext<AppDbContext>()
+.AddDbContext<AppDbContext>(ServiceLifetime.Transient)
 {String.Join("\n", entities.Select(x => $@".AddScoped<I{x.Name}Service,{x.Name}Service>()
 .AddTransient<I{x.Name}Repository, {x.Name}Repository>()"))};
 

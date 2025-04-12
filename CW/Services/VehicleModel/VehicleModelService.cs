@@ -1,7 +1,11 @@
 
 using AutoMapper;
 namespace Global;
-public class VehicleModelService(IVehicleModelRepository repository, ILogger<VehicleModelService> logger) : IVehicleModelService
+public class VehicleModelService(IVehicleModelRepository repository,
+IManufacturerRepository manufacturerRepository,
+IVehicleCategoryRepository vehicleCategoryRepository,
+IFuelTypeRepository fuelTypeRepository,
+ILogger<VehicleModelService> logger) : IVehicleModelService
 {
     public async Task<VehicleModelServiceDto> AddAsync(AddVehicleModelServiceDto addServiceDto)
     {
@@ -9,6 +13,10 @@ public class VehicleModelService(IVehicleModelRepository repository, ILogger<Veh
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddVehicleModelServiceDto, AddVehicleModelRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddVehicleModelServiceDto, AddVehicleModelRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        manufacturerRepository.GetByIdAsync(addRepositoryDto.ManufacturerId),
+		vehicleCategoryRepository.GetByIdAsync(addRepositoryDto.VehicleCategoryId),
+		fuelTypeRepository.GetByIdAsync(addRepositoryDto.FuelTypeId));
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<VehicleModelRepositoryDto, VehicleModelServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +56,10 @@ public class VehicleModelService(IVehicleModelRepository repository, ILogger<Veh
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateVehicleModelServiceDto, UpdateVehicleModelRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateVehicleModelServiceDto, UpdateVehicleModelRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        updateDto.ManufacturerId.HasValue ? manufacturerRepository.GetByIdAsync(updateDto.ManufacturerId.Value) : Task.CompletedTask,
+		updateDto.VehicleCategoryId.HasValue ? vehicleCategoryRepository.GetByIdAsync(updateDto.VehicleCategoryId.Value) : Task.CompletedTask,
+		updateDto.FuelTypeId.HasValue ? fuelTypeRepository.GetByIdAsync(updateDto.FuelTypeId.Value) : Task.CompletedTask);
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

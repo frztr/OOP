@@ -79,7 +79,7 @@ public DbSet<Automechanic> AutomechanicList { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=AutoManagementSystemDb;Username=postgres;Password=postgres");
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=AMSDb;Username=postgres;Password=postgres");
     }
 
     protected override void OnModelCreating(ModelBuilder builder)

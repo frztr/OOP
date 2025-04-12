@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class AutomechanicService(IAutomechanicRepository repository, ILogger<AutomechanicService> logger) : IAutomechanicService
+public class AutomechanicService(IAutomechanicRepository repository,
+
+ILogger<AutomechanicService> logger) : IAutomechanicService
 {
     public async Task<AutomechanicServiceDto> AddAsync(AddAutomechanicServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class AutomechanicService(IAutomechanicRepository repository, ILogger<Aut
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddAutomechanicServiceDto, AddAutomechanicRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddAutomechanicServiceDto, AddAutomechanicRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        );
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<AutomechanicRepositoryDto, AutomechanicServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class AutomechanicService(IAutomechanicRepository repository, ILogger<Aut
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateAutomechanicServiceDto, UpdateAutomechanicRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateAutomechanicServiceDto, UpdateAutomechanicRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        );
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

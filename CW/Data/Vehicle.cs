@@ -10,7 +10,7 @@ public class Vehicle
     public short StatusId { get; set; }
     
     public VehicleModel VehicleModel { get; set; }
-    public VehicleStatus Status { get; set; }
+    public VehicleStatus VehicleStatus { get; set; }
     public ICollection<VehiclePhoto> Photos { get; set; }
     public ICollection<FuelMeasurementHistory> FuelMeasurements { get; set; }
     public ICollection<MileageMeasurementHistory> MileageMeasurements { get; set; }

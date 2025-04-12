@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class DocumentTypeService(IDocumentTypeRepository repository, ILogger<DocumentTypeService> logger) : IDocumentTypeService
+public class DocumentTypeService(IDocumentTypeRepository repository,
+
+ILogger<DocumentTypeService> logger) : IDocumentTypeService
 {
     public async Task<DocumentTypeServiceDto> AddAsync(AddDocumentTypeServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class DocumentTypeService(IDocumentTypeRepository repository, ILogger<Doc
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddDocumentTypeServiceDto, AddDocumentTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddDocumentTypeServiceDto, AddDocumentTypeRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        );
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<DocumentTypeRepositoryDto, DocumentTypeServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class DocumentTypeService(IDocumentTypeRepository repository, ILogger<Doc
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateDocumentTypeServiceDto, UpdateDocumentTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateDocumentTypeServiceDto, UpdateDocumentTypeRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        );
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

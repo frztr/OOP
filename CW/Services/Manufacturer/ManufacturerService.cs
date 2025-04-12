@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class ManufacturerService(IManufacturerRepository repository, ILogger<ManufacturerService> logger) : IManufacturerService
+public class ManufacturerService(IManufacturerRepository repository,
+
+ILogger<ManufacturerService> logger) : IManufacturerService
 {
     public async Task<ManufacturerServiceDto> AddAsync(AddManufacturerServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class ManufacturerService(IManufacturerRepository repository, ILogger<Man
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddManufacturerServiceDto, AddManufacturerRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddManufacturerServiceDto, AddManufacturerRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        );
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<ManufacturerRepositoryDto, ManufacturerServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class ManufacturerService(IManufacturerRepository repository, ILogger<Man
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateManufacturerServiceDto, UpdateManufacturerRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateManufacturerServiceDto, UpdateManufacturerRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        );
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

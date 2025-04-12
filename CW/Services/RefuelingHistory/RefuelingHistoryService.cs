@@ -1,7 +1,11 @@
 
 using AutoMapper;
 namespace Global;
-public class RefuelingHistoryService(IRefuelingHistoryRepository repository, ILogger<RefuelingHistoryService> logger) : IRefuelingHistoryService
+public class RefuelingHistoryService(IRefuelingHistoryRepository repository,
+IOilTypeRepository oilTypeRepository,
+IVehicleRepository vehicleRepository,
+IDriverRepository driverRepository,
+ILogger<RefuelingHistoryService> logger) : IRefuelingHistoryService
 {
     public async Task<RefuelingHistoryServiceDto> AddAsync(AddRefuelingHistoryServiceDto addServiceDto)
     {
@@ -9,6 +13,10 @@ public class RefuelingHistoryService(IRefuelingHistoryRepository repository, ILo
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddRefuelingHistoryServiceDto, AddRefuelingHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddRefuelingHistoryServiceDto, AddRefuelingHistoryRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        oilTypeRepository.GetByIdAsync(addRepositoryDto.OilTypeId),
+		vehicleRepository.GetByIdAsync(addRepositoryDto.VehicleId),
+		driverRepository.GetByIdAsync(addRepositoryDto.DriverId));
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<RefuelingHistoryRepositoryDto, RefuelingHistoryServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +56,10 @@ public class RefuelingHistoryService(IRefuelingHistoryRepository repository, ILo
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateRefuelingHistoryServiceDto, UpdateRefuelingHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateRefuelingHistoryServiceDto, UpdateRefuelingHistoryRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        updateDto.OilTypeId.HasValue ? oilTypeRepository.GetByIdAsync(updateDto.OilTypeId.Value) : Task.CompletedTask,
+		updateDto.VehicleId.HasValue ? vehicleRepository.GetByIdAsync(updateDto.VehicleId.Value) : Task.CompletedTask,
+		updateDto.DriverId.HasValue ? driverRepository.GetByIdAsync(updateDto.DriverId.Value) : Task.CompletedTask);
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

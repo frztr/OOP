@@ -10,7 +10,7 @@ public class EntityParser
         var entityName = Regex.Match(fileText, @"public class ([\w]+)").Value.Replace("public class ", "");
         var entityBody = new Regex(@"((public class ([\w]+)[\W]{1}[\\{]{1})|([\\{]{1} get; set; [\\}]{1})|([\\}]{1}))+").Replace(
         Regex.Match(fileText, @"public class ([\w]+)[\W]{1}[\\{]{1}[\w\W]+[\\}]{1}").Value, "");
-        var props = Regex.Matches(entityBody, @"\w+ \w+ \w+");
+        var props = Regex.Matches(entityBody, @"\w+ \w+[?]* \w+");
         var entProps = props.ToList().Select(x =>
         {
             var s = x.Value.Split(" ");
@@ -56,7 +56,17 @@ public class EntityParser
                 prop.IsRequired = true;
             }
             //.HasPrecision(7, 3)
-
         }
+
+        var foreign_keys = Regex.Matches(fileText, @"builder.HasOne\([\w]+[\W]*=>[\W]*[\w]+.([\w]+)\)[\W]*.WithMany\([\w]+[\W]*=>[\W]*[\w]+.[\w]+\)[\W]*.HasForeignKey\([\w]+[\W]*=>[\W]*[\w]+.([\w]+)\)");
+        foreach (var foreign_key in foreign_keys.ToList())
+        {
+            var entityFK = foreign_key.Groups[1].Captures.FirstOrDefault().Value;
+            var propFK = foreign_key.Groups[2].Captures.FirstOrDefault().Value;
+            var prop = entity.Props.FirstOrDefault(x => x.Name == propFK);
+            // Console.WriteLine(JsonConvert.SerializeObject(new { propFK, entityFK, prop, entity }));
+            prop.FK = entityFK;
+        }
+
     }
 }

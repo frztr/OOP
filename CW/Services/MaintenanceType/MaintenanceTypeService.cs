@@ -1,7 +1,9 @@
 
 using AutoMapper;
 namespace Global;
-public class MaintenanceTypeService(IMaintenanceTypeRepository repository, ILogger<MaintenanceTypeService> logger) : IMaintenanceTypeService
+public class MaintenanceTypeService(IMaintenanceTypeRepository repository,
+
+ILogger<MaintenanceTypeService> logger) : IMaintenanceTypeService
 {
     public async Task<MaintenanceTypeServiceDto> AddAsync(AddMaintenanceTypeServiceDto addServiceDto)
     {
@@ -9,6 +11,8 @@ public class MaintenanceTypeService(IMaintenanceTypeRepository repository, ILogg
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddMaintenanceTypeServiceDto, AddMaintenanceTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddMaintenanceTypeServiceDto, AddMaintenanceTypeRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        );
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<MaintenanceTypeRepositoryDto, MaintenanceTypeServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +52,8 @@ public class MaintenanceTypeService(IMaintenanceTypeRepository repository, ILogg
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateMaintenanceTypeServiceDto, UpdateMaintenanceTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateMaintenanceTypeServiceDto, UpdateMaintenanceTypeRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        );
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

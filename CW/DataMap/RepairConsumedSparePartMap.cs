@@ -12,7 +12,7 @@ public class RepairConsumedSparePartMap : IEntityTypeConfiguration<RepairConsume
         builder.Property(rcsp => rcsp.SparePartId).HasColumnName("spare_part_id").IsRequired();
         builder.Property(rcsp => rcsp.PartCount).HasColumnName("part_count").IsRequired();
         
-        builder.HasOne(rcsp => rcsp.Repair)
+        builder.HasOne(rcsp => rcsp.RepairHistory)
             .WithMany(r => r.ConsumedSpareParts)
             .HasForeignKey(rcsp => rcsp.RepairId);
             

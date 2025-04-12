@@ -1,7 +1,10 @@
 
 using AutoMapper;
 namespace Global;
-public class PlannedMaintenanceScheduleService(IPlannedMaintenanceScheduleRepository repository, ILogger<PlannedMaintenanceScheduleService> logger) : IPlannedMaintenanceScheduleService
+public class PlannedMaintenanceScheduleService(IPlannedMaintenanceScheduleRepository repository,
+IMaintenanceTypeRepository maintenanceTypeRepository,
+IVehicleRepository vehicleRepository,
+ILogger<PlannedMaintenanceScheduleService> logger) : IPlannedMaintenanceScheduleService
 {
     public async Task<PlannedMaintenanceScheduleServiceDto> AddAsync(AddPlannedMaintenanceScheduleServiceDto addServiceDto)
     {
@@ -9,6 +12,9 @@ public class PlannedMaintenanceScheduleService(IPlannedMaintenanceScheduleReposi
         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddPlannedMaintenanceScheduleServiceDto, AddPlannedMaintenanceScheduleRepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddPlannedMaintenanceScheduleServiceDto, AddPlannedMaintenanceScheduleRepositoryDto>(addServiceDto);
+        await Task.WhenAll(
+        maintenanceTypeRepository.GetByIdAsync(addRepositoryDto.MaintenanceTypeId),
+		vehicleRepository.GetByIdAsync(addRepositoryDto.VehicleId));
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<PlannedMaintenanceScheduleRepositoryDto, PlannedMaintenanceScheduleServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -48,6 +54,9 @@ public class PlannedMaintenanceScheduleService(IPlannedMaintenanceScheduleReposi
         var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdatePlannedMaintenanceScheduleServiceDto, UpdatePlannedMaintenanceScheduleRepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdatePlannedMaintenanceScheduleServiceDto, UpdatePlannedMaintenanceScheduleRepositoryDto>(updateDto);
+        await Task.WhenAll(
+        updateDto.MaintenanceTypeId.HasValue ? maintenanceTypeRepository.GetByIdAsync(updateDto.MaintenanceTypeId.Value) : Task.CompletedTask,
+		updateDto.VehicleId.HasValue ? vehicleRepository.GetByIdAsync(updateDto.VehicleId.Value) : Task.CompletedTask);
         await repository.UpdateAsync(updateRepositoryDto);
     }
 }

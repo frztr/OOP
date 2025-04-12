@@ -17,7 +17,7 @@ public class Add{entity.Name}{layer}Dto
         prop += $"\t[Required]\n";
     if (x.HasMaxLength.HasValue)
         prop += $"\t[StringLength({x.HasMaxLength.Value})]\n";
-    prop += $"\tpublic {x.Type}{((x.PK || x.Identity || x.IsRequired) ? "" : "?")} {x.Name} {{ get; set; }}";
+    prop += $"\tpublic {x.Type} {x.Name} {{ get; set; }}";
     return prop;
 }))}
 }}";
