@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using Microsoft.AspNetCore.Mvc;
 namespace Global;
-[Authorize(Roles="admin")]
+[Authorize(Roles = "admin")]
 [ApiController]
 [Route("RepairHistory")]
 public class RepairHistoryController(IRepairHistoryService service) : Controller
@@ -14,7 +14,7 @@ public class RepairHistoryController(IRepairHistoryService service) : Controller
     [Route("add")]
     [ProducesResponseType(200)]
     [ProducesResponseType(500)]
-    public async Task<IResult> Add(AddRepairHistoryControllerDto addDto) 
+    public async Task<IResult> Add(AddRepairHistoryControllerDto addDto)
     {
         try
         {
@@ -28,7 +28,7 @@ public class RepairHistoryController(IRepairHistoryService service) : Controller
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(new {error = ex.Message});
+            return Results.InternalServerError(new { error = ex.Message });
         }
     }
 
@@ -45,7 +45,7 @@ public class RepairHistoryController(IRepairHistoryService service) : Controller
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(new {error = ex.Message}); 
+            return Results.InternalServerError(new { error = ex.Message });
         }
     }
 
@@ -53,22 +53,23 @@ public class RepairHistoryController(IRepairHistoryService service) : Controller
     [Route("")]
     [ProducesResponseType(200)]
     [ProducesResponseType(500)]
-    public async Task<IResult> GetAll([FromQuery]RepairHistoryQueryControllerDto queryDto)
+    public async Task<IResult> GetAll([FromQuery] RepairHistoryQueryControllerDto queryDto)
     {
         try
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RepairHistoryQueryControllerDto,RepairHistoryQueryServiceDto>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RepairHistoryQueryControllerDto, RepairHistoryQueryServiceDto>());
             var mapper = new Mapper(config);
-            var dto = mapper.Map<RepairHistoryQueryControllerDto,RepairHistoryQueryServiceDto>(queryDto);
-            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<RepairHistoryServiceDto,RepairHistoryControllerDto>());
+            var dto = mapper.Map<RepairHistoryQueryControllerDto, RepairHistoryQueryServiceDto>(queryDto);
+            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<RepairHistoryServiceDto, RepairHistoryControllerDto>());
             var mapper2 = new Mapper(config2);
-            return Results.Json(new RepairHistoryListControllerDto(){
-                Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<RepairHistoryServiceDto,RepairHistoryControllerDto>(x))
+            return Results.Json(new RepairHistoryListControllerDto()
+            {
+                Items = (await service.GetAllAsync(dto)).Items.Select(x => mapper2.Map<RepairHistoryServiceDto, RepairHistoryControllerDto>(x))
             });
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(new {error = ex.Message});
+            return Results.InternalServerError(new { error = ex.Message });
         }
     }
 
@@ -86,7 +87,7 @@ public class RepairHistoryController(IRepairHistoryService service) : Controller
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(new {error = ex.Message});
+            return Results.InternalServerError(new { error = ex.Message });
         }
     }
     [HttpPatch]
@@ -105,7 +106,7 @@ public class RepairHistoryController(IRepairHistoryService service) : Controller
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(new {error = ex.Message});
+            return Results.InternalServerError(new { error = ex.Message });
         }
     }
 }

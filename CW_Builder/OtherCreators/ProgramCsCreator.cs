@@ -37,6 +37,9 @@ builder.Services.AddLogging(builder =>
 }});
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
+builder.Services.ConfigureHttpJsonOptions(opts =>{{
+    opts.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+}});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
