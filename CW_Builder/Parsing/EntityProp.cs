@@ -12,5 +12,11 @@ public class EntityProp
 
     public bool IsRequired { get; set; } = false;
 
+    public bool Unique { get; set; } = false;
+
     public string? FK { get; set; } = null;
+
+    public string? FK_Field { get; set; } = null;
+
+    public string? Default { get; set; } = null;
 }
