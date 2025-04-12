@@ -31,7 +31,7 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
         }}
         catch (Exception ex)
         {{
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {{error = ex.Message}});
         }}
     }}
 
@@ -46,7 +46,7 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
         }}
         catch (Exception ex)
         {{
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {{error = ex.Message}});
         }}
     }}
 
@@ -67,7 +67,7 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
         }}
         catch (Exception ex)
         {{
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {{error = ex.Message}});
         }}
     }}
 
@@ -83,7 +83,7 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
         }}
         catch (Exception ex)
         {{
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {{error = ex.Message}});
         }}
     }}
     [HttpPatch]
@@ -100,7 +100,7 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
         }}
         catch (Exception ex)
         {{
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {{error = ex.Message}});
         }}
     }}
 
@@ -122,7 +122,7 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
         }}
         catch (Exception ex)
         {{
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {{error = ex.Message}});
         }}
     }}
 }}

@@ -126,4 +126,5 @@ if (args.Contains("-file"))
     File.WriteAllText($"{AppContext.Get().ProjectPath}/Repositories/File/FileRepository.cs", filerepository);
 }
 
+CopyCreator.CopyFilesRecursively("./Errors",$"{AppContext.Get().ProjectPath}/Errors");
 

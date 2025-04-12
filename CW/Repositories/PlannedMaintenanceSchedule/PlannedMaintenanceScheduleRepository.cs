@@ -20,7 +20,9 @@ public class PlannedMaintenanceScheduleRepository(AppDbContext db) : IPlannedMai
 
     public async Task DeleteAsync(int id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<PlannedMaintenanceSchedule>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class PlannedMaintenanceScheduleRepository(AppDbContext db) : IPlannedMai
         var config = new MapperConfiguration(cfg => cfg.CreateMap<PlannedMaintenanceSchedule,PlannedMaintenanceScheduleRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<PlannedMaintenanceSchedule>(new {id});
         return mapper.Map<PlannedMaintenanceSchedule,PlannedMaintenanceScheduleRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdatePlannedMaintenanceScheduleRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<PlannedMaintenanceSchedule>(new {Id = updateDto.Id});
 		if(updateDto.PlannedDate.HasValue){
             entity.PlannedDate = updateDto.PlannedDate.Value;
         }

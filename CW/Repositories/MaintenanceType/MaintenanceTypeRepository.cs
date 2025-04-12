@@ -20,7 +20,9 @@ public class MaintenanceTypeRepository(AppDbContext db) : IMaintenanceTypeReposi
 
     public async Task DeleteAsync(short id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<MaintenanceType>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class MaintenanceTypeRepository(AppDbContext db) : IMaintenanceTypeReposi
         var config = new MapperConfiguration(cfg => cfg.CreateMap<MaintenanceType,MaintenanceTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<MaintenanceType>(new {id});
         return mapper.Map<MaintenanceType,MaintenanceTypeRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateMaintenanceTypeRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<MaintenanceType>(new {Id = updateDto.Id});
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }

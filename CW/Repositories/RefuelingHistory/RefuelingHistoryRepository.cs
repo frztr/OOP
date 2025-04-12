@@ -20,7 +20,9 @@ public class RefuelingHistoryRepository(AppDbContext db) : IRefuelingHistoryRepo
 
     public async Task DeleteAsync(int id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<RefuelingHistory>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class RefuelingHistoryRepository(AppDbContext db) : IRefuelingHistoryRepo
         var config = new MapperConfiguration(cfg => cfg.CreateMap<RefuelingHistory,RefuelingHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<RefuelingHistory>(new {id});
         return mapper.Map<RefuelingHistory,RefuelingHistoryRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateRefuelingHistoryRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<RefuelingHistory>(new {Id = updateDto.Id});
 		if(updateDto.Volume.HasValue){
             entity.Volume = updateDto.Volume.Value;
         }

@@ -20,7 +20,9 @@ public class SparePartRepository(AppDbContext db) : ISparePartRepository
 
     public async Task DeleteAsync(int id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<SparePart>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class SparePartRepository(AppDbContext db) : ISparePartRepository
         var config = new MapperConfiguration(cfg => cfg.CreateMap<SparePart,SparePartRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<SparePart>(new {id});
         return mapper.Map<SparePart,SparePartRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateSparePartRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<SparePart>(new {Id = updateDto.Id});
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }

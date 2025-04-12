@@ -26,7 +26,7 @@ public class UserController(IUserService service)
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
 
@@ -41,7 +41,7 @@ public class UserController(IUserService service)
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
 
@@ -62,7 +62,7 @@ public class UserController(IUserService service)
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
 
@@ -78,7 +78,7 @@ public class UserController(IUserService service)
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
     [HttpPatch]
@@ -95,7 +95,7 @@ public class UserController(IUserService service)
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
 
@@ -117,7 +117,7 @@ public class UserController(IUserService service)
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
 }

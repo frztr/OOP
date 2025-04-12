@@ -20,7 +20,9 @@ public class FuelMeasurementHistoryRepository(AppDbContext db) : IFuelMeasuremen
 
     public async Task DeleteAsync(int id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<FuelMeasurementHistory>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class FuelMeasurementHistoryRepository(AppDbContext db) : IFuelMeasuremen
         var config = new MapperConfiguration(cfg => cfg.CreateMap<FuelMeasurementHistory,FuelMeasurementHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<FuelMeasurementHistory>(new {id});
         return mapper.Map<FuelMeasurementHistory,FuelMeasurementHistoryRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateFuelMeasurementHistoryRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<FuelMeasurementHistory>(new {Id = updateDto.Id});
 		if(updateDto.Volume.HasValue){
             entity.Volume = updateDto.Volume.Value;
         }

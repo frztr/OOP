@@ -20,7 +20,9 @@ public class FuelTypeRepository(AppDbContext db) : IFuelTypeRepository
 
     public async Task DeleteAsync(short id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<FuelType>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class FuelTypeRepository(AppDbContext db) : IFuelTypeRepository
         var config = new MapperConfiguration(cfg => cfg.CreateMap<FuelType,FuelTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<FuelType>(new {id});
         return mapper.Map<FuelType,FuelTypeRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateFuelTypeRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<FuelType>(new {Id = updateDto.Id});
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }

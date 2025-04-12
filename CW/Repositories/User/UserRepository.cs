@@ -20,7 +20,9 @@ public class UserRepository(AppDbContext db) : IUserRepository
 
     public async Task DeleteAsync(short id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<User>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -41,12 +43,14 @@ public class UserRepository(AppDbContext db) : IUserRepository
         var config = new MapperConfiguration(cfg => cfg.CreateMap<User,UserRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<User>(new {id});
         return mapper.Map<User,UserRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateUserRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<User>(new {Id = updateDto.Id});
         		if(!String.IsNullOrEmpty(updateDto.Login)){
             entity.Login = updateDto.Login;
         }
@@ -68,6 +72,7 @@ public class UserRepository(AppDbContext db) : IUserRepository
     public async Task<UserLoginResultRepositoryDto> Login(UserLoginRepositoryDto loginDto)
     {
         var entity = await set.Include(x=>x.Role).FirstOrDefaultAsync(x=>x.Login == loginDto.Login && x.PasswordHash == loginDto.PasswordHash);
+        if(entity == null) throw new BadLoginException();
         var config = new MapperConfiguration(cfg => cfg.CreateMap<User, UserLoginResultRepositoryDto>());
         var mapper = new Mapper(config);
         var resultDto = mapper.Map<User, UserLoginResultRepositoryDto>(entity);

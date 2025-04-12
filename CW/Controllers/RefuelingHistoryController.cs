@@ -28,7 +28,8 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            Console.WriteLine($"{ex.InnerException.ToString()} {ex.Source} {ex.Data}");
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
 
@@ -45,7 +46,7 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message}); 
         }
     }
 
@@ -68,7 +69,7 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
 
@@ -86,7 +87,7 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
     [HttpPatch]
@@ -105,7 +106,7 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
 }

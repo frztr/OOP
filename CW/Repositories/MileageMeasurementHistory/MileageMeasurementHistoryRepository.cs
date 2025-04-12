@@ -20,7 +20,9 @@ public class MileageMeasurementHistoryRepository(AppDbContext db) : IMileageMeas
 
     public async Task DeleteAsync(int id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<MileageMeasurementHistory>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class MileageMeasurementHistoryRepository(AppDbContext db) : IMileageMeas
         var config = new MapperConfiguration(cfg => cfg.CreateMap<MileageMeasurementHistory,MileageMeasurementHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<MileageMeasurementHistory>(new {id});
         return mapper.Map<MileageMeasurementHistory,MileageMeasurementHistoryRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateMileageMeasurementHistoryRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<MileageMeasurementHistory>(new {Id = updateDto.Id});
 		if(updateDto.KmCount.HasValue){
             entity.KmCount = updateDto.KmCount.Value;
         }

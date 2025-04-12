@@ -20,7 +20,9 @@ public class VehicleCategoryRepository(AppDbContext db) : IVehicleCategoryReposi
 
     public async Task DeleteAsync(short id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<VehicleCategory>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class VehicleCategoryRepository(AppDbContext db) : IVehicleCategoryReposi
         var config = new MapperConfiguration(cfg => cfg.CreateMap<VehicleCategory,VehicleCategoryRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<VehicleCategory>(new {id});
         return mapper.Map<VehicleCategory,VehicleCategoryRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateVehicleCategoryRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<VehicleCategory>(new {Id = updateDto.Id});
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }

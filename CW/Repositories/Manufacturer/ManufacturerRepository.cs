@@ -20,7 +20,9 @@ public class ManufacturerRepository(AppDbContext db) : IManufacturerRepository
 
     public async Task DeleteAsync(short id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<Manufacturer>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class ManufacturerRepository(AppDbContext db) : IManufacturerRepository
         var config = new MapperConfiguration(cfg => cfg.CreateMap<Manufacturer,ManufacturerRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<Manufacturer>(new {id});
         return mapper.Map<Manufacturer,ManufacturerRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateManufacturerRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<Manufacturer>(new {Id = updateDto.Id});
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }

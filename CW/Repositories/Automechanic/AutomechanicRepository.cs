@@ -20,7 +20,9 @@ public class AutomechanicRepository(AppDbContext db) : IAutomechanicRepository
 
     public async Task DeleteAsync(short id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.UserId == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.UserId == id);
+        if(entity == null) throw new EntityNotFoundException<Automechanic>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class AutomechanicRepository(AppDbContext db) : IAutomechanicRepository
         var config = new MapperConfiguration(cfg => cfg.CreateMap<Automechanic,AutomechanicRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.UserId == id);
+        if(entity == null) throw new EntityNotFoundException<Automechanic>(new {id});
         return mapper.Map<Automechanic,AutomechanicRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateAutomechanicRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.UserId == updateDto.UserId);
+        if(entity == null) throw new EntityNotFoundException<Automechanic>(new {UserId = updateDto.UserId});
 		if(!String.IsNullOrEmpty(updateDto.Qualification)){
             entity.Qualification = updateDto.Qualification;
         }

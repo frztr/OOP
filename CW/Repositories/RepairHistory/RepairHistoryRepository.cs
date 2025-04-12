@@ -20,7 +20,9 @@ public class RepairHistoryRepository(AppDbContext db) : IRepairHistoryRepository
 
     public async Task DeleteAsync(int id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<RepairHistory>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class RepairHistoryRepository(AppDbContext db) : IRepairHistoryRepository
         var config = new MapperConfiguration(cfg => cfg.CreateMap<RepairHistory,RepairHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<RepairHistory>(new {id});
         return mapper.Map<RepairHistory,RepairHistoryRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateRepairHistoryRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<RepairHistory>(new {Id = updateDto.Id});
 		if(updateDto.VehicleId.HasValue){
             entity.VehicleId = updateDto.VehicleId.Value;
         }

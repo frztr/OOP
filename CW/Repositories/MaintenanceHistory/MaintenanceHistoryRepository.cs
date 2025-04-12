@@ -20,7 +20,9 @@ public class MaintenanceHistoryRepository(AppDbContext db) : IMaintenanceHistory
 
     public async Task DeleteAsync(int id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<MaintenanceHistory>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class MaintenanceHistoryRepository(AppDbContext db) : IMaintenanceHistory
         var config = new MapperConfiguration(cfg => cfg.CreateMap<MaintenanceHistory,MaintenanceHistoryRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<MaintenanceHistory>(new {id});
         return mapper.Map<MaintenanceHistory,MaintenanceHistoryRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateMaintenanceHistoryRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<MaintenanceHistory>(new {Id = updateDto.Id});
 		if(updateDto.Date.HasValue){
             entity.Date = updateDto.Date.Value;
         }

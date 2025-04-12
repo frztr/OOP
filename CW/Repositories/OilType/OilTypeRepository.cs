@@ -20,7 +20,9 @@ public class OilTypeRepository(AppDbContext db) : IOilTypeRepository
 
     public async Task DeleteAsync(short id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<OilType>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class OilTypeRepository(AppDbContext db) : IOilTypeRepository
         var config = new MapperConfiguration(cfg => cfg.CreateMap<OilType,OilTypeRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<OilType>(new {id});
         return mapper.Map<OilType,OilTypeRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateOilTypeRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<OilType>(new {Id = updateDto.Id});
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }

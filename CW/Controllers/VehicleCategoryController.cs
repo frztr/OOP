@@ -28,7 +28,7 @@ public class VehicleCategoryController(IVehicleCategoryService service) : Contro
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
 
@@ -45,7 +45,7 @@ public class VehicleCategoryController(IVehicleCategoryService service) : Contro
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message}); 
         }
     }
 
@@ -68,7 +68,7 @@ public class VehicleCategoryController(IVehicleCategoryService service) : Contro
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
 
@@ -86,7 +86,7 @@ public class VehicleCategoryController(IVehicleCategoryService service) : Contro
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
     [HttpPatch]
@@ -105,7 +105,7 @@ public class VehicleCategoryController(IVehicleCategoryService service) : Contro
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(ex);
+            return Results.InternalServerError(new {error = ex.Message});
         }
     }
 }

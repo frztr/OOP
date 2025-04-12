@@ -20,7 +20,9 @@ public class VehicleDocumentRepository(AppDbContext db) : IVehicleDocumentReposi
 
     public async Task DeleteAsync(int id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<VehicleDocument>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class VehicleDocumentRepository(AppDbContext db) : IVehicleDocumentReposi
         var config = new MapperConfiguration(cfg => cfg.CreateMap<VehicleDocument,VehicleDocumentRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<VehicleDocument>(new {id});
         return mapper.Map<VehicleDocument,VehicleDocumentRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateVehicleDocumentRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<VehicleDocument>(new {Id = updateDto.Id});
 		if(updateDto.DocTypeId.HasValue){
             entity.DocTypeId = updateDto.DocTypeId.Value;
         }

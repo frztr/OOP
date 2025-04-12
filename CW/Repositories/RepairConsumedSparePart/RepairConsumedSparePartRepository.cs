@@ -20,7 +20,9 @@ public class RepairConsumedSparePartRepository(AppDbContext db) : IRepairConsume
 
     public async Task DeleteAsync(int id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<RepairConsumedSparePart>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class RepairConsumedSparePartRepository(AppDbContext db) : IRepairConsume
         var config = new MapperConfiguration(cfg => cfg.CreateMap<RepairConsumedSparePart,RepairConsumedSparePartRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<RepairConsumedSparePart>(new {id});
         return mapper.Map<RepairConsumedSparePart,RepairConsumedSparePartRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateRepairConsumedSparePartRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<RepairConsumedSparePart>(new {Id = updateDto.Id});
 		if(updateDto.RepairId.HasValue){
             entity.RepairId = updateDto.RepairId.Value;
         }

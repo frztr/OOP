@@ -20,7 +20,9 @@ public class VehiclePhotoRepository(AppDbContext db) : IVehiclePhotoRepository
 
     public async Task DeleteAsync(int id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.Id == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<VehiclePhoto>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class VehiclePhotoRepository(AppDbContext db) : IVehiclePhotoRepository
         var config = new MapperConfiguration(cfg => cfg.CreateMap<VehiclePhoto,VehiclePhotoRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.Id == id);
+        if(entity == null) throw new EntityNotFoundException<VehiclePhoto>(new {id});
         return mapper.Map<VehiclePhoto,VehiclePhotoRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateVehiclePhotoRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
+        if(entity == null) throw new EntityNotFoundException<VehiclePhoto>(new {Id = updateDto.Id});
 		if(!String.IsNullOrEmpty(updateDto.Src)){
             entity.Src = updateDto.Src;
         }

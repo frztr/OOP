@@ -20,7 +20,9 @@ public class DriverRepository(AppDbContext db) : IDriverRepository
 
     public async Task DeleteAsync(short id)
     {
-        set.Remove(await set.FirstOrDefaultAsync(x => x.UserId == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.UserId == id);
+        if(entity == null) throw new EntityNotFoundException<Driver>(new {id});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }
 
@@ -42,12 +44,14 @@ public class DriverRepository(AppDbContext db) : IDriverRepository
         var config = new MapperConfiguration(cfg => cfg.CreateMap<Driver,DriverRepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.UserId == id);
+        if(entity == null) throw new EntityNotFoundException<Driver>(new {id});
         return mapper.Map<Driver,DriverRepositoryDto>(entity);
     }
 
     public async Task UpdateAsync(UpdateDriverRepositoryDto updateDto)
     {
         var entity = await set.FirstOrDefaultAsync(x => x.UserId == updateDto.UserId);
+        if(entity == null) throw new EntityNotFoundException<Driver>(new {UserId = updateDto.UserId});
 		if(updateDto.DriverLicense.HasValue){
             entity.DriverLicense = updateDto.DriverLicense.Value;
         }

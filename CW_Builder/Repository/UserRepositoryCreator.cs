@@ -46,7 +46,9 @@ public class {entity.Name}Repository(AppDbContext db) : I{entity.Name}Repository
 
     public async Task DeleteAsync({pk.Type} id)
     {{
-        set.Remove(await set.FirstOrDefaultAsync(x => x.{pk.Name} == id));
+        var entity = await set.FirstOrDefaultAsync(x => x.{pk.Name} == id);
+        if(entity == null) throw new EntityNotFoundException<{entity.Name}>(new {{id}});
+        set.Remove(entity);
         await db.SaveChangesAsync();
     }}
 
@@ -67,12 +69,14 @@ public class {entity.Name}Repository(AppDbContext db) : I{entity.Name}Repository
         var config = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name},{entity.Name}RepositoryDto>());
         var mapper = new Mapper(config);
         var entity = await set.FirstOrDefaultAsync(x => x.{pk.Name} == id);
+        if(entity == null) throw new EntityNotFoundException<{entity.Name}>(new {{id}});
         return mapper.Map<{entity.Name},{entity.Name}RepositoryDto>(entity);
     }}
 
     public async Task UpdateAsync(Update{entity.Name}RepositoryDto updateDto)
     {{
         var entity = await set.FirstOrDefaultAsync(x => x.{pk.Name} == updateDto.{pk.Name});
+        if(entity == null) throw new EntityNotFoundException<{entity.Name}>(new {{{pk.Name} = updateDto.{pk.Name}}});
         {String.Join("\n", entity.Props.Where(x=>!x.PK).Select(x => PropUpdater(x)))}
         await db.SaveChangesAsync();
     }}
@@ -80,6 +84,7 @@ public class {entity.Name}Repository(AppDbContext db) : I{entity.Name}Repository
     public async Task<UserLoginResultRepositoryDto> Login(UserLoginRepositoryDto loginDto)
     {{
         var entity = await set.Include(x=>x.Role).FirstOrDefaultAsync(x=>x.Login == loginDto.Login && x.PasswordHash == loginDto.PasswordHash);
+        if(entity == null) throw new BadLoginException();
         var config = new MapperConfiguration(cfg => cfg.CreateMap<User, UserLoginResultRepositoryDto>());
         var mapper = new Mapper(config);
         var resultDto = mapper.Map<User, UserLoginResultRepositoryDto>(entity);
