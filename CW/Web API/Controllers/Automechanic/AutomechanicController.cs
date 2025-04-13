@@ -135,6 +135,12 @@ public class AutomechanicController(IAutomechanicService service) : Controller
         {
             return Results.BadRequest(new {error = ex.Message});
         }
+        catch (DbUpdateException ex)
+        when ((ex.InnerException as Npgsql.PostgresException).SqlState == "23505")
+        {
+            var innerEx = (ex.InnerException as Npgsql.PostgresException);
+            return Results.BadRequest(new { error = $"Нарушение уникальности поля {innerEx.ConstraintName.Split("_").LastOrDefault()}" });
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});

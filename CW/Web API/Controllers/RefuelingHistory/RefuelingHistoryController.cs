@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 namespace Global;
 [Authorize(Roles="admin")]
 [ApiController]
@@ -30,6 +31,12 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
         catch (EntityNotFoundException ex)
         {
             return Results.BadRequest(new {error = ex.Message});
+        }
+        catch (DbUpdateException ex)
+        when ((ex.InnerException as Npgsql.PostgresException).SqlState == "23505")
+        {
+            var innerEx = (ex.InnerException as Npgsql.PostgresException);
+            return Results.BadRequest(new { error = $"Нарушение уникальности поля {innerEx.ConstraintName.Split("_").LastOrDefault()}" });
         }
         catch (Exception ex)
         {
@@ -127,6 +134,12 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
         catch (EntityNotFoundException ex)
         {
             return Results.BadRequest(new {error = ex.Message});
+        }
+        catch (DbUpdateException ex)
+        when ((ex.InnerException as Npgsql.PostgresException).SqlState == "23505")
+        {
+            var innerEx = (ex.InnerException as Npgsql.PostgresException);
+            return Results.BadRequest(new { error = $"Нарушение уникальности поля {innerEx.ConstraintName.Split("_").LastOrDefault()}" });
         }
         catch (Exception ex)
         {
