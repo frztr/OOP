@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
 
-public class EntityNotFoundException<T>: Exception{
+public class EntityNotFoundException : Exception{}
+
+public class EntityNotFoundException<T>: EntityNotFoundException{
     
     private object obj;
     public EntityNotFoundException(){

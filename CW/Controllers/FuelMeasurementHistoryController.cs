@@ -13,6 +13,7 @@ public class FuelMeasurementHistoryController(IFuelMeasurementHistoryService ser
     [HttpPost]
     [Route("add")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> Add(AddFuelMeasurementHistoryControllerDto addDto) 
     {
@@ -26,6 +27,10 @@ public class FuelMeasurementHistoryController(IFuelMeasurementHistoryService ser
             var mapper2 = new Mapper(config2);
             return Results.Json(mapper2.Map<FuelMeasurementHistoryServiceDto, FuelMeasurementHistoryControllerDto>(result));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -35,6 +40,7 @@ public class FuelMeasurementHistoryController(IFuelMeasurementHistoryService ser
     [HttpDelete]
     [Route("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> Delete(int id)
     {
@@ -42,6 +48,10 @@ public class FuelMeasurementHistoryController(IFuelMeasurementHistoryService ser
         {
             await service.DeleteAsync(id);
             return Results.Ok();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
         }
         catch (Exception ex)
         {
@@ -52,6 +62,7 @@ public class FuelMeasurementHistoryController(IFuelMeasurementHistoryService ser
     [HttpGet]
     [Route("")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> GetAll([FromQuery]FuelMeasurementHistoryQueryControllerDto queryDto)
     {
@@ -66,6 +77,10 @@ public class FuelMeasurementHistoryController(IFuelMeasurementHistoryService ser
                 Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<FuelMeasurementHistoryServiceDto,FuelMeasurementHistoryControllerDto>(x))
             });
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -75,6 +90,7 @@ public class FuelMeasurementHistoryController(IFuelMeasurementHistoryService ser
     [HttpGet]
     [Route("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> GetById(int id)
     {
@@ -84,6 +100,10 @@ public class FuelMeasurementHistoryController(IFuelMeasurementHistoryService ser
             var mapper = new Mapper(config);
             return Results.Json(mapper.Map<FuelMeasurementHistoryServiceDto, FuelMeasurementHistoryControllerDto>(await service.GetByIdAsync(id)));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -92,6 +112,7 @@ public class FuelMeasurementHistoryController(IFuelMeasurementHistoryService ser
     [HttpPatch]
     [Route("update")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> UpdateAsync(UpdateFuelMeasurementHistoryControllerDto updateDto)
     {
@@ -102,6 +123,10 @@ public class FuelMeasurementHistoryController(IFuelMeasurementHistoryService ser
             var updateServiceDto = mapper.Map<UpdateFuelMeasurementHistoryControllerDto, UpdateFuelMeasurementHistoryServiceDto>(updateDto);
             await service.UpdateAsync(updateServiceDto);
             return Results.Ok();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
         }
         catch (Exception ex)
         {

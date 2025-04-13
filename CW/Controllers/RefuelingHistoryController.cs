@@ -13,6 +13,7 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
     [HttpPost]
     [Route("add")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> Add(AddRefuelingHistoryControllerDto addDto) 
     {
@@ -26,6 +27,10 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
             var mapper2 = new Mapper(config2);
             return Results.Json(mapper2.Map<RefuelingHistoryServiceDto, RefuelingHistoryControllerDto>(result));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -35,6 +40,7 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
     [HttpDelete]
     [Route("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> Delete(int id)
     {
@@ -42,6 +48,10 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
         {
             await service.DeleteAsync(id);
             return Results.Ok();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
         }
         catch (Exception ex)
         {
@@ -52,6 +62,7 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
     [HttpGet]
     [Route("")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> GetAll([FromQuery]RefuelingHistoryQueryControllerDto queryDto)
     {
@@ -66,6 +77,10 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
                 Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<RefuelingHistoryServiceDto,RefuelingHistoryControllerDto>(x))
             });
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -75,6 +90,7 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
     [HttpGet]
     [Route("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> GetById(int id)
     {
@@ -84,6 +100,10 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
             var mapper = new Mapper(config);
             return Results.Json(mapper.Map<RefuelingHistoryServiceDto, RefuelingHistoryControllerDto>(await service.GetByIdAsync(id)));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -92,6 +112,7 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
     [HttpPatch]
     [Route("update")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> UpdateAsync(UpdateRefuelingHistoryControllerDto updateDto)
     {
@@ -102,6 +123,10 @@ public class RefuelingHistoryController(IRefuelingHistoryService service) : Cont
             var updateServiceDto = mapper.Map<UpdateRefuelingHistoryControllerDto, UpdateRefuelingHistoryServiceDto>(updateDto);
             await service.UpdateAsync(updateServiceDto);
             return Results.Ok();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
         }
         catch (Exception ex)
         {

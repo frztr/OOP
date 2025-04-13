@@ -13,6 +13,7 @@ public class PlannedMaintenanceScheduleController(IPlannedMaintenanceScheduleSer
     [HttpPost]
     [Route("add")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> Add(AddPlannedMaintenanceScheduleControllerDto addDto) 
     {
@@ -26,6 +27,10 @@ public class PlannedMaintenanceScheduleController(IPlannedMaintenanceScheduleSer
             var mapper2 = new Mapper(config2);
             return Results.Json(mapper2.Map<PlannedMaintenanceScheduleServiceDto, PlannedMaintenanceScheduleControllerDto>(result));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -35,6 +40,7 @@ public class PlannedMaintenanceScheduleController(IPlannedMaintenanceScheduleSer
     [HttpDelete]
     [Route("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> Delete(int id)
     {
@@ -42,6 +48,10 @@ public class PlannedMaintenanceScheduleController(IPlannedMaintenanceScheduleSer
         {
             await service.DeleteAsync(id);
             return Results.Ok();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
         }
         catch (Exception ex)
         {
@@ -52,6 +62,7 @@ public class PlannedMaintenanceScheduleController(IPlannedMaintenanceScheduleSer
     [HttpGet]
     [Route("")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> GetAll([FromQuery]PlannedMaintenanceScheduleQueryControllerDto queryDto)
     {
@@ -66,6 +77,10 @@ public class PlannedMaintenanceScheduleController(IPlannedMaintenanceScheduleSer
                 Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<PlannedMaintenanceScheduleServiceDto,PlannedMaintenanceScheduleControllerDto>(x))
             });
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -75,6 +90,7 @@ public class PlannedMaintenanceScheduleController(IPlannedMaintenanceScheduleSer
     [HttpGet]
     [Route("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> GetById(int id)
     {
@@ -84,6 +100,10 @@ public class PlannedMaintenanceScheduleController(IPlannedMaintenanceScheduleSer
             var mapper = new Mapper(config);
             return Results.Json(mapper.Map<PlannedMaintenanceScheduleServiceDto, PlannedMaintenanceScheduleControllerDto>(await service.GetByIdAsync(id)));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -92,6 +112,7 @@ public class PlannedMaintenanceScheduleController(IPlannedMaintenanceScheduleSer
     [HttpPatch]
     [Route("update")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> UpdateAsync(UpdatePlannedMaintenanceScheduleControllerDto updateDto)
     {
@@ -102,6 +123,10 @@ public class PlannedMaintenanceScheduleController(IPlannedMaintenanceScheduleSer
             var updateServiceDto = mapper.Map<UpdatePlannedMaintenanceScheduleControllerDto, UpdatePlannedMaintenanceScheduleServiceDto>(updateDto);
             await service.UpdateAsync(updateServiceDto);
             return Results.Ok();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
         }
         catch (Exception ex)
         {

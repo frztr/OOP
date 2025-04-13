@@ -12,6 +12,9 @@ public class UserController(IUserService service)
 {
     [HttpPost]
     [Route("add")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IResult> Add(AddUserControllerDto addDto)
     {
         try
@@ -24,6 +27,10 @@ public class UserController(IUserService service)
             var mapper2 = new Mapper(config2);
             return Results.Json(mapper2.Map<UserServiceDto, UserControllerDto>(result));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -32,12 +39,19 @@ public class UserController(IUserService service)
 
     [HttpDelete]
     [Route("{id}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IResult> Delete(short id)
     {
         try
         {
             await service.DeleteAsync(id);
             return Results.Ok();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
         }
         catch (Exception ex)
         {
@@ -47,6 +61,9 @@ public class UserController(IUserService service)
 
     [HttpGet]
     [Route("")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IResult> GetAll([FromQuery]UserQueryControllerDto queryDto)
     {
         try
@@ -60,6 +77,10 @@ public class UserController(IUserService service)
                 Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<UserServiceDto,UserControllerDto>(x))
             });
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -68,6 +89,9 @@ public class UserController(IUserService service)
 
     [HttpGet]
     [Route("{id}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IResult> GetById(short id)
     {
         try
@@ -76,6 +100,10 @@ public class UserController(IUserService service)
             var mapper = new Mapper(config);
             return Results.Json(mapper.Map<UserServiceDto, UserControllerDto>(await service.GetByIdAsync(id)));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -83,6 +111,9 @@ public class UserController(IUserService service)
     }
     [HttpPatch]
     [Route("update")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IResult> UpdateAsync(UpdateUserControllerDto updateDto)
     {
         try
@@ -93,6 +124,10 @@ public class UserController(IUserService service)
             await service.UpdateAsync(updateServiceDto);
             return Results.Ok();
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -101,6 +136,9 @@ public class UserController(IUserService service)
 
     [HttpPost]
     [Route("login")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
     [AllowAnonymous]
     public async Task<IResult> Login(UserLoginControllerDto loginDto)
     {
@@ -114,6 +152,10 @@ public class UserController(IUserService service)
             var mapper2 = new Mapper(config2);
             return Results.Json(mapper2.Map<UserLoginResultServiceDto, UserLoginResultControllerDto>(await service.Login(userLoginServiceDto)));
             
+        }
+        catch (BadLoginException ex)
+        {
+            return Results.NotFound(new {error = ex.Message});
         }
         catch (Exception ex)
         {

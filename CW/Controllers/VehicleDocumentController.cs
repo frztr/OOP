@@ -13,6 +13,7 @@ public class VehicleDocumentController(IVehicleDocumentService service) : Contro
     [HttpPost]
     [Route("add")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> Add(AddVehicleDocumentControllerDto addDto) 
     {
@@ -26,6 +27,10 @@ public class VehicleDocumentController(IVehicleDocumentService service) : Contro
             var mapper2 = new Mapper(config2);
             return Results.Json(mapper2.Map<VehicleDocumentServiceDto, VehicleDocumentControllerDto>(result));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -35,6 +40,7 @@ public class VehicleDocumentController(IVehicleDocumentService service) : Contro
     [HttpDelete]
     [Route("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> Delete(int id)
     {
@@ -42,6 +48,10 @@ public class VehicleDocumentController(IVehicleDocumentService service) : Contro
         {
             await service.DeleteAsync(id);
             return Results.Ok();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
         }
         catch (Exception ex)
         {
@@ -52,6 +62,7 @@ public class VehicleDocumentController(IVehicleDocumentService service) : Contro
     [HttpGet]
     [Route("")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> GetAll([FromQuery]VehicleDocumentQueryControllerDto queryDto)
     {
@@ -66,6 +77,10 @@ public class VehicleDocumentController(IVehicleDocumentService service) : Contro
                 Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<VehicleDocumentServiceDto,VehicleDocumentControllerDto>(x))
             });
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -75,6 +90,7 @@ public class VehicleDocumentController(IVehicleDocumentService service) : Contro
     [HttpGet]
     [Route("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> GetById(int id)
     {
@@ -84,6 +100,10 @@ public class VehicleDocumentController(IVehicleDocumentService service) : Contro
             var mapper = new Mapper(config);
             return Results.Json(mapper.Map<VehicleDocumentServiceDto, VehicleDocumentControllerDto>(await service.GetByIdAsync(id)));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -92,6 +112,7 @@ public class VehicleDocumentController(IVehicleDocumentService service) : Contro
     [HttpPatch]
     [Route("update")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> UpdateAsync(UpdateVehicleDocumentControllerDto updateDto)
     {
@@ -102,6 +123,10 @@ public class VehicleDocumentController(IVehicleDocumentService service) : Contro
             var updateServiceDto = mapper.Map<UpdateVehicleDocumentControllerDto, UpdateVehicleDocumentServiceDto>(updateDto);
             await service.UpdateAsync(updateServiceDto);
             return Results.Ok();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
         }
         catch (Exception ex)
         {

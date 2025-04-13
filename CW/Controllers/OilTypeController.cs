@@ -13,6 +13,7 @@ public class OilTypeController(IOilTypeService service) : Controller
     [HttpPost]
     [Route("add")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> Add(AddOilTypeControllerDto addDto) 
     {
@@ -26,6 +27,10 @@ public class OilTypeController(IOilTypeService service) : Controller
             var mapper2 = new Mapper(config2);
             return Results.Json(mapper2.Map<OilTypeServiceDto, OilTypeControllerDto>(result));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -35,6 +40,7 @@ public class OilTypeController(IOilTypeService service) : Controller
     [HttpDelete]
     [Route("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> Delete(short id)
     {
@@ -42,6 +48,10 @@ public class OilTypeController(IOilTypeService service) : Controller
         {
             await service.DeleteAsync(id);
             return Results.Ok();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
         }
         catch (Exception ex)
         {
@@ -52,6 +62,7 @@ public class OilTypeController(IOilTypeService service) : Controller
     [HttpGet]
     [Route("")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> GetAll([FromQuery]OilTypeQueryControllerDto queryDto)
     {
@@ -66,6 +77,10 @@ public class OilTypeController(IOilTypeService service) : Controller
                 Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<OilTypeServiceDto,OilTypeControllerDto>(x))
             });
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -75,6 +90,7 @@ public class OilTypeController(IOilTypeService service) : Controller
     [HttpGet]
     [Route("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> GetById(short id)
     {
@@ -84,6 +100,10 @@ public class OilTypeController(IOilTypeService service) : Controller
             var mapper = new Mapper(config);
             return Results.Json(mapper.Map<OilTypeServiceDto, OilTypeControllerDto>(await service.GetByIdAsync(id)));
         }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
+        }
         catch (Exception ex)
         {
             return Results.InternalServerError(new {error = ex.Message});
@@ -92,6 +112,7 @@ public class OilTypeController(IOilTypeService service) : Controller
     [HttpPatch]
     [Route("update")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<IResult> UpdateAsync(UpdateOilTypeControllerDto updateDto)
     {
@@ -102,6 +123,10 @@ public class OilTypeController(IOilTypeService service) : Controller
             var updateServiceDto = mapper.Map<UpdateOilTypeControllerDto, UpdateOilTypeServiceDto>(updateDto);
             await service.UpdateAsync(updateServiceDto);
             return Results.Ok();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            return Results.BadRequest(new {error = ex.Message});
         }
         catch (Exception ex)
         {

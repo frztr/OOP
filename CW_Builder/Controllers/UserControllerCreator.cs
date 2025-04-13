@@ -17,6 +17,9 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
 {{
     [HttpPost]
     [Route(""add"")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IResult> Add(Add{entity.Name}ControllerDto addDto)
     {{
         try
@@ -29,6 +32,10 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
             var mapper2 = new Mapper(config2);
             return Results.Json(mapper2.Map<{entity.Name}ServiceDto, {entity.Name}ControllerDto>(result));
         }}
+        catch (EntityNotFoundException ex)
+        {{
+            return Results.BadRequest(new {{error = ex.Message}});
+        }}
         catch (Exception ex)
         {{
             return Results.InternalServerError(new {{error = ex.Message}});
@@ -37,12 +44,19 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
 
     [HttpDelete]
     [Route(""{{id}}"")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IResult> Delete({pk} id)
     {{
         try
         {{
             await service.DeleteAsync(id);
             return Results.Ok();
+        }}
+        catch (EntityNotFoundException ex)
+        {{
+            return Results.BadRequest(new {{error = ex.Message}});
         }}
         catch (Exception ex)
         {{
@@ -52,6 +66,9 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
 
     [HttpGet]
     [Route("""")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IResult> GetAll([FromQuery]{entity.Name}QueryControllerDto queryDto)
     {{
         try
@@ -65,6 +82,10 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
                 Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<{entity.Name}ServiceDto,{entity.Name}ControllerDto>(x))
             }});
         }}
+        catch (EntityNotFoundException ex)
+        {{
+            return Results.BadRequest(new {{error = ex.Message}});
+        }}
         catch (Exception ex)
         {{
             return Results.InternalServerError(new {{error = ex.Message}});
@@ -73,6 +94,9 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
 
     [HttpGet]
     [Route(""{{id}}"")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IResult> GetById({pk} id)
     {{
         try
@@ -81,6 +105,10 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
             var mapper = new Mapper(config);
             return Results.Json(mapper.Map<{entity.Name}ServiceDto, {entity.Name}ControllerDto>(await service.GetByIdAsync(id)));
         }}
+        catch (EntityNotFoundException ex)
+        {{
+            return Results.BadRequest(new {{error = ex.Message}});
+        }}
         catch (Exception ex)
         {{
             return Results.InternalServerError(new {{error = ex.Message}});
@@ -88,6 +116,9 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
     }}
     [HttpPatch]
     [Route(""update"")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<IResult> UpdateAsync(Update{entity.Name}ControllerDto updateDto)
     {{
         try
@@ -98,6 +129,10 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
             await service.UpdateAsync(updateServiceDto);
             return Results.Ok();
         }}
+        catch (EntityNotFoundException ex)
+        {{
+            return Results.BadRequest(new {{error = ex.Message}});
+        }}
         catch (Exception ex)
         {{
             return Results.InternalServerError(new {{error = ex.Message}});
@@ -106,6 +141,9 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
 
     [HttpPost]
     [Route(""login"")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
     [AllowAnonymous]
     public async Task<IResult> Login(UserLoginControllerDto loginDto)
     {{
@@ -119,6 +157,10 @@ public class {entity.Name}Controller(I{entity.Name}Service service)
             var mapper2 = new Mapper(config2);
             return Results.Json(mapper2.Map<UserLoginResultServiceDto, UserLoginResultControllerDto>(await service.Login(userLoginServiceDto)));
             
+        }}
+        catch (BadLoginException ex)
+        {{
+            return Results.NotFound(new {{error = ex.Message}});
         }}
         catch (Exception ex)
         {{
