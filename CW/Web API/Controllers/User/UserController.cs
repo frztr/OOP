@@ -10,32 +10,32 @@ namespace Global;
 [Route("User")]
 public class UserController(IUserService service)
 {
-    [HttpPost]
-    [Route("add")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(500)]
-    public async Task<IResult> Add(AddUserControllerDto addDto)
-    {
-        try
-        {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<AddUserControllerDto, AddUserServiceDto>());
-            var mapper = new Mapper(config);
-            var addServiceDto = mapper.Map<AddUserControllerDto, AddUserServiceDto>(addDto);
-            var result = await service.AddAsync(addServiceDto);
-            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<UserServiceDto, UserControllerDto>());
-            var mapper2 = new Mapper(config2);
-            return Results.Json(mapper2.Map<UserServiceDto, UserControllerDto>(result));
-        }
-        catch (EntityNotFoundException ex)
-        {
-            return Results.BadRequest(new {error = ex.Message});
-        }
-        catch (Exception ex)
-        {
-            return Results.InternalServerError(new {error = ex.Message});
-        }
-    }
+    // [HttpPost]
+    // [Route("add")]
+    // [ProducesResponseType(200)]
+    // [ProducesResponseType(400)]
+    // [ProducesResponseType(500)]
+    // public async Task<IResult> Add(AddUserControllerDto addDto)
+    // {
+    //     try
+    //     {
+    //         var config = new MapperConfiguration(cfg => cfg.CreateMap<AddUserControllerDto, AddUserServiceDto>());
+    //         var mapper = new Mapper(config);
+    //         var addServiceDto = mapper.Map<AddUserControllerDto, AddUserServiceDto>(addDto);
+    //         var result = await service.AddAsync(addServiceDto);
+    //         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<UserServiceDto, UserControllerDto>());
+    //         var mapper2 = new Mapper(config2);
+    //         return Results.Json(mapper2.Map<UserServiceDto, UserControllerDto>(result));
+    //     }
+    //     catch (EntityNotFoundException ex)
+    //     {
+    //         return Results.BadRequest(new {error = ex.Message});
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         return Results.InternalServerError(new {error = ex.Message});
+    //     }
+    // }
 
     [HttpDelete]
     [Route("{id}")]

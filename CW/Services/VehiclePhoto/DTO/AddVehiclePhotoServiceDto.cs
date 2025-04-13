@@ -1,11 +1,11 @@
 
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 namespace Global;
 public class AddVehiclePhotoServiceDto
 {
 	[Required]
-	[StringLength(255)]
-	public string Src { get; set; }
+	public IFormFile Photo { get; set; }
 	[Required]
 	public int VehicleId { get; set; }
 }

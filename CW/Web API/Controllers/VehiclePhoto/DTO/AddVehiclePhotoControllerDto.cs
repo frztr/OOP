@@ -4,8 +4,7 @@ namespace Global;
 public class AddVehiclePhotoControllerDto
 {
 	[Required]
-	[StringLength(255)]
-	public string Src { get; set; }
+	public IFormFile Photo { get; set; }
 	[Required]
 	public int VehicleId { get; set; }
 }

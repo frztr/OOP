@@ -6,8 +6,7 @@ public class AddVehicleDocumentControllerDto
 	[Required]
 	public short DoctypeId { get; set; }
 	[Required]
-	[StringLength(255)]
-	public string Src { get; set; }
+	public IFormFile File { get; set; }
 	[Required]
 	public int VehicleId { get; set; }
 }

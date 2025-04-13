@@ -4,7 +4,15 @@ namespace Global;
 public class AddAutomechanicControllerDto
 {
 	[Required]
-	public short UserId { get; set; }
+	[StringLength(32)]
+	public string Login { get; set; }
+	[Required]
+	[StringLength(100)]
+	public string Fio { get; set; }
+	[Required]
+	public short RoleId { get; set; }
+    [Required]
+    public string Password { get; set; }
 	[Required]
 	[StringLength(30)]
 	public string Qualification { get; set; }

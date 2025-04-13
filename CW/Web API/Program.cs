@@ -55,7 +55,8 @@ builder.Services
 .AddScoped<IRepairHistoryService,RepairHistoryService>()
 .AddTransient<IRepairHistoryRepository, RepairHistoryRepository>()
 .AddScoped<IVehicleModelService,VehicleModelService>()
-.AddTransient<IVehicleModelRepository, VehicleModelRepository>();
+.AddTransient<IVehicleModelRepository, VehicleModelRepository>()
+.AddTransient<IFileRepository,FileRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
