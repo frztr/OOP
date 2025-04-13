@@ -4,7 +4,7 @@ namespace Global;
 public class AddVehicleDocumentControllerDto
 {
 	[Required]
-	public short DocTypeId { get; set; }
+	public short DoctypeId { get; set; }
 	[Required]
 	[StringLength(255)]
 	public string Src { get; set; }

@@ -13,7 +13,7 @@ ILogger<VehicleDocumentService> logger) : IVehicleDocumentService
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<AddVehicleDocumentServiceDto, AddVehicleDocumentRepositoryDto>(addServiceDto);
         await Task.WhenAll(
-        documentTypeRepository.GetByIdAsync(addRepositoryDto.DocTypeId),
+        documentTypeRepository.GetByIdAsync(addRepositoryDto.DoctypeId),
 		vehicleRepository.GetByIdAsync(addRepositoryDto.VehicleId));
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<VehicleDocumentRepositoryDto, VehicleDocumentServiceDto>());
@@ -55,7 +55,7 @@ ILogger<VehicleDocumentService> logger) : IVehicleDocumentService
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<UpdateVehicleDocumentServiceDto, UpdateVehicleDocumentRepositoryDto>(updateDto);
         await Task.WhenAll(
-        updateDto.DocTypeId.HasValue ? documentTypeRepository.GetByIdAsync(updateDto.DocTypeId.Value) : Task.CompletedTask,
+        updateDto.DoctypeId.HasValue ? documentTypeRepository.GetByIdAsync(updateDto.DoctypeId.Value) : Task.CompletedTask,
 		updateDto.VehicleId.HasValue ? vehicleRepository.GetByIdAsync(updateDto.VehicleId.Value) : Task.CompletedTask);
         await repository.UpdateAsync(updateRepositoryDto);
     }

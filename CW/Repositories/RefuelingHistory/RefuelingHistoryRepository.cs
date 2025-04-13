@@ -58,23 +58,23 @@ public class RefuelingHistoryRepository(AppDbContext db) : IRefuelingHistoryRepo
 		if(updateDto.OilTypeId.HasValue){
             entity.OilTypeId = updateDto.OilTypeId.Value;
         }
-		if(updateDto.FuelStationTinNumber.HasValue){
-            entity.FuelStationTinNumber = updateDto.FuelStationTinNumber.Value;
+
+		if(updateDto.FuelstationTinNumber.HasValue){
+            entity.FuelstationTinNumber = updateDto.FuelstationTinNumber.Value;
         }
 		if(updateDto.VehicleId.HasValue){
             entity.VehicleId = updateDto.VehicleId.Value;
         }
+
 		if(updateDto.Price.HasValue){
             entity.Price = updateDto.Price.Value;
         }
-		if(updateDto.DateTime.HasValue){
-            entity.DateTime = updateDto.DateTime.Value;
+		if(updateDto.Datetime.HasValue){
+            entity.Datetime = updateDto.Datetime.Value;
         }
 		if(updateDto.DriverId.HasValue){
             entity.DriverId = updateDto.DriverId.Value;
         }
-
-
 
         await db.SaveChangesAsync();
     }

@@ -1,15 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Global;
-
 public class FuelTypeMap : IEntityTypeConfiguration<FuelType>
 {
     public void Configure(EntityTypeBuilder<FuelType> builder)
     {
         builder.ToTable("fuel_type");
-        builder.HasKey(ft => ft.Id);
-        builder.Property(ft => ft.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(ft => ft.Name).HasColumnName("name").HasMaxLength(20).IsRequired();
-        builder.HasIndex(ft => ft.Name).IsUnique();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.Name).HasColumnName("name").HasMaxLength(20).IsRequired();
+        builder.HasIndex(v => v.Name).IsUnique();
+                    
+            
+        
     }
 }

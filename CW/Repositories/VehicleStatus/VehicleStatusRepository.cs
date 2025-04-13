@@ -55,6 +55,7 @@ public class VehicleStatusRepository(AppDbContext db) : IVehicleStatusRepository
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }
+
         await db.SaveChangesAsync();
     }
 }

@@ -1,21 +1,22 @@
-namespace Global;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+namespace Global;
 public class UserMap : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.ToTable("user");
-        builder.HasKey(u => u.Id);
-        builder.Property(u => u.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(u => u.Login).HasColumnName("login").HasMaxLength(32).IsRequired();
-        builder.Property(u => u.PasswordHash).HasColumnName("password_hash").HasMaxLength(128).IsRequired();
-        builder.Property(u => u.RoleId).HasColumnName("role_id").IsRequired();
-        builder.Property(u => u.Fio).HasColumnName("fio").HasMaxLength(100).IsRequired();
-        builder.HasIndex(u => u.Login).IsUnique();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.Login).HasColumnName("login").HasMaxLength(32).IsRequired();
+		builder.Property(d => d.Fio).HasColumnName("fio").HasMaxLength(100).IsRequired();
+		builder.Property(d => d.PasswordHash).HasColumnName("password_hash").HasMaxLength(128).IsRequired();
+		builder.Property(d => d.RoleId).HasColumnName("role_id").IsRequired();
+        builder.HasIndex(v => v.Login).IsUnique();
+                    
+        builder.HasOne(d => d.Role)
+                .WithMany(e => e.Users)
+                .HasForeignKey(d => d.RoleId);    
         
-        builder.HasOne(u => u.Role)
-            .WithMany(r => r.Users)
-            .HasForeignKey(u => u.RoleId);
     }
 }

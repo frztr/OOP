@@ -54,14 +54,14 @@ public class UserRepository(AppDbContext db) : IUserRepository
         		if(!String.IsNullOrEmpty(updateDto.Login)){
             entity.Login = updateDto.Login;
         }
+		if(!String.IsNullOrEmpty(updateDto.Fio)){
+            entity.Fio = updateDto.Fio;
+        }
 		if(!String.IsNullOrEmpty(updateDto.PasswordHash)){
             entity.PasswordHash = updateDto.PasswordHash;
         }
 		if(updateDto.RoleId.HasValue){
             entity.RoleId = updateDto.RoleId.Value;
-        }
-		if(!String.IsNullOrEmpty(updateDto.Fio)){
-            entity.Fio = updateDto.Fio;
         }
 
 

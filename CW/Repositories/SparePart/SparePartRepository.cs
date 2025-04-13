@@ -58,6 +58,7 @@ public class SparePartRepository(AppDbContext db) : ISparePartRepository
 		if(updateDto.CountLeft.HasValue){
             entity.CountLeft = updateDto.CountLeft.Value;
         }
+
         await db.SaveChangesAsync();
     }
 }

@@ -9,13 +9,17 @@ public class SQLParser
     {
         // Console.WriteLine(text);
         List<Entity> entities = new List<Entity>();
+        if (!Directory.Exists($"{AppContext.Get().ProjectPath}/Data/"))
+            Directory.CreateDirectory($"{AppContext.Get().ProjectPath}/Data/");
+        if (!Directory.Exists($"{AppContext.Get().ProjectPath}/DataMap/"))
+            Directory.CreateDirectory($"{AppContext.Get().ProjectPath}/DataMap/");
         var table_content = "create table (\"?[\\w]+\"?){1}[\\s]?\\({1}\\s*[\\w\\s\\(\\)0-9,\"]+;";
         var tables = Regex.Matches(text, table_content);
         foreach (var table in tables)
         {
-            Console.WriteLine("_______");
+            // Console.WriteLine("_______");
             var _table = Regex.Match(table.ToString(), table_content);
-            var table_name = _table.Groups[1].Captures[0].ToString().Replace("\"","");
+            var table_name = _table.Groups[1].Captures[0].ToString().Replace("\"", "");
             // Console.WriteLine(table.ToString());
             var table_cont = Regex.Replace(_table.ToString().Replace(");", ""), "create table (\"?[\\w]+\"?){1}[\\s]?\\({1}\\s*", "");
             var rows = table_cont.Split(",\n");
@@ -40,7 +44,7 @@ public class SQLParser
                 var _keyMatch = Regex.Match(key, "(foreign[\\s]+key[\\s]+(\\([\\w]+\\)){1} references (\"?[\\w]+\"?\\([\\w]+\\))){1}");
                 // Console.WriteLine(key);
                 var fk_name = _keyMatch.Groups[2].Captures[0].Value.Replace("(", "").Replace(")", "");
-                var _ref = _keyMatch.Groups[3].Captures[0].Value.Replace(")", "").Replace("\"","").Split("(");
+                var _ref = _keyMatch.Groups[3].Captures[0].Value.Replace(")", "").Replace("\"", "").Split("(");
                 var ref_table = _ref[0];
                 var ref_field = _ref[1];
                 var prop = entity.Props.FirstOrDefault(x => x.Name == fk_name);
@@ -59,30 +63,43 @@ public class SQLParser
                 var prop = f_tables.Skip(j).FirstOrDefault();
                 var f_table = entities.FirstOrDefault(x => x.Name == prop.FK);
                 // Console.WriteLine(new { entity = entities[i].Name, prop.Name,prop.FK, f_table });
-                var f_prop = new EntityProp()
+                EntityProp f_prop;
+                if (!prop.PK)
                 {
-                    Type = $"ICollection<{ToPascalCase(entities[i].Name)}>",
-                    Name = $"{ToPascalCase(entities[i].Name)}s"
-                };
+                    f_prop = new EntityProp()
+                    {
+                        Type = $"ICollection<{ToPascalCase(entities[i].Name)}>",
+                        Name = FixManyEnds($"{ToPascalCase(entities[i].Name)}s")
+                    };
+                }
+                else
+                {
+                    f_prop = new EntityProp()
+                    {
+                        Type = $"{ToPascalCase(entities[i].Name)}",
+                        Name = $"{ToPascalCase(entities[i].Name)}"
+                    };
+                }
                 f_table.Props.Add(f_prop);
             }
         }
 
         foreach (var entity in entities)
         {
-            string _class = $@"public class {ToPascalCase(entity.Name)}{{
-        {String.Join("\n\t", entity.Props.Select(x =>
+            string _class = $@"using System.ComponentModel.DataAnnotations;
+public class {ToPascalCase(entity.Name)}{{
+    {String.Join("\n\t", entity.Props.Select(x =>
             {
                 var prop = "";
                 var type = "";
                 if (x.PK)
                 {
-                    prop += "[Required]\n";
+                    prop += "[Required]\n\t";
                 }
                 if (x.Type.Contains("varchar"))
                 {
                     var value = x.Type.Replace("varchar(", "").Replace(")", "");
-                    prop += $"[StringLength({value})]\n";
+                    prop += $"[StringLength({value})]\n\t";
                     x.HasMaxLength = Convert.ToInt32(value);
                     type = "string";
                 }
@@ -106,10 +123,16 @@ public class SQLParser
                 {
                     type = "decimal";
                 }
-                if(type == ""){
+                if (type == "")
+                {
                     type = x.Type;
                 }
-                return $@"public {type}{((x.IsRequired || x.PK || x.Identity || x.Default != null || x.Type.Contains("ICollection")) ? "" : "?")} {ToPascalCase(x.Name)} {{ get;set; }}";
+                prop += $@"public {type}{((x.IsRequired || x.PK || x.Identity || x.Default != null || x.Type.Contains("ICollection")) ? "" : "?")} {ToPascalCase(x.Name)} {{ get;set; }}";
+                if (x.FK != null)
+                {
+                    prop += $"\n\tpublic {ToPascalCase(x.FK)} {ToPascalCase(x.FK)} {{get;set;}}";
+                }
+                return prop;
             }))}
 }}";
             string map = $@"using Microsoft.EntityFrameworkCore;
@@ -120,27 +143,39 @@ public class {ToPascalCase(entity.Name)}Map : IEntityTypeConfiguration<{ToPascal
     public void Configure(EntityTypeBuilder<{ToPascalCase(entity.Name)}> builder)
     {{
         builder.ToTable(""{entity.Name}"");
-        builder.HasKey(d => d.{entity.Props.FirstOrDefault(x=>x.PK).Name});
-        {String.Join("\n\t",entity.Props.Select(x=>{
-            var ads = "";
-            if(x.IsRequired) ads += ".IsRequired()";
-            if(new List<string>(){"smallserial","serial"}.Contains(x.Type)) ads+= ".ValueGeneratedOnAdd()";
-            if(x.HasMaxLength != null) ads+= $".HasMaxLength({x.HasMaxLength})";
-            return $@"builder.Property(d => d.{ToPascalCase(x.Name)}).HasColumnName(""{x.Name}""){ads};";
-        }))}
-        {String.Join("\n\t",entity.Props.Where(x=>x.Unique).Select(x=>{
-            return $@"builder.HasIndex(v => v.{ToPascalCase(x.Name)}).IsUnique();";
-        }))}    
-        {String.Join("\n\t",entity.Props.Where(x=>x.FK != null).Select(x=>{
-            return $@"builder.HasOne(d => d.{ToPascalCase(x.FK)})
-            .With{(x.PK?"One":"Many")}(e => e.{ToPascalCase(entity.Name)}s)
-            .HasForeignKey{(!x.PK?"":$"<{ToPascalCase(entity.Name)}>")}(d => d.{ToPascalCase(x.Name)});";
-        }))}    
+        builder.HasKey(d => d.{ToPascalCase(entity.Props.FirstOrDefault(x => x.PK).Name)});
+        {String.Join("\n\t\t", entity.Props.Where(x =>
+            {
+                if (new List<string>() { "serial", "smallserial", "int", "int2", "int8", "int4", "bigint", "datetime", "date", "timestamp", "smallint", "integer" }.Contains(x.Type)
+                || x.Type.Contains("varchar") || x.Type.Contains("numeric"))
+                    return true;
+                return false;
+            }).Select(x =>
+                {
+                    var ads = "";
+                    if (new List<string>() { "smallserial", "serial" }.Contains(x.Type)) ads += ".ValueGeneratedOnAdd()";
+                    if (x.HasMaxLength != null) ads += $".HasMaxLength({x.HasMaxLength})";
+                    if (x.IsRequired) ads += ".IsRequired()";
+                    return $@"builder.Property(d => d.{ToPascalCase(x.Name)}).HasColumnName(""{x.Name}""){ads};";
+                }))}
+        {String.Join("\n\t\t", entity.Props.Where(x => x.Unique).Select(x =>
+                {
+                    return $@"builder.HasIndex(v => v.{ToPascalCase(x.Name)}).IsUnique();";
+                }))}
+                    
+        {String.Join("\n\n\t\t", entity.Props.Where(x => x.FK != null).Select(x =>
+                {
+                    return $@"builder.HasOne(d => d.{ToPascalCase(x.FK)})
+                .With{(x.PK ? "One" : "Many")}(e => e.{FixManyEnds($"{ToPascalCase(entity.Name)}{(x.PK ? "" : "s")}")})
+                .HasForeignKey{(!x.PK ? "" : $"<{ToPascalCase(entity.Name)}>")}(d => d.{ToPascalCase(x.Name)});";
+                }))}    
         
     }}
 }}";
+            File.WriteAllText($"{AppContext.Get().ProjectPath}/Data/{ToPascalCase(entity.Name)}.cs", _class);
+            File.WriteAllText($"{AppContext.Get().ProjectPath}/DataMap/{ToPascalCase(entity.Name)}Map.cs", map);
             // Console.WriteLine(_class);
-            Console.WriteLine(map);
+            // Console.WriteLine(map);
         }
 
     }
@@ -168,5 +203,10 @@ public class {ToPascalCase(entity.Name)}Map : IEntityTypeConfiguration<{ToPascal
             .Select(w => upperCaseInside.Replace(w, m => m.Value.ToLower()));
 
         return string.Concat(pascalCase);
+    }
+
+    private static string FixManyEnds(string input)
+    {
+        return Regex.Replace(input, @"ys$", @"ies");
     }
 }

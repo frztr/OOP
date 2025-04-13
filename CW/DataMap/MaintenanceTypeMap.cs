@@ -6,9 +6,12 @@ public class MaintenanceTypeMap : IEntityTypeConfiguration<MaintenanceType>
     public void Configure(EntityTypeBuilder<MaintenanceType> builder)
     {
         builder.ToTable("maintenance_type");
-        builder.HasKey(mt => mt.Id);
-        builder.Property(mt => mt.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(mt => mt.Name).HasColumnName("name").HasMaxLength(30).IsRequired();
-        builder.HasIndex(mt => mt.Name).IsUnique();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.Name).HasColumnName("name").HasMaxLength(30).IsRequired();
+        builder.HasIndex(v => v.Name).IsUnique();
+                    
+            
+        
     }
 }

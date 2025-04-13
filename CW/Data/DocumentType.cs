@@ -1,8 +1,8 @@
-namespace Global;
-public class DocumentType
-{
-    public short Id { get; set; }
-    public string Name { get; set; }
-    
-    public ICollection<VehicleDocument> VehicleDocuments { get; set; }
+using System.ComponentModel.DataAnnotations;
+public class DocumentType{
+    [Required]
+	public short Id { get;set; }
+	[StringLength(20)]
+	public string Name { get;set; }
+	public ICollection<VehicleDocument> VehicleDocuments { get;set; }
 }

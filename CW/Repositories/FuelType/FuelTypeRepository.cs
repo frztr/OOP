@@ -55,6 +55,8 @@ public class FuelTypeRepository(AppDbContext db) : IFuelTypeRepository
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }
+
+
         await db.SaveChangesAsync();
     }
 }

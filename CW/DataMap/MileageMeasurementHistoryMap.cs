@@ -6,14 +6,16 @@ public class MileageMeasurementHistoryMap : IEntityTypeConfiguration<MileageMeas
     public void Configure(EntityTypeBuilder<MileageMeasurementHistory> builder)
     {
         builder.ToTable("mileage_measurement_history");
-        builder.HasKey(mm => mm.Id);
-        builder.Property(mm => mm.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(mm => mm.KmCount).HasColumnName("km_count").HasPrecision(9, 3).IsRequired();
-        builder.Property(mm => mm.MeasurementDate).HasColumnName("measurement_date").IsRequired();
-        builder.Property(mm => mm.VehicleId).HasColumnName("vehicle_id").IsRequired();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.KmCount).HasColumnName("km_count").IsRequired();
+		builder.Property(d => d.MeasurementDate).HasColumnName("measurement_date").IsRequired();
+		builder.Property(d => d.VehicleId).HasColumnName("vehicle_id").IsRequired();
         
-        builder.HasOne(mm => mm.Vehicle)
-            .WithMany(v => v.MileageMeasurements)
-            .HasForeignKey(mm => mm.VehicleId);
+                    
+        builder.HasOne(d => d.Vehicle)
+                .WithMany(e => e.MileageMeasurementHistories)
+                .HasForeignKey(d => d.VehicleId);    
+        
     }
 }

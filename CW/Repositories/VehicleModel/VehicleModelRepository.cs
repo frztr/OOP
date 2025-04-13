@@ -58,20 +58,21 @@ public class VehicleModelRepository(AppDbContext db) : IVehicleModelRepository
 		if(updateDto.ManufacturerId.HasValue){
             entity.ManufacturerId = updateDto.ManufacturerId.Value;
         }
+
 		if(updateDto.VehicleCategoryId.HasValue){
             entity.VehicleCategoryId = updateDto.VehicleCategoryId.Value;
         }
+
 		if(updateDto.Power.HasValue){
             entity.Power = updateDto.Power.Value;
         }
 		if(updateDto.FuelTypeId.HasValue){
             entity.FuelTypeId = updateDto.FuelTypeId.Value;
         }
+
 		if(updateDto.LoadCapacity.HasValue){
             entity.LoadCapacity = updateDto.LoadCapacity.Value;
         }
-
-
 
         await db.SaveChangesAsync();
     }

@@ -58,17 +58,17 @@ public class MaintenanceHistoryRepository(AppDbContext db) : IMaintenanceHistory
 		if(updateDto.VehicleId.HasValue){
             entity.VehicleId = updateDto.VehicleId.Value;
         }
+
 		if(updateDto.MaintenanceTypeId.HasValue){
             entity.MaintenanceTypeId = updateDto.MaintenanceTypeId.Value;
         }
+
 		if(!String.IsNullOrEmpty(updateDto.CompletedWork)){
             entity.CompletedWork = updateDto.CompletedWork;
         }
 		if(updateDto.AutomechanicId.HasValue){
             entity.AutomechanicId = updateDto.AutomechanicId.Value;
         }
-
-
 
         await db.SaveChangesAsync();
     }

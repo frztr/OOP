@@ -55,6 +55,7 @@ public class ManufacturerRepository(AppDbContext db) : IManufacturerRepository
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }
+
         await db.SaveChangesAsync();
     }
 }

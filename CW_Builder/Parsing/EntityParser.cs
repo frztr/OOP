@@ -8,12 +8,15 @@ public class EntityParser
     {
         var fileText = File.ReadAllText($"{AppContext.Get().ProjectPath}/Data/{file.Name.Replace(".cs", "")}.cs");
         var entityName = Regex.Match(fileText, @"public class ([\w]+)").Value.Replace("public class ", "");
-        var entityBody = new Regex(@"((public class ([\w]+)[\W]{1}[\\{]{1})|([\\{]{1} get; set; [\\}]{1})|([\\}]{1}))+").Replace(
-        Regex.Match(fileText, @"public class ([\w]+)[\W]{1}[\\{]{1}[\w\W]+[\\}]{1}").Value, "");
-        var props = Regex.Matches(entityBody, @"\w+ \w+[?]* \w+");
+        // var entityBody = new Regex(@"((public class ([\w]+)[\W]{1}[\\{]{1})|([\\{]{1} get; set; [\\}]{1})|([\\}]{1}))+").Replace(
+        //     Regex.Match(fileText, @"public class ([\w]+)[\W]{1}[\\{]{1}[\w\W]+[\\}]{1}").Value, "");
+        var props = Regex.Matches(fileText, @"\w+ [\w<>]+[?]* \w+\s*\{\s*get;\s*set;\s*\}");
+                // Regex.Matches(fileText, @"\w+\s+[\w\<\>]+[?]*\s+\w+[\s]{{\s*get;\s*set;\s*}}").ToList().ForEach(x=>Console.WriteLine(x));
+        // Regex.Matches(fileText, @"\w+\s+[\w><]+[?]*\s+\w+\s*{{\s*get;\s*set;\s*}}").ToList().ForEach(x=>Console.WriteLine(x));
         var entProps = props.ToList().Select(x =>
         {
             var s = x.Value.Split(" ");
+            // Console.WriteLine(x);
             return new EntityProp()
             {
                 Modificator = s[0],
@@ -64,6 +67,7 @@ public class EntityParser
             var entityFK = foreign_key.Groups[1].Captures.FirstOrDefault().Value;
             var propFK = foreign_key.Groups[2].Captures.FirstOrDefault().Value;
             var prop = entity.Props.FirstOrDefault(x => x.Name == propFK);
+            // Console.WriteLine(new {entityFK,propFK,entity = JsonConvert.SerializeObject(entity)});
             // Console.WriteLine(JsonConvert.SerializeObject(new { propFK, entityFK, prop, entity }));
             prop.FK = entityFK;
         }

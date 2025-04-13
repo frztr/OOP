@@ -6,26 +6,28 @@ public class RefuelingHistoryMap : IEntityTypeConfiguration<RefuelingHistory>
     public void Configure(EntityTypeBuilder<RefuelingHistory> builder)
     {
         builder.ToTable("refueling_history");
-        builder.HasKey(rh => rh.Id);
-        builder.Property(rh => rh.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(rh => rh.Volume).HasColumnName("volume").HasPrecision(7, 3).IsRequired();
-        builder.Property(rh => rh.OilTypeId).HasColumnName("oil_type_id").IsRequired();
-        builder.Property(rh => rh.FuelStationTinNumber).HasColumnName("fuelstation_tin_number").IsRequired();
-        builder.Property(rh => rh.VehicleId).HasColumnName("vehicle_id").IsRequired();
-        builder.Property(rh => rh.Price).HasColumnName("price").HasPrecision(9, 2).IsRequired();
-        builder.Property(rh => rh.DateTime).HasColumnName("datetime").IsRequired();
-        builder.Property(rh => rh.DriverId).HasColumnName("driver_id").IsRequired();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.Volume).HasColumnName("volume").IsRequired();
+		builder.Property(d => d.OilTypeId).HasColumnName("oil_type_id").IsRequired();
+		builder.Property(d => d.FuelstationTinNumber).HasColumnName("fuelstation_tin_number").IsRequired();
+		builder.Property(d => d.VehicleId).HasColumnName("vehicle_id").IsRequired();
+		builder.Property(d => d.Price).HasColumnName("price").IsRequired();
+		builder.Property(d => d.Datetime).HasColumnName("datetime").IsRequired();
+		builder.Property(d => d.DriverId).HasColumnName("driver_id").IsRequired();
         
-        builder.HasOne(rh => rh.OilType)
-            .WithMany(ot => ot.Refuelings)
-            .HasForeignKey(rh => rh.OilTypeId);
-            
-        builder.HasOne(rh => rh.Vehicle)
-            .WithMany(v => v.Refuelings)
-            .HasForeignKey(rh => rh.VehicleId);
-            
-        builder.HasOne(rh => rh.Driver)
-            .WithMany(d => d.RefuelingHistories)
-            .HasForeignKey(rh => rh.DriverId);
+                    
+        builder.HasOne(d => d.OilType)
+                .WithMany(e => e.RefuelingHistories)
+                .HasForeignKey(d => d.OilTypeId);
+
+		builder.HasOne(d => d.Vehicle)
+                .WithMany(e => e.RefuelingHistories)
+                .HasForeignKey(d => d.VehicleId);
+
+		builder.HasOne(d => d.Driver)
+                .WithMany(e => e.RefuelingHistories)
+                .HasForeignKey(d => d.DriverId);    
+        
     }
 }

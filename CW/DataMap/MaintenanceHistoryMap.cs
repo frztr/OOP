@@ -6,24 +6,26 @@ public class MaintenanceHistoryMap : IEntityTypeConfiguration<MaintenanceHistory
     public void Configure(EntityTypeBuilder<MaintenanceHistory> builder)
     {
         builder.ToTable("maintenance_history");
-        builder.HasKey(mh => mh.Id);
-        builder.Property(mh => mh.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(mh => mh.Date).HasColumnName("date").IsRequired();
-        builder.Property(mh => mh.VehicleId).HasColumnName("vehicle_id").IsRequired();
-        builder.Property(mh => mh.MaintenanceTypeId).HasColumnName("maintenance_type_id").IsRequired();
-        builder.Property(mh => mh.CompletedWork).HasColumnName("completed_work").HasMaxLength(2000).IsRequired();
-        builder.Property(mh => mh.AutomechanicId).HasColumnName("automechanic_id").IsRequired();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.Date).HasColumnName("date").IsRequired();
+		builder.Property(d => d.VehicleId).HasColumnName("vehicle_id").IsRequired();
+		builder.Property(d => d.MaintenanceTypeId).HasColumnName("maintenance_type_id").IsRequired();
+		builder.Property(d => d.CompletedWork).HasColumnName("completed_work").HasMaxLength(2000).IsRequired();
+		builder.Property(d => d.AutomechanicId).HasColumnName("automechanic_id").IsRequired();
         
-        builder.HasOne(mh => mh.Vehicle)
-            .WithMany(v => v.Maintenances)
-            .HasForeignKey(mh => mh.VehicleId);
-            
-        builder.HasOne(mh => mh.MaintenanceType)
-            .WithMany(mt => mt.MaintenanceHistories)
-            .HasForeignKey(mh => mh.MaintenanceTypeId);
-            
-        builder.HasOne(mh => mh.Automechanic)
-            .WithMany(a => a.MaintenanceHistories)
-            .HasForeignKey(mh => mh.AutomechanicId);
+                    
+        builder.HasOne(d => d.Vehicle)
+                .WithMany(e => e.MaintenanceHistories)
+                .HasForeignKey(d => d.VehicleId);
+
+		builder.HasOne(d => d.MaintenanceType)
+                .WithMany(e => e.MaintenanceHistories)
+                .HasForeignKey(d => d.MaintenanceTypeId);
+
+		builder.HasOne(d => d.Automechanic)
+                .WithMany(e => e.MaintenanceHistories)
+                .HasForeignKey(d => d.AutomechanicId);    
+        
     }
 }

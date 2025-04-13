@@ -6,10 +6,13 @@ public class SparePartMap : IEntityTypeConfiguration<SparePart>
     public void Configure(EntityTypeBuilder<SparePart> builder)
     {
         builder.ToTable("spare_part");
-        builder.HasKey(sp => sp.Id);
-        builder.Property(sp => sp.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(sp => sp.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
-        builder.Property(sp => sp.CountLeft).HasColumnName("count_left").HasDefaultValue(0);
-        builder.HasIndex(sp => sp.Name).IsUnique();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.Name).HasColumnName("name").HasMaxLength(100).IsRequired();
+		builder.Property(d => d.CountLeft).HasColumnName("count_left");
+        builder.HasIndex(v => v.Name).IsUnique();
+                    
+            
+        
     }
 }

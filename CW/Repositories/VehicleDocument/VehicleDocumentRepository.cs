@@ -52,16 +52,16 @@ public class VehicleDocumentRepository(AppDbContext db) : IVehicleDocumentReposi
     {
         var entity = await set.FirstOrDefaultAsync(x => x.Id == updateDto.Id);
         if(entity == null) throw new EntityNotFoundException<VehicleDocument>(new {Id = updateDto.Id});
-		if(updateDto.DocTypeId.HasValue){
-            entity.DocTypeId = updateDto.DocTypeId.Value;
+		if(updateDto.DoctypeId.HasValue){
+            entity.DoctypeId = updateDto.DoctypeId.Value;
         }
+
 		if(!String.IsNullOrEmpty(updateDto.Src)){
             entity.Src = updateDto.Src;
         }
 		if(updateDto.VehicleId.HasValue){
             entity.VehicleId = updateDto.VehicleId.Value;
         }
-
 
         await db.SaveChangesAsync();
     }

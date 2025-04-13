@@ -6,18 +6,20 @@ public class PlannedMaintenanceScheduleMap : IEntityTypeConfiguration<PlannedMai
     public void Configure(EntityTypeBuilder<PlannedMaintenanceSchedule> builder)
     {
         builder.ToTable("planned_maintenance_schedule");
-        builder.HasKey(pms => pms.Id);
-        builder.Property(pms => pms.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(pms => pms.PlannedDate).HasColumnName("planned_date").IsRequired();
-        builder.Property(pms => pms.MaintenanceTypeId).HasColumnName("maintenance_type_id").IsRequired();
-        builder.Property(pms => pms.VehicleId).HasColumnName("vehicle_id").IsRequired();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.PlannedDate).HasColumnName("planned_date").IsRequired();
+		builder.Property(d => d.MaintenanceTypeId).HasColumnName("maintenance_type_id").IsRequired();
+		builder.Property(d => d.VehicleId).HasColumnName("vehicle_id").IsRequired();
         
-        builder.HasOne(pms => pms.MaintenanceType)
-            .WithMany(mt => mt.PlannedMaintenances)
-            .HasForeignKey(pms => pms.MaintenanceTypeId);
-            
-        builder.HasOne(pms => pms.Vehicle)
-            .WithMany(v => v.PlannedMaintenances)
-            .HasForeignKey(pms => pms.VehicleId);
+                    
+        builder.HasOne(d => d.MaintenanceType)
+                .WithMany(e => e.PlannedMaintenanceSchedules)
+                .HasForeignKey(d => d.MaintenanceTypeId);
+
+		builder.HasOne(d => d.Vehicle)
+                .WithMany(e => e.PlannedMaintenanceSchedules)
+                .HasForeignKey(d => d.VehicleId);    
+        
     }
 }

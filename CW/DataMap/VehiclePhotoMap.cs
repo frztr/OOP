@@ -6,14 +6,15 @@ public class VehiclePhotoMap : IEntityTypeConfiguration<VehiclePhoto>
     public void Configure(EntityTypeBuilder<VehiclePhoto> builder)
     {
         builder.ToTable("vehicle_photo");
-        builder.HasKey(vp => vp.Id);
-        builder.Property(vp => vp.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(vp => vp.Src).HasColumnName("src").HasMaxLength(255).IsRequired();
-        builder.Property(vp => vp.VehicleId).HasColumnName("vehicle_id").IsRequired();
-        builder.HasIndex(vp => vp.Src).IsUnique();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.Src).HasColumnName("src").HasMaxLength(255).IsRequired();
+		builder.Property(d => d.VehicleId).HasColumnName("vehicle_id").IsRequired();
+        builder.HasIndex(v => v.Src).IsUnique();
+                    
+        builder.HasOne(d => d.Vehicle)
+                .WithMany(e => e.VehiclePhotos)
+                .HasForeignKey(d => d.VehicleId);    
         
-        builder.HasOne(vp => vp.Vehicle)
-            .WithMany(v => v.Photos)
-            .HasForeignKey(vp => vp.VehicleId);
     }
 }

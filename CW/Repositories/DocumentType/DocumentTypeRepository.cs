@@ -55,6 +55,7 @@ public class DocumentTypeRepository(AppDbContext db) : IDocumentTypeRepository
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }
+
         await db.SaveChangesAsync();
     }
 }

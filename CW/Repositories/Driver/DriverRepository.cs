@@ -52,6 +52,7 @@ public class DriverRepository(AppDbContext db) : IDriverRepository
     {
         var entity = await set.FirstOrDefaultAsync(x => x.UserId == updateDto.UserId);
         if(entity == null) throw new EntityNotFoundException<Driver>(new {UserId = updateDto.UserId});
+
 		if(updateDto.DriverLicense.HasValue){
             entity.DriverLicense = updateDto.DriverLicense.Value;
         }

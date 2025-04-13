@@ -106,7 +106,7 @@ datetime_end timestamp,
 completed_work varchar(2000) not null,
 price numeric(9,2),
 servicestation_tin_number bigint,
-automechanic_id int4,
+automechanic_id int2,
 foreign key (vehicle_id) references vehicle(id),
 foreign key (automechanic_id) references automechanic(user_id)
 );

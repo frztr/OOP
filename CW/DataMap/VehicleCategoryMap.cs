@@ -6,9 +6,12 @@ public class VehicleCategoryMap : IEntityTypeConfiguration<VehicleCategory>
     public void Configure(EntityTypeBuilder<VehicleCategory> builder)
     {
         builder.ToTable("vehicle_category");
-        builder.HasKey(vc => vc.Id);
-        builder.Property(vc => vc.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(vc => vc.Name).HasColumnName("name").HasMaxLength(25).IsRequired();
-        builder.HasIndex(vc => vc.Name).IsUnique();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.Name).HasColumnName("name").HasMaxLength(25).IsRequired();
+        builder.HasIndex(v => v.Name).IsUnique();
+                    
+            
+        
     }
 }

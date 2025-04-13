@@ -58,10 +58,10 @@ public class PlannedMaintenanceScheduleRepository(AppDbContext db) : IPlannedMai
 		if(updateDto.MaintenanceTypeId.HasValue){
             entity.MaintenanceTypeId = updateDto.MaintenanceTypeId.Value;
         }
+
 		if(updateDto.VehicleId.HasValue){
             entity.VehicleId = updateDto.VehicleId.Value;
         }
-
 
         await db.SaveChangesAsync();
     }

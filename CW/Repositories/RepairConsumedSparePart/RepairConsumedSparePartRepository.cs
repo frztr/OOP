@@ -55,14 +55,14 @@ public class RepairConsumedSparePartRepository(AppDbContext db) : IRepairConsume
 		if(updateDto.RepairId.HasValue){
             entity.RepairId = updateDto.RepairId.Value;
         }
+
 		if(updateDto.SparePartId.HasValue){
             entity.SparePartId = updateDto.SparePartId.Value;
         }
+
 		if(updateDto.PartCount.HasValue){
             entity.PartCount = updateDto.PartCount.Value;
         }
-
-
         await db.SaveChangesAsync();
     }
 }

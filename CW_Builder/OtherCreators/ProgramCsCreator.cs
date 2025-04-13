@@ -5,6 +5,7 @@ public class ProgramCsCreator
     public static string Create(Entity[] entities)
     {
         return $@"
+using System.Text.Json.Serialization;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

@@ -55,6 +55,7 @@ public class RoleRepository(AppDbContext db) : IRoleRepository
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }
+
         await db.SaveChangesAsync();
     }
 }

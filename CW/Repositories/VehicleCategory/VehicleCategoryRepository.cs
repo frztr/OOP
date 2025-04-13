@@ -55,6 +55,7 @@ public class VehicleCategoryRepository(AppDbContext db) : IVehicleCategoryReposi
 		if(!String.IsNullOrEmpty(updateDto.Name)){
             entity.Name = updateDto.Name;
         }
+
         await db.SaveChangesAsync();
     }
 }

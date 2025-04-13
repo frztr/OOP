@@ -52,9 +52,11 @@ public class AutomechanicRepository(AppDbContext db) : IAutomechanicRepository
     {
         var entity = await set.FirstOrDefaultAsync(x => x.UserId == updateDto.UserId);
         if(entity == null) throw new EntityNotFoundException<Automechanic>(new {UserId = updateDto.UserId});
+
 		if(!String.IsNullOrEmpty(updateDto.Qualification)){
             entity.Qualification = updateDto.Qualification;
         }
+
 
         await db.SaveChangesAsync();
     }

@@ -1,7 +1,8 @@
-namespace Global;
-public class Role
-{
-    public short Id { get; set; }
-    public string Name { get; set; }
-    public ICollection<User> Users { get; set; }
+using System.ComponentModel.DataAnnotations;
+public class Role{
+    [Required]
+	public short Id { get;set; }
+	[StringLength(30)]
+	public string Name { get;set; }
+	public ICollection<User> Users { get;set; }
 }

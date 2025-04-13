@@ -59,6 +59,7 @@ public class OilTypeRepository(AppDbContext db) : IOilTypeRepository
             entity.FuelTypeId = updateDto.FuelTypeId.Value;
         }
 
+
         await db.SaveChangesAsync();
     }
 }

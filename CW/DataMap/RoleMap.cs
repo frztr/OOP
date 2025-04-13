@@ -6,9 +6,12 @@ public class RoleMap : IEntityTypeConfiguration<Role>
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         builder.ToTable("role");
-        builder.HasKey(r => r.Id);
-        builder.Property(r => r.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(r => r.Name).HasColumnName("name").HasMaxLength(30).IsRequired();
-        builder.HasIndex(r => r.Name).IsUnique();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.Name).HasColumnName("name").HasMaxLength(30).IsRequired();
+        builder.HasIndex(v => v.Name).IsUnique();
+                    
+            
+        
     }
 }

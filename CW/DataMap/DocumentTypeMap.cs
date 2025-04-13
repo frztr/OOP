@@ -6,9 +6,12 @@ public class DocumentTypeMap : IEntityTypeConfiguration<DocumentType>
     public void Configure(EntityTypeBuilder<DocumentType> builder)
     {
         builder.ToTable("document_type");
-        builder.HasKey(dt => dt.Id);
-        builder.Property(dt => dt.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(dt => dt.Name).HasColumnName("name").HasMaxLength(20).IsRequired();
-        builder.HasIndex(dt => dt.Name).IsUnique();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.Name).HasColumnName("name").HasMaxLength(20).IsRequired();
+        builder.HasIndex(v => v.Name).IsUnique();
+                    
+            
+        
     }
 }

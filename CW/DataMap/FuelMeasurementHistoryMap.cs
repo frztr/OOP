@@ -6,14 +6,16 @@ public class FuelMeasurementHistoryMap : IEntityTypeConfiguration<FuelMeasuremen
     public void Configure(EntityTypeBuilder<FuelMeasurementHistory> builder)
     {
         builder.ToTable("fuel_measurement_history");
-        builder.HasKey(fm => fm.Id);
-        builder.Property(fm => fm.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(fm => fm.Volume).HasColumnName("volume").HasPrecision(7, 3).IsRequired();
-        builder.Property(fm => fm.MeasurementDate).HasColumnName("measurement_date").IsRequired();
-        builder.Property(fm => fm.VehicleId).HasColumnName("vehicle_id").IsRequired();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.Volume).HasColumnName("volume").IsRequired();
+		builder.Property(d => d.MeasurementDate).HasColumnName("measurement_date").IsRequired();
+		builder.Property(d => d.VehicleId).HasColumnName("vehicle_id").IsRequired();
         
-        builder.HasOne(fm => fm.Vehicle)
-            .WithMany(v => v.FuelMeasurements)
-            .HasForeignKey(fm => fm.VehicleId);
+                    
+        builder.HasOne(d => d.Vehicle)
+                .WithMany(e => e.FuelMeasurementHistories)
+                .HasForeignKey(d => d.VehicleId);    
+        
     }
 }

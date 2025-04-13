@@ -6,19 +6,20 @@ public class VehicleDocumentMap : IEntityTypeConfiguration<VehicleDocument>
     public void Configure(EntityTypeBuilder<VehicleDocument> builder)
     {
         builder.ToTable("vehicle_document");
-        builder.HasKey(vd => vd.Id);
-        builder.Property(vd => vd.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(vd => vd.DocTypeId).HasColumnName("doctype_id").IsRequired();
-        builder.Property(vd => vd.Src).HasColumnName("src").HasMaxLength(255).IsRequired();
-        builder.Property(vd => vd.VehicleId).HasColumnName("vehicle_id").IsRequired();
-        builder.HasIndex(vd => vd.Src).IsUnique();
+        builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id).HasColumnName("id").ValueGeneratedOnAdd();
+		builder.Property(d => d.DoctypeId).HasColumnName("doctype_id").IsRequired();
+		builder.Property(d => d.Src).HasColumnName("src").HasMaxLength(255).IsRequired();
+		builder.Property(d => d.VehicleId).HasColumnName("vehicle_id").IsRequired();
+        builder.HasIndex(v => v.Src).IsUnique();
+                    
+        builder.HasOne(d => d.DocumentType)
+                .WithMany(e => e.VehicleDocuments)
+                .HasForeignKey(d => d.DoctypeId);
+
+		builder.HasOne(d => d.Vehicle)
+                .WithMany(e => e.VehicleDocuments)
+                .HasForeignKey(d => d.VehicleId);    
         
-        builder.HasOne(vd => vd.DocumentType)
-            .WithMany(dt => dt.VehicleDocuments)
-            .HasForeignKey(vd => vd.DocTypeId);
-            
-        builder.HasOne(vd => vd.Vehicle)
-            .WithMany(v => v.Documents)
-            .HasForeignKey(vd => vd.VehicleId);
     }
 }

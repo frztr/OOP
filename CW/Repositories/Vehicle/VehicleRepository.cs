@@ -34,6 +34,44 @@ public class VehicleRepository(AppDbContext db) : IVehicleRepository
         {
             Items = mapper.Map<List<VehicleRepositoryDto>>(
             await set
+			.Where(x=> queryDto.Id_GT.HasValue ? x.Id > queryDto.Id_GT.Value : true)
+            .Where(x=> queryDto.Id_GTE.HasValue ? x.Id >= queryDto.Id_GTE.Value : true)
+            .Where(x=> queryDto.Id_LT.HasValue ? x.Id < queryDto.Id_LT.Value : true)
+            .Where(x=> queryDto.Id_LTE.HasValue ? x.Id <= queryDto.Id_LTE.Value : true)
+            .Where(x=> queryDto.Id_EQ.HasValue ? x.Id == queryDto.Id_EQ.Value : true)
+			.Where(x=> !String.IsNullOrEmpty(queryDto.VinNumber_EQ) ? x.VinNumber == queryDto.VinNumber_EQ : true)  
+            .Where(x=> !String.IsNullOrEmpty(queryDto.VinNumber_LIKE) ? (x.VinNumber!=null?x.VinNumber.Contains(queryDto.VinNumber_LIKE):false) : true)
+			.Where(x=> !String.IsNullOrEmpty(queryDto.PlateNumber_EQ) ? x.PlateNumber == queryDto.PlateNumber_EQ : true)  
+            .Where(x=> !String.IsNullOrEmpty(queryDto.PlateNumber_LIKE) ? (x.PlateNumber!=null?x.PlateNumber.Contains(queryDto.PlateNumber_LIKE):false) : true)
+			.Where(x=> queryDto.VehiclemodelId_GT.HasValue ? x.VehiclemodelId > queryDto.VehiclemodelId_GT.Value : true)
+            .Where(x=> queryDto.VehiclemodelId_GTE.HasValue ? x.VehiclemodelId >= queryDto.VehiclemodelId_GTE.Value : true)
+            .Where(x=> queryDto.VehiclemodelId_LT.HasValue ? x.VehiclemodelId < queryDto.VehiclemodelId_LT.Value : true)
+            .Where(x=> queryDto.VehiclemodelId_LTE.HasValue ? x.VehiclemodelId <= queryDto.VehiclemodelId_LTE.Value : true)
+            .Where(x=> queryDto.VehiclemodelId_EQ.HasValue ? x.VehiclemodelId == queryDto.VehiclemodelId_EQ.Value : true)
+
+			.Where(x=> queryDto.ReleaseYear_GT.HasValue ? x.ReleaseYear > queryDto.ReleaseYear_GT.Value : true)
+            .Where(x=> queryDto.ReleaseYear_GTE.HasValue ? x.ReleaseYear >= queryDto.ReleaseYear_GTE.Value : true)
+            .Where(x=> queryDto.ReleaseYear_LT.HasValue ? x.ReleaseYear < queryDto.ReleaseYear_LT.Value : true)
+            .Where(x=> queryDto.ReleaseYear_LTE.HasValue ? x.ReleaseYear <= queryDto.ReleaseYear_LTE.Value : true)
+            .Where(x=> queryDto.ReleaseYear_EQ.HasValue ? x.ReleaseYear == queryDto.ReleaseYear_EQ.Value : true)
+			.Where(x=> queryDto.RegistrationDate_GT.HasValue ? x.RegistrationDate > queryDto.RegistrationDate_GT.Value : true)
+            .Where(x=> queryDto.RegistrationDate_GTE.HasValue ? x.RegistrationDate >= queryDto.RegistrationDate_GTE.Value : true)
+            .Where(x=> queryDto.RegistrationDate_LT.HasValue ? x.RegistrationDate < queryDto.RegistrationDate_LT.Value : true)
+            .Where(x=> queryDto.RegistrationDate_LTE.HasValue ? x.RegistrationDate <= queryDto.RegistrationDate_LTE.Value : true)
+            .Where(x=> queryDto.RegistrationDate_EQ.HasValue ? x.RegistrationDate == queryDto.RegistrationDate_EQ.Value : true)
+			.Where(x=> queryDto.StatusId_GT.HasValue ? x.StatusId > queryDto.StatusId_GT.Value : true)
+            .Where(x=> queryDto.StatusId_GTE.HasValue ? x.StatusId >= queryDto.StatusId_GTE.Value : true)
+            .Where(x=> queryDto.StatusId_LT.HasValue ? x.StatusId < queryDto.StatusId_LT.Value : true)
+            .Where(x=> queryDto.StatusId_LTE.HasValue ? x.StatusId <= queryDto.StatusId_LTE.Value : true)
+            .Where(x=> queryDto.StatusId_EQ.HasValue ? x.StatusId == queryDto.StatusId_EQ.Value : true)
+
+
+
+
+
+
+
+
 .Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };
@@ -58,9 +96,10 @@ public class VehicleRepository(AppDbContext db) : IVehicleRepository
 		if(!String.IsNullOrEmpty(updateDto.PlateNumber)){
             entity.PlateNumber = updateDto.PlateNumber;
         }
-		if(updateDto.VehicleModelId.HasValue){
-            entity.VehicleModelId = updateDto.VehicleModelId.Value;
+		if(updateDto.VehiclemodelId.HasValue){
+            entity.VehiclemodelId = updateDto.VehiclemodelId.Value;
         }
+
 		if(updateDto.ReleaseYear.HasValue){
             entity.ReleaseYear = updateDto.ReleaseYear.Value;
         }
@@ -70,6 +109,13 @@ public class VehicleRepository(AppDbContext db) : IVehicleRepository
 		if(updateDto.StatusId.HasValue){
             entity.StatusId = updateDto.StatusId.Value;
         }
+
+
+
+
+
+
+
 
 
         await db.SaveChangesAsync();

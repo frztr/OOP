@@ -10,7 +10,7 @@ public class AddVehicleControllerDto
 	[StringLength(15)]
 	public string PlateNumber { get; set; }
 	[Required]
-	public int VehicleModelId { get; set; }
+	public int VehiclemodelId { get; set; }
 	[Required]
 	public short ReleaseYear { get; set; }
 	[Required]
