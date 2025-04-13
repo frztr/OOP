@@ -34,6 +34,35 @@ public class MaintenanceHistoryRepository(AppDbContext db) : IMaintenanceHistory
         {
             Items = mapper.Map<List<MaintenanceHistoryRepositoryDto>>(
             await set
+			.Where(x=> queryDto.Id_GT.HasValue ? x.Id > queryDto.Id_GT.Value : true)
+            .Where(x=> queryDto.Id_GTE.HasValue ? x.Id >= queryDto.Id_GTE.Value : true)
+            .Where(x=> queryDto.Id_LT.HasValue ? x.Id < queryDto.Id_LT.Value : true)
+            .Where(x=> queryDto.Id_LTE.HasValue ? x.Id <= queryDto.Id_LTE.Value : true)
+            .Where(x=> queryDto.Id_EQ.HasValue ? x.Id == queryDto.Id_EQ.Value : true)
+			.Where(x=> queryDto.Date_GT.HasValue ? x.Date > queryDto.Date_GT.Value : true)
+            .Where(x=> queryDto.Date_GTE.HasValue ? x.Date >= queryDto.Date_GTE.Value : true)
+            .Where(x=> queryDto.Date_LT.HasValue ? x.Date < queryDto.Date_LT.Value : true)
+            .Where(x=> queryDto.Date_LTE.HasValue ? x.Date <= queryDto.Date_LTE.Value : true)
+            .Where(x=> queryDto.Date_EQ.HasValue ? x.Date == queryDto.Date_EQ.Value : true)
+			.Where(x=> queryDto.VehicleId_GT.HasValue ? x.VehicleId > queryDto.VehicleId_GT.Value : true)
+            .Where(x=> queryDto.VehicleId_GTE.HasValue ? x.VehicleId >= queryDto.VehicleId_GTE.Value : true)
+            .Where(x=> queryDto.VehicleId_LT.HasValue ? x.VehicleId < queryDto.VehicleId_LT.Value : true)
+            .Where(x=> queryDto.VehicleId_LTE.HasValue ? x.VehicleId <= queryDto.VehicleId_LTE.Value : true)
+            .Where(x=> queryDto.VehicleId_EQ.HasValue ? x.VehicleId == queryDto.VehicleId_EQ.Value : true)
+
+			.Where(x=> queryDto.MaintenanceTypeId_GT.HasValue ? x.MaintenanceTypeId > queryDto.MaintenanceTypeId_GT.Value : true)
+            .Where(x=> queryDto.MaintenanceTypeId_GTE.HasValue ? x.MaintenanceTypeId >= queryDto.MaintenanceTypeId_GTE.Value : true)
+            .Where(x=> queryDto.MaintenanceTypeId_LT.HasValue ? x.MaintenanceTypeId < queryDto.MaintenanceTypeId_LT.Value : true)
+            .Where(x=> queryDto.MaintenanceTypeId_LTE.HasValue ? x.MaintenanceTypeId <= queryDto.MaintenanceTypeId_LTE.Value : true)
+            .Where(x=> queryDto.MaintenanceTypeId_EQ.HasValue ? x.MaintenanceTypeId == queryDto.MaintenanceTypeId_EQ.Value : true)
+
+			.Where(x=> !String.IsNullOrEmpty(queryDto.CompletedWork_EQ) ? x.CompletedWork == queryDto.CompletedWork_EQ : true)  
+            .Where(x=> !String.IsNullOrEmpty(queryDto.CompletedWork_LIKE) ? (x.CompletedWork!=null?x.CompletedWork.Contains(queryDto.CompletedWork_LIKE):false) : true)
+			.Where(x=> queryDto.AutomechanicId_GT.HasValue ? x.AutomechanicId > queryDto.AutomechanicId_GT.Value : true)
+            .Where(x=> queryDto.AutomechanicId_GTE.HasValue ? x.AutomechanicId >= queryDto.AutomechanicId_GTE.Value : true)
+            .Where(x=> queryDto.AutomechanicId_LT.HasValue ? x.AutomechanicId < queryDto.AutomechanicId_LT.Value : true)
+            .Where(x=> queryDto.AutomechanicId_LTE.HasValue ? x.AutomechanicId <= queryDto.AutomechanicId_LTE.Value : true)
+            .Where(x=> queryDto.AutomechanicId_EQ.HasValue ? x.AutomechanicId == queryDto.AutomechanicId_EQ.Value : true)
 .Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };

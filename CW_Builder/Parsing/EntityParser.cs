@@ -6,7 +6,7 @@ public class EntityParser
 {
     public static Entity Parse(FileInfo file)
     {
-        var fileText = File.ReadAllText($"{AppContext.Get().ProjectPath}/Data/{file.Name.Replace(".cs", "")}.cs");
+        var fileText = File.ReadAllText($"{AppContext.Get().ProjectPath}/Data/Data/{file.Name.Replace(".cs", "")}.cs");
         var entityName = Regex.Match(fileText, @"public class ([\w]+)").Value.Replace("public class ", "");
         // var entityBody = new Regex(@"((public class ([\w]+)[\W]{1}[\\{]{1})|([\\{]{1} get; set; [\\}]{1})|([\\}]{1}))+").Replace(
         //     Regex.Match(fileText, @"public class ([\w]+)[\W]{1}[\\{]{1}[\w\W]+[\\}]{1}").Value, "");
@@ -37,7 +37,7 @@ public class EntityParser
 
     private static void ParseDataMaps(Entity entity)
     {
-        var fileText = File.ReadAllText($"{AppContext.Get().ProjectPath}/DataMap/{entity.Name}Map.cs");
+        var fileText = File.ReadAllText($"{AppContext.Get().ProjectPath}/Data/DataMap/{entity.Name}Map.cs");
 
         foreach (var prop in entity.Props)
         {

@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IRefuelingHistoryRepository
+namespace Global;
+public interface IRefuelingHistoryRepository
 {
     public Task<RefuelingHistoryListRepositoryDto> GetAllAsync(RefuelingHistoryQueryRepositoryDto queryDto);
 

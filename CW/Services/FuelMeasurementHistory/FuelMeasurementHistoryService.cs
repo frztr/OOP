@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class FuelMeasurementHistoryService(IFuelMeasurementHistoryRepository repository,
 IVehicleRepository vehicleRepository,
 ILogger<FuelMeasurementHistoryService> logger) : IFuelMeasurementHistoryService

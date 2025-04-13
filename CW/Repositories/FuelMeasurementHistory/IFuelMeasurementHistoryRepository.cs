@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IFuelMeasurementHistoryRepository
+namespace Global;
+public interface IFuelMeasurementHistoryRepository
 {
     public Task<FuelMeasurementHistoryListRepositoryDto> GetAllAsync(FuelMeasurementHistoryQueryRepositoryDto queryDto);
 

@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class SparePartService(ISparePartRepository repository,
 
 ILogger<SparePartService> logger) : ISparePartService

@@ -34,6 +34,26 @@ public class FuelMeasurementHistoryRepository(AppDbContext db) : IFuelMeasuremen
         {
             Items = mapper.Map<List<FuelMeasurementHistoryRepositoryDto>>(
             await set
+			.Where(x=> queryDto.Id_GT.HasValue ? x.Id > queryDto.Id_GT.Value : true)
+            .Where(x=> queryDto.Id_GTE.HasValue ? x.Id >= queryDto.Id_GTE.Value : true)
+            .Where(x=> queryDto.Id_LT.HasValue ? x.Id < queryDto.Id_LT.Value : true)
+            .Where(x=> queryDto.Id_LTE.HasValue ? x.Id <= queryDto.Id_LTE.Value : true)
+            .Where(x=> queryDto.Id_EQ.HasValue ? x.Id == queryDto.Id_EQ.Value : true)
+			.Where(x=> queryDto.Volume_GT.HasValue ? x.Volume > queryDto.Volume_GT.Value : true)
+            .Where(x=> queryDto.Volume_GTE.HasValue ? x.Volume >= queryDto.Volume_GTE.Value : true)
+            .Where(x=> queryDto.Volume_LT.HasValue ? x.Volume < queryDto.Volume_LT.Value : true)
+            .Where(x=> queryDto.Volume_LTE.HasValue ? x.Volume <= queryDto.Volume_LTE.Value : true)
+            .Where(x=> queryDto.Volume_EQ.HasValue ? x.Volume == queryDto.Volume_EQ.Value : true)
+			.Where(x=> queryDto.MeasurementDate_GT.HasValue ? x.MeasurementDate > queryDto.MeasurementDate_GT.Value : true)
+            .Where(x=> queryDto.MeasurementDate_GTE.HasValue ? x.MeasurementDate >= queryDto.MeasurementDate_GTE.Value : true)
+            .Where(x=> queryDto.MeasurementDate_LT.HasValue ? x.MeasurementDate < queryDto.MeasurementDate_LT.Value : true)
+            .Where(x=> queryDto.MeasurementDate_LTE.HasValue ? x.MeasurementDate <= queryDto.MeasurementDate_LTE.Value : true)
+            .Where(x=> queryDto.MeasurementDate_EQ.HasValue ? x.MeasurementDate == queryDto.MeasurementDate_EQ.Value : true)
+			.Where(x=> queryDto.VehicleId_GT.HasValue ? x.VehicleId > queryDto.VehicleId_GT.Value : true)
+            .Where(x=> queryDto.VehicleId_GTE.HasValue ? x.VehicleId >= queryDto.VehicleId_GTE.Value : true)
+            .Where(x=> queryDto.VehicleId_LT.HasValue ? x.VehicleId < queryDto.VehicleId_LT.Value : true)
+            .Where(x=> queryDto.VehicleId_LTE.HasValue ? x.VehicleId <= queryDto.VehicleId_LTE.Value : true)
+            .Where(x=> queryDto.VehicleId_EQ.HasValue ? x.VehicleId == queryDto.VehicleId_EQ.Value : true)
 .Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };

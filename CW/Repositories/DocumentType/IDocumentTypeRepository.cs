@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IDocumentTypeRepository
+namespace Global;
+public interface IDocumentTypeRepository
 {
     public Task<DocumentTypeListRepositoryDto> GetAllAsync(DocumentTypeQueryRepositoryDto queryDto);
 

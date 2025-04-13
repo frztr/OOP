@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class VehicleCategoryService(IVehicleCategoryRepository repository,
 
 ILogger<VehicleCategoryService> logger) : IVehicleCategoryService

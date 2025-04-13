@@ -4,8 +4,8 @@ public class RepositoryInterfaceCreator
     {
         var pk = $@"{entity.Props.FirstOrDefault(x => x.PK).Type}";
         return $@"
-        namespace Global;
-        public interface I{entity.Name}Repository
+namespace Global;
+public interface I{entity.Name}Repository
 {{
     public Task<{entity.Name}ListRepositoryDto> GetAllAsync({entity.Name}QueryRepositoryDto queryDto);
 

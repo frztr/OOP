@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IAutomechanicRepository
+namespace Global;
+public interface IAutomechanicRepository
 {
     public Task<AutomechanicListRepositoryDto> GetAllAsync(AutomechanicQueryRepositoryDto queryDto);
 

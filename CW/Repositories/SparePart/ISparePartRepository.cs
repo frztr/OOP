@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface ISparePartRepository
+namespace Global;
+public interface ISparePartRepository
 {
     public Task<SparePartListRepositoryDto> GetAllAsync(SparePartQueryRepositoryDto queryDto);
 

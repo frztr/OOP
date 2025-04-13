@@ -8,6 +8,7 @@ public class ServiceCreator
         return $@"
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class {entity.Name}Service(I{entity.Name}Repository repository,
 {String.Join("\n", entity.Props.Where(x => x.FK != null)
 .Select(x => $"I{x.FK}Repository {JsonNamingPolicy.CamelCase.ConvertName(x.FK)}Repository,"))}

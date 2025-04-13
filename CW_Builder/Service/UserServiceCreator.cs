@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 namespace Global;
 public class {entity.Name}Service(I{entity.Name}Repository repository, ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
 {{

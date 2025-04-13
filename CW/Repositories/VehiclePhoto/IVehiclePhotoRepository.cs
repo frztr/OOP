@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IVehiclePhotoRepository
+namespace Global;
+public interface IVehiclePhotoRepository
 {
     public Task<VehiclePhotoListRepositoryDto> GetAllAsync(VehiclePhotoQueryRepositoryDto queryDto);
 

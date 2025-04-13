@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class MileageMeasurementHistoryService(IMileageMeasurementHistoryRepository repository,
 IVehicleRepository vehicleRepository,
 ILogger<MileageMeasurementHistoryService> logger) : IMileageMeasurementHistoryService

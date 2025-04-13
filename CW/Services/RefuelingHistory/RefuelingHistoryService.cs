@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class RefuelingHistoryService(IRefuelingHistoryRepository repository,
 IOilTypeRepository oilTypeRepository,
 IVehicleRepository vehicleRepository,

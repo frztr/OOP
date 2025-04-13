@@ -34,6 +34,29 @@ public class RepairHistoryRepository(AppDbContext db) : IRepairHistoryRepository
         {
             Items = mapper.Map<List<RepairHistoryRepositoryDto>>(
             await set
+			.Where(x=> queryDto.Id_GT.HasValue ? x.Id > queryDto.Id_GT.Value : true)
+            .Where(x=> queryDto.Id_GTE.HasValue ? x.Id >= queryDto.Id_GTE.Value : true)
+            .Where(x=> queryDto.Id_LT.HasValue ? x.Id < queryDto.Id_LT.Value : true)
+            .Where(x=> queryDto.Id_LTE.HasValue ? x.Id <= queryDto.Id_LTE.Value : true)
+            .Where(x=> queryDto.Id_EQ.HasValue ? x.Id == queryDto.Id_EQ.Value : true)
+			.Where(x=> queryDto.VehicleId_GT.HasValue ? x.VehicleId > queryDto.VehicleId_GT.Value : true)
+            .Where(x=> queryDto.VehicleId_GTE.HasValue ? x.VehicleId >= queryDto.VehicleId_GTE.Value : true)
+            .Where(x=> queryDto.VehicleId_LT.HasValue ? x.VehicleId < queryDto.VehicleId_LT.Value : true)
+            .Where(x=> queryDto.VehicleId_LTE.HasValue ? x.VehicleId <= queryDto.VehicleId_LTE.Value : true)
+            .Where(x=> queryDto.VehicleId_EQ.HasValue ? x.VehicleId == queryDto.VehicleId_EQ.Value : true)
+
+			.Where(x=> queryDto.DatetimeBegin_GT.HasValue ? x.DatetimeBegin > queryDto.DatetimeBegin_GT.Value : true)
+            .Where(x=> queryDto.DatetimeBegin_GTE.HasValue ? x.DatetimeBegin >= queryDto.DatetimeBegin_GTE.Value : true)
+            .Where(x=> queryDto.DatetimeBegin_LT.HasValue ? x.DatetimeBegin < queryDto.DatetimeBegin_LT.Value : true)
+            .Where(x=> queryDto.DatetimeBegin_LTE.HasValue ? x.DatetimeBegin <= queryDto.DatetimeBegin_LTE.Value : true)
+            .Where(x=> queryDto.DatetimeBegin_EQ.HasValue ? x.DatetimeBegin == queryDto.DatetimeBegin_EQ.Value : true)
+
+			.Where(x=> !String.IsNullOrEmpty(queryDto.CompletedWork_EQ) ? x.CompletedWork == queryDto.CompletedWork_EQ : true)  
+            .Where(x=> !String.IsNullOrEmpty(queryDto.CompletedWork_LIKE) ? (x.CompletedWork!=null?x.CompletedWork.Contains(queryDto.CompletedWork_LIKE):false) : true)
+
+
+
+
 .Skip(queryDto.Offset).Take(queryDto.Count < 50 ? queryDto.Count : 50).ToListAsync()
             )
         };

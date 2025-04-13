@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 namespace Global;
 public class UserService(IUserRepository repository, ILogger<UserService> logger) : IUserService
 {

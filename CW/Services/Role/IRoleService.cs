@@ -1,14 +1,14 @@
 
 namespace Global;
 public interface IRoleService
-    {
-        public Task<RoleListServiceDto> GetAllAsync(RoleQueryServiceDto queryDto);
+{
+    public Task<RoleListServiceDto> GetAllAsync(RoleQueryServiceDto queryDto);
 
-        public Task<RoleServiceDto> GetByIdAsync(short id);
+    public Task<RoleServiceDto> GetByIdAsync(short id);
 
-        public Task<RoleServiceDto> AddAsync(AddRoleServiceDto addDto);
+    public Task<RoleServiceDto> AddAsync(AddRoleServiceDto addDto);
 
-        public Task DeleteAsync(short id);
+    public Task DeleteAsync(short id);
 
-        public Task UpdateAsync(UpdateRoleServiceDto updateDto);
-    }
+    public Task UpdateAsync(UpdateRoleServiceDto updateDto);
+}

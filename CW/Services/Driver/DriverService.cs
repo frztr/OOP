@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class DriverService(IDriverRepository repository,
 
 ILogger<DriverService> logger) : IDriverService

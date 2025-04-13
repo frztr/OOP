@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class DocumentTypeService(IDocumentTypeRepository repository,
 
 ILogger<DocumentTypeService> logger) : IDocumentTypeService

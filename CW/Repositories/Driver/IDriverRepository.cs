@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IDriverRepository
+namespace Global;
+public interface IDriverRepository
 {
     public Task<DriverListRepositoryDto> GetAllAsync(DriverQueryRepositoryDto queryDto);
 

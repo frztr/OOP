@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class ManufacturerService(IManufacturerRepository repository,
 
 ILogger<ManufacturerService> logger) : IManufacturerService

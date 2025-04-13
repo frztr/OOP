@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IMileageMeasurementHistoryRepository
+namespace Global;
+public interface IMileageMeasurementHistoryRepository
 {
     public Task<MileageMeasurementHistoryListRepositoryDto> GetAllAsync(MileageMeasurementHistoryQueryRepositoryDto queryDto);
 

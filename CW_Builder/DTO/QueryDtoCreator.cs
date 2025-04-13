@@ -5,7 +5,7 @@ public class QueryDtoCreator
     public static string CreateDto(Entity entity, string layer)
     {
         return $@"
-    using Microsoft.AspNetCore.Mvc;
+    {(layer != "Repository" ? "using Microsoft.AspNetCore.Mvc;" : "")}
     public class {entity.Name}Query{layer}Dto
     {{
         public int Count {{ get; set; }} = 50;

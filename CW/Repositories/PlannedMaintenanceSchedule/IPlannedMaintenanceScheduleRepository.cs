@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IPlannedMaintenanceScheduleRepository
+namespace Global;
+public interface IPlannedMaintenanceScheduleRepository
 {
     public Task<PlannedMaintenanceScheduleListRepositoryDto> GetAllAsync(PlannedMaintenanceScheduleQueryRepositoryDto queryDto);
 

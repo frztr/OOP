@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class RoleService(IRoleRepository repository,
 
 ILogger<RoleService> logger) : IRoleService

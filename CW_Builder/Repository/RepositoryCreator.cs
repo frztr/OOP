@@ -97,3 +97,4 @@ public class {entity.Name}Repository(AppDbContext db) : I{entity.Name}Repository
 
     }
 }
+    

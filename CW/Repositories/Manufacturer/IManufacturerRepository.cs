@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IManufacturerRepository
+namespace Global;
+public interface IManufacturerRepository
 {
     public Task<ManufacturerListRepositoryDto> GetAllAsync(ManufacturerQueryRepositoryDto queryDto);
 

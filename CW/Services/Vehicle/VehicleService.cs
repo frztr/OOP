@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class VehicleService(IVehicleRepository repository,
 IVehicleModelRepository vehicleModelRepository,
 IVehicleStatusRepository vehicleStatusRepository,

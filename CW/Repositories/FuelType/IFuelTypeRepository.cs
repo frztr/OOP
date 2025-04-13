@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IFuelTypeRepository
+namespace Global;
+public interface IFuelTypeRepository
 {
     public Task<FuelTypeListRepositoryDto> GetAllAsync(FuelTypeQueryRepositoryDto queryDto);
 

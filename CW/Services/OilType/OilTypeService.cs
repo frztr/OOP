@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class OilTypeService(IOilTypeRepository repository,
 IFuelTypeRepository fuelTypeRepository,
 ILogger<OilTypeService> logger) : IOilTypeService

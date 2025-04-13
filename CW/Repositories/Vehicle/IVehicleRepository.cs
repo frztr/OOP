@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IVehicleRepository
+namespace Global;
+public interface IVehicleRepository
 {
     public Task<VehicleListRepositoryDto> GetAllAsync(VehicleQueryRepositoryDto queryDto);
 

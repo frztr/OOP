@@ -6,17 +6,17 @@ public class ServiceInterfaceCreator
         return $@"
 namespace Global;
 public interface I{entity.Name}Service
-    {{
-        public Task<{entity.Name}ListServiceDto> GetAllAsync({entity.Name}QueryServiceDto queryDto);
+{{
+    public Task<{entity.Name}ListServiceDto> GetAllAsync({entity.Name}QueryServiceDto queryDto);
 
-        public Task<{entity.Name}ServiceDto> GetByIdAsync({pk} id);
+    public Task<{entity.Name}ServiceDto> GetByIdAsync({pk} id);
 
-        public Task<{entity.Name}ServiceDto> AddAsync(Add{entity.Name}ServiceDto addDto);
+    public Task<{entity.Name}ServiceDto> AddAsync(Add{entity.Name}ServiceDto addDto);
 
-        public Task DeleteAsync({pk} id);
+    public Task DeleteAsync({pk} id);
 
-        public Task UpdateAsync(Update{entity.Name}ServiceDto updateDto);
-    }}";
+    public Task UpdateAsync(Update{entity.Name}ServiceDto updateDto);
+}}";
 
     }
 }

@@ -5,14 +5,15 @@ using Newtonsoft.Json;
 
 public class SQLParser
 {
+    static string projectFolder = "/Data";
     public static void Parse(string text)
     {
         // Console.WriteLine(text);
         List<Entity> entities = new List<Entity>();
-        if (!Directory.Exists($"{AppContext.Get().ProjectPath}/Data/"))
-            Directory.CreateDirectory($"{AppContext.Get().ProjectPath}/Data/");
-        if (!Directory.Exists($"{AppContext.Get().ProjectPath}/DataMap/"))
-            Directory.CreateDirectory($"{AppContext.Get().ProjectPath}/DataMap/");
+        if (!Directory.Exists($"{AppContext.Get().ProjectPath}{projectFolder}/Data/"))
+            Directory.CreateDirectory($"{AppContext.Get().ProjectPath}{projectFolder}/Data/");
+        if (!Directory.Exists($"{AppContext.Get().ProjectPath}{projectFolder}/DataMap/"))
+            Directory.CreateDirectory($"{AppContext.Get().ProjectPath}{projectFolder}/DataMap/");
         var table_content = "create table (\"?[\\w]+\"?){1}[\\s]?\\({1}\\s*[\\w\\s\\(\\)0-9,\"]+;";
         var tables = Regex.Matches(text, table_content);
         foreach (var table in tables)
@@ -172,15 +173,15 @@ public class {ToPascalCase(entity.Name)}Map : IEntityTypeConfiguration<{ToPascal
         
     }}
 }}";
-            File.WriteAllText($"{AppContext.Get().ProjectPath}/Data/{ToPascalCase(entity.Name)}.cs", _class);
-            File.WriteAllText($"{AppContext.Get().ProjectPath}/DataMap/{ToPascalCase(entity.Name)}Map.cs", map);
+            File.WriteAllText($"{AppContext.Get().ProjectPath}{projectFolder}/Data/{ToPascalCase(entity.Name)}.cs", _class);
+            File.WriteAllText($"{AppContext.Get().ProjectPath}{projectFolder}/DataMap/{ToPascalCase(entity.Name)}Map.cs", map);
             // Console.WriteLine(_class);
             // Console.WriteLine(map);
         }
 
     }
 
-    private static string ToPascalCase(string original)
+    public static string ToPascalCase(string original)
     {
         Regex invalidCharsRgx = new Regex("[^_a-zA-Z0-9]");
         Regex whiteSpace = new Regex(@"(?<=\s)");
@@ -205,7 +206,7 @@ public class {ToPascalCase(entity.Name)}Map : IEntityTypeConfiguration<{ToPascal
         return string.Concat(pascalCase);
     }
 
-    private static string FixManyEnds(string input)
+    public static string FixManyEnds(string input)
     {
         return Regex.Replace(input, @"ys$", @"ies");
     }

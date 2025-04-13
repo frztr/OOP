@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IMaintenanceTypeRepository
+namespace Global;
+public interface IMaintenanceTypeRepository
 {
     public Task<MaintenanceTypeListRepositoryDto> GetAllAsync(MaintenanceTypeQueryRepositoryDto queryDto);
 

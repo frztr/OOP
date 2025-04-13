@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IOilTypeRepository
+namespace Global;
+public interface IOilTypeRepository
 {
     public Task<OilTypeListRepositoryDto> GetAllAsync(OilTypeQueryRepositoryDto queryDto);
 

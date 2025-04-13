@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IRoleRepository
+namespace Global;
+public interface IRoleRepository
 {
     public Task<RoleListRepositoryDto> GetAllAsync(RoleQueryRepositoryDto queryDto);
 

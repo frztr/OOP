@@ -1,6 +1,7 @@
 
 using AutoMapper;
 namespace Global;
+using Microsoft.Extensions.Logging;
 public class AutomechanicService(IAutomechanicRepository repository,
 
 ILogger<AutomechanicService> logger) : IAutomechanicService

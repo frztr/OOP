@@ -1,6 +1,6 @@
 
-        namespace Global;
-        public interface IRepairConsumedSparePartRepository
+namespace Global;
+public interface IRepairConsumedSparePartRepository
 {
     public Task<RepairConsumedSparePartListRepositoryDto> GetAllAsync(RepairConsumedSparePartQueryRepositoryDto queryDto);
 
