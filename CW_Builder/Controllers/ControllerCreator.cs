@@ -36,6 +36,12 @@ public class {entity.Name}Controller(I{entity.Name}Service service) : Controller
         {{
             return Results.BadRequest(new {{error = ex.Message}});
         }}
+        catch (DbUpdateException ex)
+        when ((ex.InnerException as Npgsql.PostgresException).SqlState == ""23505"")
+        {{
+            var innerEx = (ex.InnerException as Npgsql.PostgresException);
+            return Results.BadRequest(new {{ error = $""Нарушение уникальности поля {{innerEx.ConstraintName.Split(""_"").LastOrDefault()}}"" }});
+        }}
         catch (Exception ex)
         {{
             return Results.InternalServerError(new {{error = ex.Message}});
@@ -132,6 +138,12 @@ public class {entity.Name}Controller(I{entity.Name}Service service) : Controller
         catch (EntityNotFoundException ex)
         {{
             return Results.BadRequest(new {{error = ex.Message}});
+        }}
+        catch (DbUpdateException ex)
+        when ((ex.InnerException as Npgsql.PostgresException).SqlState == ""23505"")
+        {{
+            var innerEx = (ex.InnerException as Npgsql.PostgresException);
+            return Results.BadRequest(new {{ error = $""Нарушение уникальности поля {{innerEx.ConstraintName.Split(""_"").LastOrDefault()}}"" }});
         }}
         catch (Exception ex)
         {{

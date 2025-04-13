@@ -4,8 +4,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 namespace Global;
-[Authorize(Roles="admin")]
+[Authorize(Roles = "admin")]
 [ApiController]
 [Route("Role")]
 public class RoleController(IRoleService service) : Controller
@@ -15,7 +16,7 @@ public class RoleController(IRoleService service) : Controller
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public async Task<IResult> Add(AddRoleControllerDto addDto) 
+    public async Task<IResult> Add(AddRoleControllerDto addDto)
     {
         try
         {
@@ -29,11 +30,18 @@ public class RoleController(IRoleService service) : Controller
         }
         catch (EntityNotFoundException ex)
         {
-            return Results.BadRequest(new {error = ex.Message});
+            return Results.BadRequest(new { error = ex.Message });
+        }
+        catch (DbUpdateException ex)
+        when ((ex.InnerException as Npgsql.PostgresException).SqlState == "23505")
+        {
+            var innerEx = (ex.InnerException as Npgsql.PostgresException);
+            return Results.BadRequest(new { error = $"Нарушение уникальности поля {innerEx.ConstraintName.Split("_").LastOrDefault()}" });
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(new {error = ex.Message});
+            Console.WriteLine($"EX:{ex.ToString()}");
+            return Results.InternalServerError(new { error = ex.Message });
         }
     }
 
@@ -51,11 +59,11 @@ public class RoleController(IRoleService service) : Controller
         }
         catch (EntityNotFoundException ex)
         {
-            return Results.BadRequest(new {error = ex.Message});
+            return Results.BadRequest(new { error = ex.Message });
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(new {error = ex.Message}); 
+            return Results.InternalServerError(new { error = ex.Message });
         }
     }
 
@@ -64,26 +72,27 @@ public class RoleController(IRoleService service) : Controller
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
-    public async Task<IResult> GetAll([FromQuery]RoleQueryControllerDto queryDto)
+    public async Task<IResult> GetAll([FromQuery] RoleQueryControllerDto queryDto)
     {
         try
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RoleQueryControllerDto,RoleQueryServiceDto>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RoleQueryControllerDto, RoleQueryServiceDto>());
             var mapper = new Mapper(config);
-            var dto = mapper.Map<RoleQueryControllerDto,RoleQueryServiceDto>(queryDto);
-            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<RoleServiceDto,RoleControllerDto>());
+            var dto = mapper.Map<RoleQueryControllerDto, RoleQueryServiceDto>(queryDto);
+            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<RoleServiceDto, RoleControllerDto>());
             var mapper2 = new Mapper(config2);
-            return Results.Json(new RoleListControllerDto(){
-                Items = (await service.GetAllAsync(dto)).Items.Select(x=>mapper2.Map<RoleServiceDto,RoleControllerDto>(x))
+            return Results.Json(new RoleListControllerDto()
+            {
+                Items = (await service.GetAllAsync(dto)).Items.Select(x => mapper2.Map<RoleServiceDto, RoleControllerDto>(x))
             });
         }
         catch (EntityNotFoundException ex)
         {
-            return Results.BadRequest(new {error = ex.Message});
+            return Results.BadRequest(new { error = ex.Message });
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(new {error = ex.Message});
+            return Results.InternalServerError(new { error = ex.Message });
         }
     }
 
@@ -102,11 +111,11 @@ public class RoleController(IRoleService service) : Controller
         }
         catch (EntityNotFoundException ex)
         {
-            return Results.BadRequest(new {error = ex.Message});
+            return Results.BadRequest(new { error = ex.Message });
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(new {error = ex.Message});
+            return Results.InternalServerError(new { error = ex.Message });
         }
     }
     [HttpPatch]
@@ -126,11 +135,11 @@ public class RoleController(IRoleService service) : Controller
         }
         catch (EntityNotFoundException ex)
         {
-            return Results.BadRequest(new {error = ex.Message});
+            return Results.BadRequest(new { error = ex.Message });
         }
         catch (Exception ex)
         {
-            return Results.InternalServerError(new {error = ex.Message});
+            return Results.InternalServerError(new { error = ex.Message });
         }
     }
 }
