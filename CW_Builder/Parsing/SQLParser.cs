@@ -104,6 +104,10 @@ public class {ToPascalCase(entity.Name)}{{
                     x.HasMaxLength = Convert.ToInt32(value);
                     type = "string";
                 }
+                if (x.Type == "boolean")
+                {
+                    type = "bool";
+                }
                 if (new List<string>() { "smallserial", "smallint", "int2" }.Contains(x.Type))
                 {
                     type = "short";
@@ -147,7 +151,7 @@ public class {ToPascalCase(entity.Name)}Map : IEntityTypeConfiguration<{ToPascal
         builder.HasKey(d => d.{ToPascalCase(entity.Props.FirstOrDefault(x => x.PK).Name)});
         {String.Join("\n\t\t", entity.Props.Where(x =>
             {
-                if (new List<string>() { "serial", "smallserial", "int", "int2", "int8", "int4", "bigint", "datetime", "date", "timestamp", "smallint", "integer" }.Contains(x.Type)
+                if (new List<string>() { "boolean","serial", "smallserial", "int", "int2", "int8", "int4", "bigint", "datetime", "date", "timestamp", "smallint", "integer" }.Contains(x.Type)
                 || x.Type.Contains("varchar") || x.Type.Contains("numeric"))
                     return true;
                 return false;
