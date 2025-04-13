@@ -5,6 +5,7 @@ public class UserControllerCreator
         var pk = $@"{entity.Props.FirstOrDefault(x => x.PK).Type}";
         return $@"
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using Microsoft.AspNetCore.Authorization;
