@@ -22,15 +22,19 @@ public class SQLParser
             var _table = Regex.Match(table.ToString(), table_content);
             var table_name = _table.Groups[1].Captures[0].ToString().Replace("\"", "");
             // Console.WriteLine(table.ToString());
-            var table_cont = Regex.Replace(_table.ToString().Replace(");", ""), "create table (\"?[\\w]+\"?){1}[\\s]?\\({1}\\s*", "");
-            var rows = table_cont.Split(",\n");
+            var table_cont = Regex.Replace(_table.ToString().Replace(");", ""), "create table (\"?[\\w]+\"?){1}[\\s]?\\({1}\\s*", "").Replace("\r","");
+            // Console.WriteLine(JsonConvert.SerializeObject(new {table_cont}));
+            var rows = Regex.Split(table_cont,",\\s*\n\\s*");
+            // var rows = table_cont.Split(",\n");
             var foreign_keys = rows.Where(x => x.Contains("foreign key"));
             var fields = rows.Where(x => !foreign_keys.Contains(x));
             Entity entity = new Entity();
             entity.Name = table_name.ToString();
             foreach (var field in fields)
             {
-                var words = field.Split(' ');
+                var words = Regex.Split(field,"\\s+");
+                // var words = field.Split(' ');
+                // Console.WriteLine(JsonConvert.SerializeObject(new {words}));
                 var prop = new EntityProp();
                 prop.Name = words[0];
                 prop.Type = words[1];
@@ -97,35 +101,34 @@ public class {ToPascalCase(entity.Name)}{{
                 {
                     prop += "[Required]\n\t";
                 }
-                if (x.Type.Contains("varchar"))
+                if (Regex.IsMatch(x.Type,"varchar\\([0-9]+\\)|char\\([0-9]+\\)|text"))
                 {
                     var value = x.Type.Replace("varchar(", "").Replace(")", "");
                     prop += $"[StringLength({value})]\n\t";
                     x.HasMaxLength = Convert.ToInt32(value);
                     type = "string";
                 }
-                if (x.Type == "boolean")
+                if (new List<string>() { "boolean", "bool" }.Contains(x.Type))
                 {
                     type = "bool";
                 }
-                if (new List<string>() { "smallserial", "smallint", "int2" }.Contains(x.Type))
+                if (new List<string>() { "smallserial", "smallint", "int2", "serial2" }.Contains(x.Type))
                 {
                     type = "short";
                 }
-                if (new List<string>() { "serial", "int", "int4" }.Contains(x.Type))
+                if (new List<string>() { "serial", "int", "integer", "int4", "serial4"}.Contains(x.Type))
                 {
                     type = "int";
                 }
-                if (new List<string>() { "bigint", "int8" }.Contains(x.Type))
+                if (new List<string>() { "bigint", "int8", "bigserial","serial8" }.Contains(x.Type))
                 {
                     type = "long";
                 }
-                if (new List<string>() { "date", "datetime", "timestamp" }.Contains(x.Type))
+                if (new List<string>() { "date", "datetime", "timestamp","timetz","timestamptz" }.Contains(x.Type))
                 {
                     type = "DateTime";
                 }
-                if (x.Type.Contains("numeric"))
-                {
+                if(Regex.IsMatch(x.Type,"numeric\\([0-9]+,[0-9]+\\)|float4|float8|decimal|double precision")){
                     type = "decimal";
                 }
                 if (type == "")

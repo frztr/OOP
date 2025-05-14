@@ -57,6 +57,7 @@ commands.ForEach(x =>
    p.StartInfo.WorkingDirectory = $"{AppContext.Get().ProjectPath}{x[2]}";
    p.StartInfo.FileName = x[0];
    p.StartInfo.Arguments = x[1];
+   p.StartInfo.UseShellExecute = true;
    p.Start();
    p.WaitForExit();
 });
@@ -65,7 +66,7 @@ commands.ForEach(x =>
 if (File.Exists($"{AppContext.Get().ProjectPath}/init.sql"))
 {
    var read = File.ReadAllText($"{AppContext.Get().ProjectPath}/init.sql");
-   SQLParser.Parse(read);
+   SQLParser.Parse(read.ToLower());
 }
 
 DirectoryInfo directoryInfo = new DirectoryInfo($"{AppContext.Get().ProjectPath}/Data/Data/");
