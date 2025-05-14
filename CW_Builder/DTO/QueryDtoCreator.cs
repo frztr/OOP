@@ -13,24 +13,25 @@ public class QueryDtoCreator
         public int Offset {{ get; set; }} = 0;
         {(entity.ExtendedSearch ? String.Join("\n", entity.Props.Select(x =>
         {
-            if (x.Type == "int" || x.Type == "decimal" || x.Type == "short" || x.Type == "long" || x.Type == "DateTime")
+            string type = x.Type.Replace("?","");
+            if (type == "int" || type == "decimal" || type == "short" || type == "long" || type == "DateTime")
                 return $@"
         {(layer == "Controller" ? $@"[FromQuery(Name = ""{x.Name}[gt]"")]" : "")}
-        public {x.Type}? {x.Name}_GT {{get; set;}}
+        public {type}? {x.Name}_GT {{get; set;}}
         {(layer == "Controller" ? $@"[FromQuery(Name = ""{x.Name}[gte]"")]" : "")}
-        public {x.Type}? {x.Name}_GTE {{get; set;}}
+        public {type}? {x.Name}_GTE {{get; set;}}
         {(layer == "Controller" ? $@"[FromQuery(Name = ""{x.Name}[lt]"")]" : "")}
-        public {x.Type}? {x.Name}_LT {{get; set;}}
+        public {type}? {x.Name}_LT {{get; set;}}
         {(layer == "Controller" ? $@"[FromQuery(Name = ""{x.Name}[lte]"")]" : "")}
-        public {x.Type}? {x.Name}_LTE {{get; set;}}
+        public {type}? {x.Name}_LTE {{get; set;}}
         {(layer == "Controller" ? $@"[FromQuery(Name = ""{x.Name}[eq]"")]" : "")}
-        public {x.Type}? {x.Name}_EQ {{get; set;}}";
-            if (x.Type == "string")
+        public {type}? {x.Name}_EQ {{get; set;}}";
+            if (type == "string")
                 return $@"
         {(layer == "Controller" ? $@"[FromQuery(Name = ""{x.Name}[eq]"")]" : "")}
-        public {x.Type}? {x.Name}_EQ {{get; set;}}
+        public {type}? {x.Name}_EQ {{get; set;}}
         {(layer == "Controller" ? $@"[FromQuery(Name = ""{x.Name}[like]"")]" : "")}
-        public {x.Type}? {x.Name}_LIKE {{get; set;}}";
+        public {type}? {x.Name}_LIKE {{get; set;}}";
             return "";
         }).ToList()) : "")}
     }}";
