@@ -4,16 +4,16 @@ AppContext.Init(args);
 List<List<string>> commands = new List<List<string>>(){
    new List<string>(){"dotnet","new sln --force","/"},
    new List<string>(){"dotnet","new classlib --name Shared --force","/"},
-   new List<string>(){"rm","./Shared/Class1.cs","/"},
+   // new List<string>(){"rm","./Shared/Class1.cs","/"},
    new List<string>(){"dotnet",@"add package Newtonsoft.Json",@"/Shared"},
    new List<string>(){"dotnet","build","/Shared"},
    new List<string>(){"dotnet","new classlib --name Data --force","/"},
-   new List<string>(){"rm","./Data/Class1.cs","/"},
+   // new List<string>(){"rm","./Data/Class1.cs","/"},
    new List<string>(){"dotnet",@"add package Microsoft.EntityFrameworkCore.Design",@"/Data"},
    new List<string>(){"dotnet",@"add package Npgsql.EntityFrameworkCore.PostgreSQL",@"/Data"},
    new List<string>(){"dotnet","build","/Data"},
    new List<string>(){"dotnet","new classlib --name Repositories --force","/"},
-   new List<string>(){"rm","./Repositories/Class1.cs","/"},
+   // new List<string>(){"rm","./Repositories/Class1.cs","/"},
    new List<string>(){"dotnet","add reference ../Shared/Shared.csproj","/Repositories"},
    new List<string>(){"dotnet","add reference ../Data/Data.csproj","/Repositories"},
    new List<string>(){"dotnet",@"add package Microsoft.EntityFrameworkCore.Design",@"/Repositories"},
@@ -24,7 +24,7 @@ List<List<string>> commands = new List<List<string>>(){
    new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Identity.EntityFrameworkCore",@"/Repositories"},
    new List<string>(){"dotnet","build","/Repositories"},
    new List<string>(){"dotnet","new classlib --name Services --force","/"},
-   new List<string>(){"rm","./Services/Class1.cs","/"},
+   // new List<string>(){"rm","./Services/Class1.cs","/"},
    new List<string>(){"dotnet","add reference ../Shared/Shared.csproj","/Services"},
    new List<string>(){"dotnet","add reference ../Repositories/Repositories.csproj","/Services"},
    new List<string>(){"dotnet",@"add package AutoMapper",@"/Services"},
@@ -57,11 +57,22 @@ commands.ForEach(x =>
    p.StartInfo.WorkingDirectory = $"{AppContext.Get().ProjectPath}{x[2]}";
    p.StartInfo.FileName = x[0];
    p.StartInfo.Arguments = x[1];
-   p.StartInfo.UseShellExecute = true;
    p.Start();
    p.WaitForExit();
 });
 
+new List<string>(){
+   "Shared/Class1.cs",
+   "Data/Class1.cs",
+   "Repositories/Class1.cs",
+   "Services/Class1.cs"
+}.ForEach(x =>
+{
+   if (File.Exists($"{AppContext.Get().ProjectPath}/{x}"))
+   {
+      File.Delete($"{AppContext.Get().ProjectPath}/{x}");
+   }
+});
 
 if (File.Exists($"{AppContext.Get().ProjectPath}/init.sql"))
 {
@@ -83,8 +94,8 @@ if (!Directory.Exists($"{AppContext.Get().ProjectPath}/Repositories"))
    Directory.CreateDirectory($"{AppContext.Get().ProjectPath}/Repositories");
 if (!Directory.Exists($"{AppContext.Get().ProjectPath}/Services"))
    Directory.CreateDirectory($"{AppContext.Get().ProjectPath}/Services");
-if (!Directory.Exists($"{AppContext.Get().ProjectPath}Web API/Controllers"))
-   Directory.CreateDirectory($"{AppContext.Get().ProjectPath}Web API/Controllers");
+if (!Directory.Exists($"{AppContext.Get().ProjectPath}/Web API/Controllers"))
+   Directory.CreateDirectory($"{AppContext.Get().ProjectPath}/Web API/Controllers");
 if (!Directory.Exists($"{AppContext.Get().ProjectPath}/Repositories/DTO"))
    Directory.CreateDirectory($"{AppContext.Get().ProjectPath}/Repositories/DTO");
 if (!Directory.Exists($"{AppContext.Get().ProjectPath}/Services/DTO"))
