@@ -1,65 +1,65 @@
 ﻿using System.Diagnostics;
 
 AppContext.Init(args);
-// List<List<string>> commands = new List<List<string>>(){
-//    new List<string>(){"dotnet","new sln --force","/"},
-//    new List<string>(){"dotnet","new classlib --name Shared --force","/"},
-//    // new List<string>(){"rm","./Shared/Class1.cs","/"},
-//    new List<string>(){"dotnet",@"add package Newtonsoft.Json",@"/Shared"},
-//    new List<string>(){"dotnet","build","/Shared"},
-//    new List<string>(){"dotnet","new classlib --name Data --force","/"},
-//    // new List<string>(){"rm","./Data/Class1.cs","/"},
-//    new List<string>(){"dotnet",@"add package Microsoft.EntityFrameworkCore.Design",@"/Data"},
-//    new List<string>(){"dotnet",@"add package Npgsql.EntityFrameworkCore.PostgreSQL",@"/Data"},
-//    new List<string>(){"dotnet","build","/Data"},
-//    new List<string>(){"dotnet","new classlib --name Repositories --force","/"},
-//    // new List<string>(){"rm","./Repositories/Class1.cs","/"},
-//    new List<string>(){"dotnet","add reference ../Shared/Shared.csproj","/Repositories"},
-//    new List<string>(){"dotnet","add reference ../Data/Data.csproj","/Repositories"},
-//    new List<string>(){"dotnet",@"add package Microsoft.EntityFrameworkCore.Design",@"/Repositories"},
-//    new List<string>(){"dotnet",@"add package Npgsql.EntityFrameworkCore.PostgreSQL",@"/Repositories"},
-//    new List<string>(){"dotnet",@"add package AutoMapper",@"/Repositories"},
-//    new List<string>(){"dotnet",@"add package Swashbuckle.AspNetCore",@"/Repositories"},
-//    new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Identity",@"/Repositories"},
-//    new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Identity.EntityFrameworkCore",@"/Repositories"},
-//    new List<string>(){"dotnet","build","/Repositories"},
-//    new List<string>(){"dotnet","new classlib --name Services --force","/"},
-//    // new List<string>(){"rm","./Services/Class1.cs","/"},
-//    new List<string>(){"dotnet","add reference ../Shared/Shared.csproj","/Services"},
-//    new List<string>(){"dotnet","add reference ../Repositories/Repositories.csproj","/Services"},
-//    new List<string>(){"dotnet",@"add package AutoMapper",@"/Services"},
-//    new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Authentication.JwtBearer",@"/Services"},
-//    new List<string>(){"dotnet",@"add package Microsoft.Extensions.Logging",@"/Services"},
-//    new List<string>(){"dotnet","build","/Services"},
-//    new List<string>(){"dotnet",@"new webapi --name ""Web API"" --force","/"},
-//    new List<string>(){"dotnet","add reference ../Shared/Shared.csproj","/Services"},
-//    new List<string>(){"dotnet","add reference ../Services/Services.csproj","/Web API"},
-//    new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Authentication.JwtBearer",@"/Web API"},
-//    new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Identity",@"/Web API"},
-//    new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Identity.EntityFrameworkCore",@"/Web API"},
-//    new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Mvc.NewtonsoftJson",@"/Web API"},
-//    new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.OpenApi",@"/Web API"},
-//    new List<string>(){"dotnet",@"add package Newtonsoft.Json",@"/Web API"},
-//    new List<string>(){"dotnet",@"add package Swashbuckle.AspNetCore",@"/Web API"},
-//    new List<string>(){"dotnet",@"add package AutoMapper",@"/Web API"},
-//    new List<string>(){"dotnet",@"new tool-manifest --force",@"/Web API"},
-//    new List<string>(){"dotnet",@"tool install --local dotnet-ef",@"/Web API"},
-//    new List<string>(){"dotnet","build","/Web API"},
-//    new List<string>(){"dotnet",@"sln add Data","/"},
-//    new List<string>(){"dotnet",@"sln add Repositories","/"},
-//    new List<string>(){"dotnet",@"sln add Services","/"},
-//    new List<string>(){"dotnet",@"sln add ""Web API""","/"}
-// };
-// commands.ForEach(x =>
-// {
-//    Process p = new Process();
-//    p.StartInfo.UseShellExecute = true;
-//    p.StartInfo.WorkingDirectory = $"{AppContext.Get().ProjectPath}{x[2]}";
-//    p.StartInfo.FileName = x[0];
-//    p.StartInfo.Arguments = x[1];
-//    p.Start();
-//    p.WaitForExit();
-// });
+List<List<string>> commands = new List<List<string>>(){
+   new List<string>(){"dotnet","new sln --force","/"},
+   new List<string>(){"dotnet","new classlib --name Shared --force","/"},
+   // new List<string>(){"rm","./Shared/Class1.cs","/"},
+   new List<string>(){"dotnet",@"add package Newtonsoft.Json",@"/Shared"},
+   new List<string>(){"dotnet","build","/Shared"},
+   new List<string>(){"dotnet","new classlib --name Data --force","/"},
+   // new List<string>(){"rm","./Data/Class1.cs","/"},
+   new List<string>(){"dotnet",@"add package Microsoft.EntityFrameworkCore.Design",@"/Data"},
+   new List<string>(){"dotnet",@"add package Npgsql.EntityFrameworkCore.PostgreSQL",@"/Data"},
+   new List<string>(){"dotnet","build","/Data"},
+   new List<string>(){"dotnet","new classlib --name Repositories --force","/"},
+   // new List<string>(){"rm","./Repositories/Class1.cs","/"},
+   new List<string>(){"dotnet","add reference ../Shared/Shared.csproj","/Repositories"},
+   new List<string>(){"dotnet","add reference ../Data/Data.csproj","/Repositories"},
+   new List<string>(){"dotnet",@"add package Microsoft.EntityFrameworkCore.Design",@"/Repositories"},
+   new List<string>(){"dotnet",@"add package Npgsql.EntityFrameworkCore.PostgreSQL",@"/Repositories"},
+   new List<string>(){"dotnet",@"add package AutoMapper",@"/Repositories"},
+   new List<string>(){"dotnet",@"add package Swashbuckle.AspNetCore",@"/Repositories"},
+   new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Identity",@"/Repositories"},
+   new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Identity.EntityFrameworkCore",@"/Repositories"},
+   new List<string>(){"dotnet","build","/Repositories"},
+   new List<string>(){"dotnet","new classlib --name Services --force","/"},
+   // new List<string>(){"rm","./Services/Class1.cs","/"},
+   new List<string>(){"dotnet","add reference ../Shared/Shared.csproj","/Services"},
+   new List<string>(){"dotnet","add reference ../Repositories/Repositories.csproj","/Services"},
+   new List<string>(){"dotnet",@"add package AutoMapper",@"/Services"},
+   new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Authentication.JwtBearer",@"/Services"},
+   new List<string>(){"dotnet",@"add package Microsoft.Extensions.Logging",@"/Services"},
+   new List<string>(){"dotnet","build","/Services"},
+   new List<string>(){"dotnet",@"new webapi --name ""Web API"" --force","/"},
+   new List<string>(){"dotnet","add reference ../Shared/Shared.csproj","/Services"},
+   new List<string>(){"dotnet","add reference ../Services/Services.csproj","/Web API"},
+   new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Authentication.JwtBearer",@"/Web API"},
+   new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Identity",@"/Web API"},
+   new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Identity.EntityFrameworkCore",@"/Web API"},
+   new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.Mvc.NewtonsoftJson",@"/Web API"},
+   new List<string>(){"dotnet",@"add package Microsoft.AspNetCore.OpenApi",@"/Web API"},
+   new List<string>(){"dotnet",@"add package Newtonsoft.Json",@"/Web API"},
+   new List<string>(){"dotnet",@"add package Swashbuckle.AspNetCore",@"/Web API"},
+   new List<string>(){"dotnet",@"add package AutoMapper",@"/Web API"},
+   new List<string>(){"dotnet",@"new tool-manifest --force",@"/Web API"},
+   new List<string>(){"dotnet",@"tool install --local dotnet-ef",@"/Web API"},
+   new List<string>(){"dotnet","build","/Web API"},
+   new List<string>(){"dotnet",@"sln add Data","/"},
+   new List<string>(){"dotnet",@"sln add Repositories","/"},
+   new List<string>(){"dotnet",@"sln add Services","/"},
+   new List<string>(){"dotnet",@"sln add ""Web API""","/"}
+};
+commands.ForEach(x =>
+{
+   Process p = new Process();
+   p.StartInfo.UseShellExecute = true;
+   p.StartInfo.WorkingDirectory = $"{AppContext.Get().ProjectPath}{x[2]}";
+   p.StartInfo.FileName = x[0];
+   p.StartInfo.Arguments = x[1];
+   p.Start();
+   p.WaitForExit();
+});
 
 new List<string>(){
    "Shared/Class1.cs",
