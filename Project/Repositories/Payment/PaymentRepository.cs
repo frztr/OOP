@@ -56,6 +56,9 @@ public class PaymentRepository(AppDbContext db) : IPaymentRepository
             entity.BookingId = updateDto.BookingId.Value;
         }
 
+		if(updateDto.Amount.HasValue){
+            entity.Amount = updateDto.Amount.Value;
+        }
 		if(updateDto.PaymentDate.HasValue){
             entity.PaymentDate = updateDto.PaymentDate.Value;
         }

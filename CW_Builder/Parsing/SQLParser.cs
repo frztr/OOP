@@ -128,7 +128,7 @@ public class {ToPascalCase(entity.Name)}{{
                 {
                     type = "DateTime";
                 }
-                if(Regex.IsMatch(x.Type,"numeric\\([0-9]+,[0-9]+\\)|float4|float8|decimal|double precision")){
+                if(Regex.IsMatch(x.Type,"numeric|float4|float8|decimal|double precision")){
                     type = "decimal";
                 }
                 if (type == "")
