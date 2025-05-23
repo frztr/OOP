@@ -46,7 +46,7 @@ public class SQLParser
             }
             foreach (var key in foreign_keys)
             {
-                var _keyMatch = Regex.Match(key, "(foreign[\\s]+key[\\s]+(\\([\\w]+\\)){1} references (\"?[\\w]+\"?\\([\\w]+\\))){1}");
+                var _keyMatch = Regex.Match(key, "(foreign[\\s]+key[\\s]*(\\([\\w]+\\)){1} references (\"?[\\w]+\"?\\([\\w]+\\))){1}");
                 // Console.WriteLine(key);
                 var fk_name = _keyMatch.Groups[2].Captures[0].Value.Replace("(", "").Replace(")", "");
                 var _ref = _keyMatch.Groups[3].Captures[0].Value.Replace(")", "").Replace("\"", "").Split("(");
