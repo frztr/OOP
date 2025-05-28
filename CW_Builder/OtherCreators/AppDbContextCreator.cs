@@ -10,10 +10,22 @@ public class AppDbContextCreator
         string password
     )
     {
+        var roleProps = entities.FirstOrDefault(x => x.Name == "Role")
+            .Props.Where(x => x.Name != "Name" && !x.PK && x.IsRequired);
+        var userProps = entities.FirstOrDefault(x => x.Name == "User")
+                    .Props.Where(x =>
+                    !new List<string>(){
+                        "Login",
+                        "PasswordHash",
+                        entities.FirstOrDefault(x => x.Name == "User")
+                        .Props.FirstOrDefault(x=>x.FK == "Role").Name }.Contains(x.Name) &&
+                    !x.PK &&
+                    x.IsRequired);
         return $@"
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace Global;
 public class AppDbContext : IdentityDbContext<IdentityUser>
@@ -30,37 +42,32 @@ public DbSet<{x.Name}> {x.Name}List {{ get; set; }}
 
     protected override void OnModelCreating(ModelBuilder builder)
     {{
+        Database.EnsureDeleted();
+        Database.EnsureCreated();
         builder{String.Join("\n\t", entities.Select(x => $@".ApplyConfiguration(new {x.Name}Map())"))};
         Role r = new Role {{ 
-            {String.Join(",\n", entities.FirstOrDefault(x => x.Name == "Role")
-            .Props.Where(x => x.Name != "Name" && !x.PK && x.IsRequired).Select(x =>
+            {String.Join(",\n", roleProps.Select(x =>
             {
                 return GenValue(x);
-            }))},
-            Id = 1,
-            Name = \""admin\"" 
+            }))}{(roleProps.Count()>0?",":"")}
+            {entities.FirstOrDefault(x => x.Name == "Role")
+            .Props.FirstOrDefault(x => x.PK).Name} = 1,
+            Name = ""admin"" 
         }};
             builder.Entity<Role>().HasData(r);
             builder.Entity<User>().HasData(
                 new User {{
-                {String.Join(",\n", entities.FirstOrDefault(x => x.Name == "User")
-                    .Props.Where(x =>
-                    !new List<string>(){
-                        "Login",
-                        "Password",
-                        entities.FirstOrDefault(x => x.Name == "User")
-                        .Props.FirstOrDefault(x=>x.Type == "Role").Name }.Contains(x.Name) &&
-                    !x.PK &&
-                    x.IsRequired).Select(x =>
+                    {String.Join(",\n\t\t\t", userProps.Select(x =>
                     {
                         return GenValue(x);
-                    }))},
-                    Login = \""admin\"",
+                    }))}{(userProps.Count()>0?",":"")}
+                    Login = ""admin"",
                     PasswordHash = Convert.ToHexString(
-                    MD5.Create().ComputeHash(System.Text.Encoding.ASCII.GetBytes(\""admin\""))),
-                    Id = 1,
+                    MD5.Create().ComputeHash(System.Text.Encoding.ASCII.GetBytes(""admin""))),
                     {entities.FirstOrDefault(x => x.Name == "User")
-                        .Props.FirstOrDefault(x=>x.Type == "Role").Name} = 1
+            .Props.FirstOrDefault(x => x.PK).Name} = 1,
+                    {entities.FirstOrDefault(x => x.Name == "User")
+                        .Props.FirstOrDefault(x => x.FK == "Role").Name} = 1
                 }});
         base.OnModelCreating(builder);
     }}
@@ -70,17 +77,17 @@ public DbSet<{x.Name}> {x.Name}List {{ get; set; }}
     private static string GenValue(EntityProp x)
     {
         string value = "";
-        if (Regex.IsMatch(x.Type, "varchar\\([0-9]+\\)|char\\([0-9]+\\)|text"))
+        if (x.Type == "string")
             value = $"\"adm\"";
-        if (new List<string>() { "boolean", "bool" }.Contains(x.Type))
+        if (x.Type == "bool")
         {
             value = "false";
         }
-        if (new List<string>() { "smallserial", "smallint", "int2", "serial2" }.Contains(x.Type) ||
-        new List<string>() { "serial", "int", "integer", "int4", "serial4" }.Contains(x.Type) ||
-        new List<string>() { "bigint", "int8", "bigserial", "serial8" }.Contains(x.Type) ||
-        Regex.IsMatch(x.Type, "numeric|float4|float8|decimal|double precision")
-        )
+        if (x.Type == "DateTime")
+        {
+            value = "DateTime.Now";
+        }
+        if (new List<string>() { "short", "int", "long", "decimal" }.Contains(x.Type))
         {
             value = "1";
         }
