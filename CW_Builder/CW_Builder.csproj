@@ -8,7 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GirCore.Gtk-4.0" Version="0.6.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="builder.ui">
+      <LogicalName>builder.ui</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
