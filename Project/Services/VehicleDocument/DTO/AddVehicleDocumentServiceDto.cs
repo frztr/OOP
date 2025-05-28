@@ -1,0 +1,13 @@
+
+using System.ComponentModel.DataAnnotations;
+namespace Global;
+public class AddVehicleDocumentServiceDto
+{
+	[Required]
+	public short DoctypeId { get; set; }
+	[Required]
+	[StringLength(255)]
+	public string Src { get; set; }
+	[Required]
+	public int VehicleId { get; set; }
+}

@@ -42,8 +42,6 @@ public DbSet<{x.Name}> {x.Name}List {{ get; set; }}
 
     protected override void OnModelCreating(ModelBuilder builder)
     {{
-        Database.EnsureDeleted();
-        Database.EnsureCreated();
         builder{String.Join("\n\t", entities.Select(x => $@".ApplyConfiguration(new {x.Name}Map())"))};
         Role r = new Role {{ 
             {String.Join(",\n", roleProps.Select(x =>
