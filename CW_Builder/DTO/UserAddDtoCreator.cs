@@ -8,7 +8,7 @@ namespace Global;
 public class Add{entity.Name}{layer}Dto
 {{
     {String.Join("\n\t", entity.Props
-.Where(x => !(x.PK && x.Identity) && x.Name != "PasswordHash"
+.Where(x => !(x.PK || x.Identity) && x.Name != "PasswordHash"
 && AppContext.Get().AllowedValues.Contains(x.Type))
 .Select(x =>
 {

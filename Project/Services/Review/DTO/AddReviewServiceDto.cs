@@ -4,8 +4,6 @@ namespace Global;
 public class AddReviewServiceDto
 {
 	[Required]
-	public long Id { get; set; }
-	[Required]
 	public long UserId { get; set; }
 	[Required]
 	public short EventId { get; set; }

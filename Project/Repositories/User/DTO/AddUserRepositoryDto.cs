@@ -4,8 +4,6 @@ namespace Global;
 public class AddUserRepositoryDto
 {
     [Required]
-	public long Id { get; set; }
-	[Required]
 	[StringLength(50)]
 	public string FirstName { get; set; }
 	[Required]

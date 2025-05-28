@@ -4,8 +4,6 @@ namespace Global;
 public class AddBookingRepositoryDto
 {
 	[Required]
-	public long Id { get; set; }
-	[Required]
 	public long UserId { get; set; }
 	[Required]
 	public int EventId { get; set; }

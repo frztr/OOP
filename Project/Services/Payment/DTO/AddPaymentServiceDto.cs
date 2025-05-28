@@ -4,8 +4,6 @@ namespace Global;
 public class AddPaymentServiceDto
 {
 	[Required]
-	public long Id { get; set; }
-	[Required]
 	public long BookingId { get; set; }
 	[Required]
 	public decimal Amount { get; set; }
