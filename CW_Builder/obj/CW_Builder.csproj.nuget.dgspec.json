@@ -1,0 +1,77 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/forezzzter/Рабочий стол/OOP/CW_Builder/CW_Builder.csproj": {}
+  },
+  "projects": {
+    "/home/forezzzter/Рабочий стол/OOP/CW_Builder/CW_Builder.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/forezzzter/Рабочий стол/OOP/CW_Builder/CW_Builder.csproj",
+        "projectName": "CW_Builder",
+        "projectPath": "/home/forezzzter/Рабочий стол/OOP/CW_Builder/CW_Builder.csproj",
+        "packagesPath": "/home/forezzzter/.nuget/packages/",
+        "outputPath": "/home/forezzzter/Рабочий стол/OOP/CW_Builder/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/forezzzter/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "GirCore.Gtk-4.0": {
+              "target": "Package",
+              "version": "[0.6.3, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/forezzzter/.dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
