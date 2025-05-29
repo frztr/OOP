@@ -22,9 +22,9 @@ public class SQLParser
             var _table = Regex.Match(table.ToString(), table_content);
             var table_name = _table.Groups[1].Captures[0].ToString().Replace("\"", "");
             // Console.WriteLine(table.ToString());
-            var table_cont = Regex.Replace(_table.ToString().Replace(");", ""), "create table (\"?[\\w]+\"?){1}[\\s]?\\({1}\\s*", "").Replace("\r","");
+            var table_cont = Regex.Replace(_table.ToString().Replace(");", ""), "create table (\"?[\\w]+\"?){1}[\\s]?\\({1}\\s*", "").Replace("\r", "");
             // Console.WriteLine(JsonConvert.SerializeObject(new {table_cont}));
-            var rows = Regex.Split(table_cont,",\\s*\n\\s*");
+            var rows = Regex.Split(table_cont, ",\\s*\n\\s*");
             // var rows = table_cont.Split(",\n");
             var foreign_keys = rows.Where(x => x.Contains("foreign key"));
             var fields = rows.Where(x => !foreign_keys.Contains(x));
@@ -32,7 +32,7 @@ public class SQLParser
             entity.Name = table_name.ToString();
             foreach (var field in fields)
             {
-                var words = Regex.Split(field,"\\s+");
+                var words = Regex.Split(field, "\\s+");
                 // var words = field.Split(' ');
                 // Console.WriteLine(JsonConvert.SerializeObject(new {words}));
                 var prop = new EntityProp();
@@ -69,22 +69,27 @@ public class SQLParser
                 var f_table = entities.FirstOrDefault(x => x.Name == prop.FK);
                 // Console.WriteLine(new { entity = entities[i].Name, prop.Name,prop.FK, f_table });
                 EntityProp f_prop;
+                var prefix = "";
+                if (f_tables.Where(x=>x.FK == prop.FK).Count() > 1)
+                    prefix = $"{prop.Name}".Replace("id","");
                 if (!prop.PK)
-                {
-                    f_prop = new EntityProp()
                     {
-                        Type = $"ICollection<{ToPascalCase(entities[i].Name)}>",
-                        Name = FixManyEnds($"{ToPascalCase(entities[i].Name)}s")
-                    };
-                }
-                else
-                {
-                    f_prop = new EntityProp()
+                        f_prop = new EntityProp()
+                        {
+
+                            Type = $"ICollection<{ToPascalCase(entities[i].Name)}>",
+                            Name = FixManyEnds($"{ToPascalCase(prefix)}{ToPascalCase(entities[i].Name)}s")
+                        };
+                    }
+                    else
                     {
-                        Type = $"{ToPascalCase(entities[i].Name)}",
-                        Name = $"{ToPascalCase(entities[i].Name)}"
-                    };
-                }
+                        f_prop = new EntityProp()
+                        {
+                            Type = $"{ToPascalCase(entities[i].Name)}",
+                            Name = $"{ToPascalCase(prefix)}{ToPascalCase(entities[i].Name)}"
+                        };
+                    }
+
                 f_table.Props.Add(f_prop);
             }
         }
@@ -101,7 +106,7 @@ public class {ToPascalCase(entity.Name)}{{
                 {
                     prop += "[Required]\n\t";
                 }
-                if (Regex.IsMatch(x.Type,"varchar\\([0-9]+\\)|char\\([0-9]+\\)|text"))
+                if (Regex.IsMatch(x.Type, "varchar\\([0-9]+\\)|char\\([0-9]+\\)|text"))
                 {
                     var value = x.Type.Replace("varchar(", "").Replace(")", "");
                     prop += $"[StringLength({value})]\n\t";
@@ -116,19 +121,20 @@ public class {ToPascalCase(entity.Name)}{{
                 {
                     type = "short";
                 }
-                if (new List<string>() { "serial", "int", "integer", "int4", "serial4"}.Contains(x.Type))
+                if (new List<string>() { "serial", "int", "integer", "int4", "serial4" }.Contains(x.Type))
                 {
                     type = "int";
                 }
-                if (new List<string>() { "bigint", "int8", "bigserial","serial8" }.Contains(x.Type))
+                if (new List<string>() { "bigint", "int8", "bigserial", "serial8" }.Contains(x.Type))
                 {
                     type = "long";
                 }
-                if (new List<string>() { "date", "datetime", "timestamp","timetz","timestamptz" }.Contains(x.Type))
+                if (new List<string>() { "date", "datetime", "timestamp", "timetz", "timestamptz" }.Contains(x.Type))
                 {
                     type = "DateTime";
                 }
-                if(Regex.IsMatch(x.Type,"numeric|float4|float8|decimal|double precision")){
+                if (Regex.IsMatch(x.Type, "numeric|float4|float8|decimal|double precision"))
+                {
                     type = "decimal";
                 }
                 if (type == "")
@@ -136,9 +142,12 @@ public class {ToPascalCase(entity.Name)}{{
                     type = x.Type;
                 }
                 prop += $@"public {type}{((x.IsRequired || x.PK || x.Identity || x.Default != null || x.Type.Contains("ICollection")) ? "" : "?")} {ToPascalCase(x.Name)} {{ get;set; }}";
+                var postfix = "";
+                // if (entity.Props.Where(y => y.FK == x.FK).Count() > 1)
+                postfix = $"{x.Name}_".ToLower().Replace("id", "");
                 if (x.FK != null)
                 {
-                    prop += $"\n\tpublic {ToPascalCase(x.FK)} {ToPascalCase(x.FK)} {{get;set;}}";
+                    prop += $"\n\tpublic {ToPascalCase(x.FK)} {ToPascalCase((ToPascalCase(postfix) != ToPascalCase(x.FK)) ? (postfix + x.FK) : postfix)} {{get;set;}}";
                 }
                 return prop;
             }))}
@@ -154,7 +163,7 @@ public class {ToPascalCase(entity.Name)}Map : IEntityTypeConfiguration<{ToPascal
         builder.HasKey(d => d.{ToPascalCase(entity.Props.FirstOrDefault(x => x.PK).Name)});
         {String.Join("\n\t\t", entity.Props.Where(x =>
             {
-                if (new List<string>() { "boolean","serial", "smallserial", "int", "int2", "int8", "int4", "bigint", "datetime", "date", "timestamp", "smallint", "integer" }.Contains(x.Type)
+                if (new List<string>() { "boolean", "serial", "smallserial", "int", "int2", "int8", "int4", "bigint", "datetime", "date", "timestamp", "smallint", "integer" }.Contains(x.Type)
                 || x.Type.Contains("varchar") || x.Type.Contains("numeric"))
                     return true;
                 return false;
@@ -173,8 +182,12 @@ public class {ToPascalCase(entity.Name)}Map : IEntityTypeConfiguration<{ToPascal
                     
         {String.Join("\n\n\t\t", entity.Props.Where(x => x.FK != null).Select(x =>
                 {
-                    return $@"builder.HasOne(d => d.{ToPascalCase(x.FK)})
-                .With{(x.PK ? "One" : "Many")}(e => e.{FixManyEnds($"{ToPascalCase(entity.Name)}{(x.PK ? "" : "s")}")})
+                    var postfix = "";
+                    if (entity.Props.Where(y => y.FK == x.FK).Count() > 1)
+                    postfix = $"{x.Name}_".ToLower().Replace("id", "");
+
+                    return $@"builder.HasOne(d => d.{(x.FK == entity.Name ? ToPascalCase(x.Name.Replace("id","")):"")}{ToPascalCase((ToPascalCase(postfix) != ToPascalCase(x.FK)) ? (postfix + x.FK) : x.FK)})
+                .With{(x.PK ? "One" : "Many")}(e => e.{FixManyEnds($"{ToPascalCase(postfix + entity.Name)}{(x.PK ? "" : "s")}")})
                 .HasForeignKey{(!x.PK ? "" : $"<{ToPascalCase(entity.Name)}>")}(d => d.{ToPascalCase(x.Name)});";
                 }))}    
         
