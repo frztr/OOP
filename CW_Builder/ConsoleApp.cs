@@ -109,12 +109,6 @@ public class ConsoleApp
             }
         });
 
-        if (File.Exists($"{AppContext.Get().ProjectPath}/init.sql"))
-        {
-            var read = File.ReadAllText($"{AppContext.Get().ProjectPath}/init.sql");
-            SQLParser.Parse(read.ToLower());
-        }
-
         if (File.Exists($"{scriptPath}"))
         {
             var read = File.ReadAllText($"{scriptPath}");

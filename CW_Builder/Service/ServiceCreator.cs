@@ -5,13 +5,17 @@ public class ServiceCreator
     public static string CreateService(Entity entity)
     {
         var pk = $@"{entity.Props.FirstOrDefault(x => x.PK).Type}";
+        Console.WriteLine(JsonSerializer.Serialize(entity));
         return $@"
 using AutoMapper;
 namespace Global;
 using Microsoft.Extensions.Logging;
 public class {entity.Name}Service(I{entity.Name}Repository repository,
-{String.Join("\n", entity.Props.Where(x => x.FK != null)
-.Select(x => $"I{x.FK}Repository {JsonNamingPolicy.CamelCase.ConvertName(x.FK)}Repository,"))}
+{String.Join("\n", entity.Props
+.Where(x => x.FK != null).Select(x=>entity.Props.FirstOrDefault(y=>y.Name == x.FK))
+.DistinctBy(y=>y.Type)
+.Where(y=>y.Type != entity.Name)
+.Select(x => $"I{x.Type}Repository {JsonNamingPolicy.CamelCase.ConvertName(x.Type)}Repository,"))}
 ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
 {{
     public async Task<{entity.Name}ServiceDto> AddAsync(Add{entity.Name}ServiceDto addServiceDto)
@@ -24,13 +28,15 @@ ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
         {String.Join(",\n\t\t", entity.Props.Where(x => x.FK != null)
         .Select(x =>
         {
+            var prop = entity.Props.FirstOrDefault(y => y.Name == x.FK);
+            var repoName = prop.Type != entity.Name ? $"{JsonNamingPolicy.CamelCase.ConvertName(prop.Type)}Repository" : "repository";
             if (x.IsRequired)
             {
-                return $"{JsonNamingPolicy.CamelCase.ConvertName(x.FK)}Repository.GetByIdAsync(addRepositoryDto.{x.Name})";
+                return $"{repoName}.GetByIdAsync(addRepositoryDto.{x.Name})";
             }
             else
             {
-                return $@"addRepositoryDto.{x.Name}.HasValue ? {JsonNamingPolicy.CamelCase.ConvertName(x.FK)}Repository.GetByIdAsync(addRepositoryDto.{x.Name}.Value) : Task.CompletedTask";
+                return $@"addRepositoryDto.{x.Name}.HasValue ? {repoName}.GetByIdAsync(addRepositoryDto.{x.Name}.Value) : Task.CompletedTask";
             }
         }))});
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
@@ -76,8 +82,9 @@ ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
         {String.Join(",\n\t\t", entity.Props.Where(x => x.FK != null)
         .Select(x =>
         {
-
-            return $@"updateDto.{x.Name}.HasValue ? {JsonNamingPolicy.CamelCase.ConvertName(x.FK)}Repository.GetByIdAsync(updateDto.{x.Name}.Value) : Task.CompletedTask";
+            var prop = entity.Props.FirstOrDefault(y => y.Name == x.FK);
+            var repoName = prop.Type != entity.Name ? $"{JsonNamingPolicy.CamelCase.ConvertName(prop.Type)}Repository" : "repository";
+            return $@"updateDto.{x.Name}.HasValue ? {repoName}.GetByIdAsync(updateDto.{x.Name}.Value) : Task.CompletedTask";
 
         }))});
         await repository.UpdateAsync(updateRepositoryDto);
