@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<interface>
-  <object class="GtkWindow" id="window">
-    <property name="title">METANIT.COM</property>
-    <property name="default-width">250</property>
-    <property name="default-height">200</property>
-  </object>
-</interface>
