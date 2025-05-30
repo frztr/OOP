@@ -38,6 +38,7 @@ public class ConsoleApp
         var args = arguments.ToArray();
 
         AppContext.Init(args);
+        // List<List<string>> commands = new List<List<string>>();
                 List<List<string>> commands = new List<List<string>>(){
            new List<string>(){"dotnet","new sln --force","/"},
            new List<string>(){"dotnet","new classlib --name Shared --force","/"},
@@ -107,12 +108,6 @@ public class ConsoleApp
                 File.Delete($"{AppContext.Get().ProjectPath}/{x}");
             }
         });
-
-        if (File.Exists($"{AppContext.Get().ProjectPath}/init.sql"))
-        {
-            var read = File.ReadAllText($"{AppContext.Get().ProjectPath}/init.sql");
-            SQLParser.Parse(read.ToLower());
-        }
 
         if (File.Exists($"{scriptPath}"))
         {
