@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 public class UserServiceCreator
 {
     public static string CreateService(Entity entity)
@@ -12,7 +14,12 @@ using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 namespace Global;
-public class {entity.Name}Service(I{entity.Name}Repository repository, ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
+public class {entity.Name}Service(I{entity.Name}Repository repository,
+{String.Join("\n", entity.Props
+.Where(x => x.FK != null).Select(x=>entity.Props.FirstOrDefault(y=>y.Name == x.FK))
+.DistinctBy(y=>y.Type)
+.Where(y=>y.Type != entity.Name)
+.Select(x => $"I{x.Type}Repository {JsonNamingPolicy.CamelCase.ConvertName(x.Type)}Repository,"))}, ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
 {{
     public async Task<{entity.Name}ServiceDto> AddAsync(Add{entity.Name}ServiceDto addServiceDto)
     {{
@@ -20,7 +27,21 @@ public class {entity.Name}Service(I{entity.Name}Repository repository, ILogger<{
         var config = new MapperConfiguration(cfg => cfg.CreateMap<Add{entity.Name}ServiceDto, Add{entity.Name}RepositoryDto>());
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<Add{entity.Name}ServiceDto, Add{entity.Name}RepositoryDto>(addServiceDto);
-        addRepositoryDto.PasswordHash = Convert.ToHexString(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(addServiceDto.Password))).ToLower();
+        await Task.WhenAll(
+        {String.Join(",\n\t\t", entity.Props.Where(x => x.FK != null)
+        .Select(x =>
+        {
+            var prop = entity.Props.FirstOrDefault(y => y.Name == x.FK);
+            var repoName = prop.Type != entity.Name ? $"{JsonNamingPolicy.CamelCase.ConvertName(prop.Type)}Repository" : "repository";
+            if (x.IsRequired)
+            {
+                return $"{repoName}.GetByIdAsync(addRepositoryDto.{x.Name})";
+            }
+            else
+            {
+                return $@"addRepositoryDto.{x.Name}.HasValue ? {repoName}.GetByIdAsync(addRepositoryDto.{x.Name}.Value) : Task.CompletedTask";
+            }
+        }))});
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name}RepositoryDto, {entity.Name}ServiceDto>());
         var mapper2 = new Mapper(config2);
@@ -60,6 +81,15 @@ public class {entity.Name}Service(I{entity.Name}Repository repository, ILogger<{
         var config = new MapperConfiguration(cfg => cfg.CreateMap<Update{entity.Name}ServiceDto, Update{entity.Name}RepositoryDto>());
         var mapper = new Mapper(config);
         var updateRepositoryDto = mapper.Map<Update{entity.Name}ServiceDto, Update{entity.Name}RepositoryDto>(updateDto);
+        await Task.WhenAll(
+        {String.Join(",\n\t\t", entity.Props.Where(x => x.FK != null)
+        .Select(x =>
+        {
+            var prop = entity.Props.FirstOrDefault(y => y.Name == x.FK);
+            var repoName = prop.Type != entity.Name ? $"{JsonNamingPolicy.CamelCase.ConvertName(prop.Type)}Repository" : "repository";
+            return $@"updateDto.{x.Name}.HasValue ? {repoName}.GetByIdAsync(updateDto.{x.Name}.Value) : Task.CompletedTask";
+
+        }))});
         await repository.UpdateAsync(updateRepositoryDto);
     }}
     
