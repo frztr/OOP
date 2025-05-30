@@ -19,7 +19,7 @@ public class {entity.Name}Service(I{entity.Name}Repository repository,
 .Where(x => x.FK != null).Select(x=>entity.Props.FirstOrDefault(y=>y.Name == x.FK))
 .DistinctBy(y=>y.Type)
 .Where(y=>y.Type != entity.Name)
-.Select(x => $"I{x.Type}Repository {JsonNamingPolicy.CamelCase.ConvertName(x.Type)}Repository,"))}, ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
+.Select(x => $"I{x.Type}Repository {JsonNamingPolicy.CamelCase.ConvertName(x.Type)}Repository,"))} ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
 {{
     public async Task<{entity.Name}ServiceDto> AddAsync(Add{entity.Name}ServiceDto addServiceDto)
     {{
