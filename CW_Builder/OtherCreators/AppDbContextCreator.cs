@@ -61,7 +61,7 @@ public DbSet<{x.Name}> {x.Name}List {{ get; set; }}
                     }))}{(userProps.Count()>0?",":"")}
                     Login = ""admin"",
                     PasswordHash = Convert.ToHexString(
-                    MD5.Create().ComputeHash(System.Text.Encoding.ASCII.GetBytes(""admin""))),
+                    MD5.Create().ComputeHash(System.Text.Encoding.ASCII.GetBytes(""admin""))).ToLower(),
                     {entities.FirstOrDefault(x => x.Name == "User")
             .Props.FirstOrDefault(x => x.PK).Name} = 1,
                     {entities.FirstOrDefault(x => x.Name == "User")
