@@ -143,7 +143,7 @@ public class {ToPascalCase(entity.Name)}{{
                 }
                 prop += $@"public {type}{((x.IsRequired || x.PK || x.Identity || x.Default != null || x.Type.Contains("ICollection")) ? "" : "?")} {ToPascalCase(x.Name)} {{ get;set; }}";
                 var postfix = "";
-                // if (entity.Props.Where(y => y.FK == x.FK).Count() > 1)
+                if (entity.Props.Where(y => y.FK == x.FK).Count() > 1)
                 postfix = $"{x.Name}_".ToLower().Replace("id", "");
                 if (x.FK != null)
                 {
