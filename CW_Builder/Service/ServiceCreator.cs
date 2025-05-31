@@ -12,7 +12,7 @@ namespace Global;
 using Microsoft.Extensions.Logging;
 public class {entity.Name}Service(I{entity.Name}Repository repository,
 {String.Join("\n", entity.Props
-.Where(x => x.FK != null).Select(x=>entity.Props.FirstOrDefault(y=>y.Name == x.FK))
+.Where(x => x.FK != null).Select(x=>entity.Props.FirstOrDefault(y=>y.Name == x.FK || y.Name.Contains(x.Name+x.FK)))
 .DistinctBy(y=>y.Type)
 .Where(y=>y.Type != entity.Name)
 .Select(x => $"I{x.Type}Repository {JsonNamingPolicy.CamelCase.ConvertName(x.Type)}Repository,"))}
@@ -25,10 +25,10 @@ ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
         var mapper = new Mapper(config);
         var addRepositoryDto = mapper.Map<Add{entity.Name}ServiceDto, Add{entity.Name}RepositoryDto>(addServiceDto);
         await Task.WhenAll(
-        {String.Join(",\n\t\t", entity.Props.Where(x => x.FK != null)
+        {String.Join(",\n\t\t", entity.Props.Where(x => x.FK != null )
         .Select(x =>
         {
-            var prop = entity.Props.FirstOrDefault(y => y.Name == x.FK);
+            var prop = entity.Props.FirstOrDefault(y => y.Name == x.FK || y.Name.Contains(x.Name+x.FK));
             var repoName = prop.Type != entity.Name ? $"{JsonNamingPolicy.CamelCase.ConvertName(prop.Type)}Repository" : "repository";
             if (x.IsRequired)
             {
@@ -82,7 +82,7 @@ ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
         {String.Join(",\n\t\t", entity.Props.Where(x => x.FK != null)
         .Select(x =>
         {
-            var prop = entity.Props.FirstOrDefault(y => y.Name == x.FK);
+            var prop = entity.Props.FirstOrDefault(y => y.Name == x.FK || y.Name.Contains(x.Name+x.FK));
             var repoName = prop.Type != entity.Name ? $"{JsonNamingPolicy.CamelCase.ConvertName(prop.Type)}Repository" : "repository";
             return $@"updateDto.{x.Name}.HasValue ? {repoName}.GetByIdAsync(updateDto.{x.Name}.Value) : Task.CompletedTask";
 
