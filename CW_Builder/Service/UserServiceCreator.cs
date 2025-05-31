@@ -19,7 +19,7 @@ public class {entity.Name}Service(I{entity.Name}Repository repository,
 .Where(x => x.FK != null).Select(x=>entity.Props.FirstOrDefault(y=>y.Name == x.FK))
 .DistinctBy(y=>y.Type)
 .Where(y=>y.Type != entity.Name)
-.Select(x => $"I{x.Type}Repository {JsonNamingPolicy.CamelCase.ConvertName(x.Type)}Repository,"))}, ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
+.Select(x => $"I{x.Type}Repository {JsonNamingPolicy.CamelCase.ConvertName(x.Type)}Repository,"))} ILogger<{entity.Name}Service> logger) : I{entity.Name}Service
 {{
     public async Task<{entity.Name}ServiceDto> AddAsync(Add{entity.Name}ServiceDto addServiceDto)
     {{
@@ -42,6 +42,8 @@ public class {entity.Name}Service(I{entity.Name}Repository repository,
                 return $@"addRepositoryDto.{x.Name}.HasValue ? {repoName}.GetByIdAsync(addRepositoryDto.{x.Name}.Value) : Task.CompletedTask";
             }
         }))});
+        var passwordHash = Convert.ToHexString(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(addServiceDto.Password))).ToLower();
+        addRepositoryDto.PasswordHash = passwordHash;
         var entityRepositoryDto = await repository.AddAsync(addRepositoryDto);
         var config2 = new MapperConfiguration(cfg => cfg.CreateMap<{entity.Name}RepositoryDto, {entity.Name}ServiceDto>());
         var mapper2 = new Mapper(config2);
