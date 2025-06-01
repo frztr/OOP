@@ -83,7 +83,8 @@ public DbSet<{x.Name}> {x.Name}List {{ get; set; }}
         }
         if (x.Type == "DateTime")
         {
-            value = "DateTime.Now";
+            var datenow = DateTime.Now;
+            value = $"new DateTime({datenow.Year},{datenow.Month},{datenow.Day},{datenow.Hour},{datenow.Minute},{datenow.Second},DateTimeKind.Utc)";
         }
         if (new List<string>() { "short", "int", "long", "decimal" }.Contains(x.Type))
         {
